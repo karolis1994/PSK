@@ -24,13 +24,13 @@
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
     <data-source>
-        <name>jdbc:postgresql://localhost:5432/Hangars</name>
+        <name>jdbc:postgresql://localhost:5432/PSK</name>
         <class-name>org.postgresql.ds.PGConnectionPoolDataSource</class-name>
         <server-name>localhost</server-name>
         <port-number>5432</port-number>
-        <database-name>Hangars</database-name>
+        <database-name>PSK</database-name>
         <user>postgres</user>
-        <password>code</password>
+        <password>a</password>
         <property>
             <name>connectionAttributes</name>
             <value>;create=true</value>

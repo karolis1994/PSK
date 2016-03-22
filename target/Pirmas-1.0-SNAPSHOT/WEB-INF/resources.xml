@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<resources>
-  <Resource id="Hangars" type="javax.sql.DataSource">#Tue Feb 09 23:16:39 EET 2016
-jdbcDriver=org.postgresql.Driver
-password=code
-userName=postgres
-jdbcUrl=jdbc\:postgresql\://localhost\:5432/Hangars
-</Resource>
-</resources>
