@@ -7,25 +7,26 @@
       <!--xmlns:r="http://richfaces.org/rich"-->
     <h:head>
         <title>House reservation</title>
-
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="weekpicker.js"></script>
-       
-        <h:outputScript library="js" name="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"/>
-        <h:outputScript library="js" name="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"/>
-        <h:outputScript library="js" name="weekpicker.js"/>
-        <h:outputStylesheet library="css" name="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/base/jquery-ui.css"  />
+        <script type="text/javascript" src="weekpicker.js"></script>       
     </h:head>
     <h:body>
-        <h3>Select week</h3>
-        <div class="week-picker"></div>
-        <br/>
-        <label>Week :</label> <span id="startDate"></span> - <span id="endDate"></span>
-        <br/>
-        <br/>
-        <h3><h:outputLabel for="weekSpinner" value="Select number of weeks" /></h3>
-        <p:spinner id="weekSpinner" value="1" min="1" max="100" onchange="numberOfWeeksChanged()" onmouseover="numberOfWeeksChanged()">
-        </p:spinner>
+            <h3>Select week</h3>
+            <div class="week-picker"></div>
+            <br/>
+            Reservation from: <h:outputText class="resFrom" binding="#{from}"></h:outputText>
+            <br/>
+            Reservation to: <h:outputText class="resTo" binding="#{to}"></h:outputText>
+            <br/>
+            <br/>
+            <h3><h:outputLabel for="weekSpinner" value="Select number of weeks" /></h3>
+            <p:spinner id="weekSpinner" value="1" min="1" max="100"/>
+            <br/>
+            <br/>
+        <h:form>
+            <h:commandButton action="index" value="Continue"/>
+            <h:inputText class="startDate" value="#{reservationBean.reservedFrom}" style="visibility: hidden"/>
+            <h:inputText class="endDate" value="#{reservationBean.reservedTo}" style="visibility: hidden"/>
+        </h:form>
     </h:body>
     
 </html>

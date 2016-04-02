@@ -6,7 +6,6 @@
 $(document).ready(function() {
     var startDate;
     var endDate;
-    var numberOfWeeks = 1;
     var numberOfDays = 6;
     var date;
     var dateFormat;
@@ -21,9 +20,11 @@ $(document).ready(function() {
 
     $('#weekSpinner_input').change(function() {
         numberOfDays = 6 + ((this.value - 1) * 7)
+        
         endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - dayOfTheWeek + numberOfDays);
         selectCurrentWeek();
-        $('#endDate').text($.datepicker.formatDate( dateFormat, endDate, settings ));
+        
+        $('.endDate').val($.datepicker.formatDate( dateFormat, endDate, settings));
         $('.week-picker').datepicker("refresh");
     });
 
@@ -48,9 +49,10 @@ $(document).ready(function() {
             startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - dayOfTheWeek);
             endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - dayOfTheWeek + numberOfDays);
             dateFormat = inst.settings.dateFormat || $.datepicker._defaults.dateFormat;
-            $('#startDate').text($.datepicker.formatDate( dateFormat, startDate, inst.settings ));
-            $('#endDate').text($.datepicker.formatDate( dateFormat, endDate, inst.settings ));
-
+            
+            $('.startDate').val($.datepicker.formatDate( dateFormat, startDate, inst.settings ));    
+            $('.endDate').val($.datepicker.formatDate( dateFormat, endDate, inst.settings ));       
+            
             selectCurrentWeek();
         },
         beforeShowDay: function(date) {

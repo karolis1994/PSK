@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,7 +60,7 @@ public class Houses implements Serializable {
     private List<Reservations> reservationsList;
     @OneToMany(mappedBy = "houseid")
     private List<Paidservices> paidservicesList;
-    @OneToMany(mappedBy = "houseid")
+    @OneToMany(mappedBy = "houseid", fetch=FetchType.EAGER)
     private List<Extras> extrasList;
 
     public Houses() {

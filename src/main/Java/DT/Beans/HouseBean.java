@@ -5,11 +5,13 @@
  */
 package DT.Beans;
 
+import DT.Entities.Extras;
 import DT.Entities.Houses;
 import DT.Facades.HouseFacade;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+
 /**
  *
  * @author Henrikas
@@ -21,6 +23,7 @@ public class HouseBean {
     private HouseFacade houseFacade;
     private List<Houses> houses;
     private Houses house; 
+    private List<Extras> extras;
  
     public Houses getHouse() {
         if (house == null) {
@@ -48,5 +51,6 @@ public class HouseBean {
  
     private void loadHouses() {
         houses = houseFacade.findAll();
+        System.out.println("Extra 1: " + houses.get(0).getExtrasList().get(0).getTitle());
     }
 }
