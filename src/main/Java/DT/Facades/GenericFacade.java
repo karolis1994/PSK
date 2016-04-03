@@ -22,6 +22,10 @@ public abstract class GenericFacade<T> implements Serializable {
 
     protected Class<T> entityClass;
     
+    public GenericFacade(Class<T> entityClass) {
+        this.entityClass = entityClass;
+    }
+    
     public void create(Houses house) {
         em.persist(house);
     }
@@ -35,7 +39,8 @@ public abstract class GenericFacade<T> implements Serializable {
     }
 
     public T find(Object id) {
-        return em.find(entityClass, id);
+        T obj = em.find(entityClass, id);
+        return obj;
     }
 
     public List<T> findAll() {

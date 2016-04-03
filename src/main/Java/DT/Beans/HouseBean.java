@@ -11,12 +11,15 @@ import DT.Facades.HouseFacade;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 /**
  *
  * @author Henrikas
  */
 @ManagedBean(name = "houseBean")
+@SessionScoped
 public class HouseBean {
 
     @EJB
@@ -32,7 +35,7 @@ public class HouseBean {
  
         return house;
     }
- 
+    
     public void setHouse(Houses house) {
         this.house = house;
     }
@@ -41,16 +44,28 @@ public class HouseBean {
         house = new Houses();
     }
     
-    public List<Houses> getAllHouses() {
+    public List<Houses> getHouses() {
         if (houses == null) {
-            loadHouses();
+            houses = houseFacade.findAll();
         }
- 
+        
         return houses;
     }
- 
-    private void loadHouses() {
-        houses = houseFacade.findAll();
-        System.out.println("Extra 1: " + houses.get(0).getExtrasList().get(0).getTitle());
+    
+    public void setHouses(List<Houses> houses) {
+        this.houses = houses;
+    }
+    
+    public Houses findHouseById(Integer id) {
+        house = houseFacade.find(id);
+        return house;
+    }
+    
+    public List<Extras> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(List<Extras> extras) {
+        this.extras = extras;
     }
 }

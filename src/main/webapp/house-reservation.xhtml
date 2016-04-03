@@ -3,30 +3,62 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-      <!--xmlns:r="http://richfaces.org/rich"-->
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>House reservation</title>
         <script type="text/javascript" src="weekpicker.js"></script>       
     </h:head>
     <h:body>
-            <h3>Select week</h3>
-            <div class="week-picker"></div>
-            <br/>
-            Reservation from: <h:outputText class="resFrom" binding="#{from}"></h:outputText>
-            <br/>
-            Reservation to: <h:outputText class="resTo" binding="#{to}"></h:outputText>
-            <br/>
-            <br/>
-            <h3><h:outputLabel for="weekSpinner" value="Select number of weeks" /></h3>
-            <p:spinner id="weekSpinner" value="1" min="1" max="100"/>
-            <br/>
-            <br/>
+        <h3>Select week</h3>
+        <div class="week-picker"></div>
+        
+        <br/>
+        Reservation from: <h:outputText class="resFrom" binding="#{from}"></h:outputText>
+        <br/>
+        Reservation to: <h:outputText class="resTo" binding="#{to}"></h:outputText>
+        
+        <br/>
+        <br/>
+        
+        <h3><h:outputLabel for="weekSpinner" value="Select number of weeks" /></h3>
+        <p:spinner id="weekSpinner" value="1" min="1" max="100"/>
+        
+        <c:set var="a" value="#{reservationBean.setExtrasList(houseBean.house.getExtrasList())}" scope="request" />
+       
         <h:form>
-            <h:commandButton action="index" value="Continue"/>
+            <br/>
+            <h:dataTable value="#{reservationBean.extrasList}" var="extra" border="1">
+                <h:column>    				
+                    <f:facet name="header">Title</f:facet>    				
+                    #{extra.title}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Description</f:facet>
+                    #{extra.description}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Price</f:facet>
+                    0 EUR
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Selection</f:facet>
+                    <h:selectBooleanCheckbox binding="#{checkbox}">
+                        <f:ajax listener="#{reservationBean.extraSelectionChanged(extra, checkbox.value)}"/>
+                    </h:selectBooleanCheckbox>
+                </h:column>
+            </h:dataTable>
+            
+            <h3>Total price:</h3>
+            <h:outputText value="#{reservationBean.totalPrice}"/>
+            <br/>
+            <br/>
+            
+            <h:commandButton action="reservation-review" value="Continue"/>
             <h:inputText class="startDate" value="#{reservationBean.reservedFrom}" style="visibility: hidden"/>
             <h:inputText class="endDate" value="#{reservationBean.reservedTo}" style="visibility: hidden"/>
         </h:form>
+         
     </h:body>
     
 </html>

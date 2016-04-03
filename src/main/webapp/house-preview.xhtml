@@ -8,7 +8,7 @@
         <title>House preview</title>
     </h:head>
     <h:body>
-        <c:set var="myHouse" value="#{houseBean.getAllHouses().get(0)}" scope="request" />
+        <c:set var="myHouse" value="#{houseBean.findHouseById(1)}" scope="request" />
         <h1>#{myHouse.title}</h1>
         <h4>Description: </h4>
         <p>#{myHouse.description}</p>

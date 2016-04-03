@@ -15,4 +15,7 @@ import javax.ejb.Stateless;
 @Stateless
 public class ReservationFacade extends GenericFacade<Reservations> {
     
+    public ReservationFacade() {
+        super(Reservations.class);
+    }
 }

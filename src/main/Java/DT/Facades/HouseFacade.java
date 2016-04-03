@@ -15,4 +15,7 @@ import javax.ejb.Stateless;
 @Stateless
 public class HouseFacade extends GenericFacade<Houses> {
 
+    public HouseFacade() {
+        super(Houses.class);
+    }
 }

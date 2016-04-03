@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Reservation review</title>
+    </h:head>
+    <h:body>
+        <h3>Reservation review for <h:outputText value="#{houseBean.house.title}"/></h3>
+        House rent: <h:outputText value="xx.xx EUR"/>
+        <br/>
+        <br/>
+        <h:dataTable value="#{reservationBean.selectedExtras}" var="extra">
+            <h:column>    				  				
+                #{extra.title}
+            </h:column>
+            <h:column>
+                0 EUR
+            </h:column>
+        </h:dataTable>
+            <h3>Total price:</h3>
+        <h:outputText value="#{reservationBean.totalPrice}"/>
+
+        <h:form>
+            <br/>
+            <h:commandButton action="index" value="Pay and Finish"/>
+        </h:form>
+    </h:body>
+</html>
+
