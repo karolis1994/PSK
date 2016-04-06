@@ -6,11 +6,18 @@
 package DT.Beans;
 
 import DT.Entities.Extras;
+import DT.Entities.Paidservices;
 import DT.Entities.Reservations;
 import DT.Facades.ReservationFacade;
-import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -29,9 +36,14 @@ public class ReservationBean {
     private Reservations reservation;
     private String reservedFrom;
     private String reservedTo;
+    private Date reservedFromParsed;
+    private Date reservedToParsed;
     private List<Extras> extrasList;
     private List<Extras> selectedExtras = new ArrayList<>();
+    private List<Paidservices> paidServices;
+    private List<Paidservices> selectedPaidServices = new ArrayList<>();
     private double totalPrice = 0.0;
+    private double housePrice = 0.0;
 
     public double getTotalPrice() {
         return totalPrice;
@@ -48,7 +60,6 @@ public class ReservationBean {
     public List<Extras> getSelectedExtras() {
         return selectedExtras;
     }
-    
 
     public void setExtrasList(List<Extras> extrasList) {
         this.extrasList = extrasList;
@@ -62,7 +73,6 @@ public class ReservationBean {
         if (reservation == null) {
             reservation = new Reservations();
         }
-        
         return reservation;
     }
     
@@ -88,6 +98,30 @@ public class ReservationBean {
         }
         else if (!isSelected && selectedExtras.contains(extra)) {
             selectedExtras.remove(extra);
+        }
+    }
+    
+    public double calculateTotalPrice() {
+        totalPrice = housePrice;
+        for(Paidservices sps : selectedPaidServices) {
+            totalPrice += sps.getCost();
+        }
+        
+        return totalPrice;
+    }
+    
+    public void parseDates() {
+        try {
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy", Locale.US);
+            
+            cal.setTime(sdf.parse(reservedFrom));
+            reservedFromParsed = cal.getTime();
+            
+            cal.setTime(sdf.parse(reservedTo));
+            reservedToParsed = cal.getTime();
+        } catch (ParseException ex) {
+            Logger.getLogger(ReservationBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

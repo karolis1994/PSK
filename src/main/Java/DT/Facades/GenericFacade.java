@@ -39,8 +39,7 @@ public abstract class GenericFacade<T> implements Serializable {
     }
 
     public T find(Object id) {
-        T obj = em.find(entityClass, id);
-        return obj;
+        return em.find(entityClass, id);
     }
 
     public List<T> findAll() {

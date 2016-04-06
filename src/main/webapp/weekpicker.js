@@ -11,6 +11,7 @@ $(document).ready(function() {
     var dateFormat;
     var settings;
     var dayOfTheWeek;
+    var DATE_FORMAT_FOR_DISPLAY = 'dd MM yy';
 
     var selectCurrentWeek = function() {
         window.setTimeout(function () {
@@ -24,7 +25,8 @@ $(document).ready(function() {
         endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - dayOfTheWeek + numberOfDays);
         selectCurrentWeek();
         
-        $('.endDate').val($.datepicker.formatDate( dateFormat, endDate, settings));
+        $('.endDate').val($.datepicker.formatDate(dateFormat, endDate, settings));
+        $('#resTo').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, endDate, settings ));
         $('.week-picker').datepicker("refresh");
     });
 
@@ -50,13 +52,19 @@ $(document).ready(function() {
             endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - dayOfTheWeek + numberOfDays);
             dateFormat = inst.settings.dateFormat || $.datepicker._defaults.dateFormat;
             
-            $('.startDate').val($.datepicker.formatDate( dateFormat, startDate, inst.settings ));    
-            $('.endDate').val($.datepicker.formatDate( dateFormat, endDate, inst.settings ));       
+            $('.startDate').val($.datepicker.formatDate(dateFormat, startDate, settings ));    
+            $('.endDate').val($.datepicker.formatDate(dateFormat, endDate, settings ));   
+            
+            $('#resFrom').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, startDate, settings ));
+ +          $('#resTo').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, endDate, settings ));
             
             selectCurrentWeek();
+            
+            $('.butt').attr("disabled", false);
         },
         beforeShowDay: function(date) {
             var cssClass = '';
+            
             if(date >= startDate && date <= endDate)
                 cssClass = 'ui-datepicker-current-day';
             return [true, cssClass];
