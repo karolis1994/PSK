@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:head>
+        <title>Registration</title>
+    </h:head>
+    <h:body>
+        <div>
+            <!--navigation-->
+            <h:outputLink value="index.xhtml">Home</h:outputLink>
+        </div>
+        <div>
+            <h:form>
+                <p:panel header="Registration">
+                    <p:messages />
+
+                    <h:panelGrid columns="1" cellpadding="2">
+                        <h:outputLabel for="email" value="Email: " />
+                        <p:inputText id="email" value="#{registrationBean.email}" label="Email" required="true"/>
+                        <p:message for="email" />
+                        <h:outputText value="#{registrationBean.email}" />
+                        
+                        <h:outputLabel for="firstName" value="First name: " />
+                        <p:inputText id="firstName" value="#{registrationBean.firstName}" label="First name" required="true"/>
+                        <p:message for="firstName" />
+                        <h:outputText value="#{registrationBean.firstName}" />
+                        
+                        <h:outputLabel for="lastName" value="Last name: " />
+                        <p:inputText id="lastName" value="#{registrationBean.lastName}" label="Last name" required="true" />
+                        <p:message for="lastName" />
+                        <h:outputText value="#{registrationBean.lastName}" />
+                        
+                        <h:outputLabel for="password" value="Password: " />
+                        <p:password id="password" value="#{registrationBean.password}" match="passwordRepeat" label="Password 1" required="true" />
+
+                        <h:outputLabel for="passwordRepeat" value="Repeat password" />
+                        <p:password id="passwordRepeat" value="#{registrationBean.passwordRepeat}" label="Password 2" required="true" />                       
+                    </h:panelGrid>
+
+                    <p:commandButton action="registrationBean.Register" value="Register" ajax="false" icon="ui-icon-check" validateClient="true"/>
+                </p:panel>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

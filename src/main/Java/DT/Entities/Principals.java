@@ -37,6 +37,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Principals.findByPasswordhash", query = "SELECT p FROM Principals p WHERE p.passwordhash = :passwordhash"),
     @NamedQuery(name = "Principals.findByGroupno", query = "SELECT p FROM Principals p WHERE p.groupno = :groupno"),
     @NamedQuery(name = "Principals.findByIsadmin", query = "SELECT p FROM Principals p WHERE p.isadmin = :isadmin"),
+    @NamedQuery(name = "Principals.findByIsapproved", query = "SELECT p from Principals p where p.isapproved = :isapproved"),
     @NamedQuery(name = "Principals.findByIsdeleted", query = "SELECT p FROM Principals p WHERE p.isdeleted = :isdeleted")})
 public class Principals implements Serializable {
 
@@ -73,6 +74,8 @@ public class Principals implements Serializable {
     private Integer groupno;
     @Column(name = "isadmin")
     private Boolean isadmin;
+    @Column(name = "isapproved")
+    private Boolean isapproved;
     @Column(name = "isdeleted")
     private Boolean isdeleted;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
@@ -97,6 +100,7 @@ public class Principals implements Serializable {
         this.firstname = firstname;
         this.lastname = lastname;
         this.passwordhash = passwordhash;
+        this.isapproved = false;
     }
 
     public Integer getId() {
@@ -161,6 +165,14 @@ public class Principals implements Serializable {
 
     public void setIsadmin(Boolean isadmin) {
         this.isadmin = isadmin;
+    }
+    
+    public void setIsapproved(Boolean isapproved) {
+        this.isapproved = isapproved;
+    }
+    
+    public Boolean getIsapproved() {
+        return isapproved;
     }
 
     public Boolean getIsdeleted() {

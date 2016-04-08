@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS Principals(
   PasswordHash VARCHAR(255) NOT NULL,
   GroupNo INT NULL,
   IsAdmin BOOLEAN NULL,
+  IsApproved BOOLEAN NULL,
   IsDeleted BOOLEAN NULL
 );
 CREATE TABLE IF NOT EXISTS Settings(
