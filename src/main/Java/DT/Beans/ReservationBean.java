@@ -9,6 +9,7 @@ import DT.Entities.Extras;
 import DT.Entities.Paidservices;
 import DT.Entities.Reservations;
 import DT.Facades.ReservationFacade;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +30,9 @@ import javax.faces.bean.ViewScoped;
  */
 @ManagedBean(name = "reservationBean")
 @SessionScoped
-public class ReservationBean {
+public class ReservationBean implements Serializable{
+    private final String DATE_FORMAT = "dd/mm/yy";
+    
     @EJB
     private ReservationFacade reservationFacade;
     private List<Reservations> reservations;
@@ -113,7 +116,7 @@ public class ReservationBean {
     public void parseDates() {
         try {
             Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy", Locale.US);
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.US);
             
             cal.setTime(sdf.parse(reservedFrom));
             reservedFromParsed = cal.getTime();

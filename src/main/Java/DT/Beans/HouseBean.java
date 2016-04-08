@@ -8,6 +8,7 @@ package DT.Beans;
 import DT.Entities.Extras;
 import DT.Entities.Houses;
 import DT.Facades.HouseFacade;
+import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -20,7 +21,7 @@ import javax.faces.bean.ViewScoped;
  */
 @ManagedBean(name = "houseBean")
 @SessionScoped
-public class HouseBean {
+public class HouseBean implements Serializable{
 
     @EJB
     private HouseFacade houseFacade;

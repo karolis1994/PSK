@@ -7,7 +7,8 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>House reservation</title>
-        <script type="text/javascript" src="weekpicker.js"></script>       
+        <script type="text/javascript" src="weekpicker.js"></script>    
+        <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
     </h:head>
     <h:body>
         <h3>Select starting week</h3>
@@ -29,7 +30,7 @@
         <h:form>
             <br/>
             <h3><h:outputLabel for="services-table" value="Select additional services"/></h3>
-            <h:dataTable id="services-table" value="#{reservationBean.extrasList}" var="extra" border="1">
+            <h:dataTable id="services-table" value="#{reservationBean.extrasList}" var="extra" styleClass="services-table" rowClasses="tableOddRow, tableEvenRow">
                 <h:column>    				
                     <f:facet name="header">Title</f:facet>    				
                     #{extra.title}
