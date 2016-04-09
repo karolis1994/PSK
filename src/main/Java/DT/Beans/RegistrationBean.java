@@ -7,17 +7,12 @@ package DT.Beans;
 
 import DT.Entities.Principals;
 import DT.Facades.PrincipalsFacade;
-import java.io.Serializable; 
 import javax.ejb.EJB;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
   
-import javax.faces.bean.ManagedBean;  
-import javax.faces.bean.RequestScoped;  
-import javax.naming.Context;  
-import javax.naming.InitialContext;  
-import javax.naming.NamingException;  
-import javax.sql.DataSource;
+import javax.faces.bean.ManagedBean;    
+import javax.faces.bean.SessionScoped;
 
 
 /**
@@ -25,8 +20,8 @@ import javax.sql.DataSource;
  * @author Karolis
  */
 @ManagedBean(name = "registrationBean")
-@RequestScoped
-public class RegistrationBean implements Serializable{
+@SessionScoped
+public class RegistrationBean {
     
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
@@ -37,20 +32,10 @@ public class RegistrationBean implements Serializable{
     private String password;
     private String repeatPassword;
     
-    Principals principal;
+    private Principals principal;
     
     @EJB
     PrincipalsFacade registrationFacade;
-    
-    DataSource ds;
-    
-    public RegistrationBean() {
-        try {
-            Context ctx = new InitialContext();
-            ds = (DataSource) ctx.lookup("jdbc\\:postgresql\\://localhost\\:5432/PSK");
-        } catch(NamingException e) {
-        }
-    }
 
     public String getFirstName() {
         return firstName;
