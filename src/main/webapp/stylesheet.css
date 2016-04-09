@@ -16,3 +16,14 @@ td, th {
     border: 1px solid gray;
     padding: 0.4em;
 }
+
+.window-content {
+    display: inline;
+    margin: 10px;
+}
+
+.window-menu {
+    float: left;
+    display: inline;
+}
+
