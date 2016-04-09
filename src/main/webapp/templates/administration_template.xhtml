@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="/templates/general_template.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+        <ui:define name="general_content">
+            <h3 style="margin-top:0">Administravimas</h3>
+            
+            <div class="window-menu">
+                <h:form>
+                    <p:menu>
+                        <p:submenu label="Vasarnamių valdymas">
+                            <p:menuitem value="Pridėti"/>
+                        </p:submenu>
+                    </p:menu>
+                </h:form>
+            </div>
+            
+            <div class="window-content">
+                <ui:insert name="administration_content" />
+            </div>
+        </ui:define>
+
+</ui:composition>
