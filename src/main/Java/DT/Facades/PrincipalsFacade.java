@@ -7,6 +7,7 @@ package DT.Facades;
 
 import DT.Entities.Principals;
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -14,15 +15,13 @@ import javax.persistence.PersistenceContext;
  *
  * @author Karolis
  */
-public class PrincipalsFacade<T> {
+@Stateless
+public class PrincipalsFacade {
     
     @PersistenceContext(unitName = "DT_DT.ReservationSystem_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
-    protected Class<T> entityClass;
-    
-    public PrincipalsFacade(Class<T> entityClass) {
-        this.entityClass = entityClass;
+    public PrincipalsFacade() {
     }
     
     public void create(Principals principal) {
@@ -42,11 +41,11 @@ public class PrincipalsFacade<T> {
                 .setParameter("email", email).getResultList();       
     }
 
-    public List<T> findAll() {
+    public List findAll() {
         return em.createNamedQuery("Principals.findAll").getResultList();
     }
     
-    public List<T> findAllApproved() {
+    public List findAllApproved() {
         return em.createNamedQuery("Principals.findByIsapproved")
                 .setParameter("isapproved", true).getResultList();
     }
