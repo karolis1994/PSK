@@ -15,6 +15,7 @@ import javax.persistence.Query;
 /**
  *
  * @author Henrikas
+ * @param <T>
  */
 public abstract class GenericFacade<T> implements Serializable {
     @PersistenceContext(unitName = "DT_DT.ReservationSystem_war_1.0-SNAPSHOTPU")
@@ -43,17 +44,18 @@ public abstract class GenericFacade<T> implements Serializable {
     }
 
     public List<T> findAll() {
-        return em.createQuery("select object(o) from Houses as o").getResultList();
+        Query query = em.createQuery("SELECT o FROM " + entityClass.getSimpleName() + " o");
+        return query.getResultList();
     }
 
     public List<T> findRange(int maxResults, int firstResult) {
-        Query q = em.createQuery("select object(o) from Houses as o");
+        Query q = em.createQuery("SELECT o FROM " + entityClass.getSimpleName() + " o");
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
         return q.getResultList();
     }
 
     public int getItemCount() {
-        return ((Long) em.createQuery("select count(o) from Houses as o").getSingleResult()).intValue();
+        return ((Long) em.createQuery("SELECT count(o) FROM " + entityClass.getSimpleName() + " o").getSingleResult()).intValue();
     }
 }
