@@ -8,12 +8,12 @@
         <description>register new user</description>  
         <from-view-id>/registrationPage.xhtml</from-view-id>  
         <navigation-case>  
-            <from-action>#{registrationBackBean.register}</from-action>  
+            <from-action>#{registrationBean.register}</from-action>  
             <from-outcome>registrationSuccesful</from-outcome>  
             <to-view-id>/registration-succesful.xhtml</to-view-id>  
         </navigation-case>  
         <navigation-case>  
-            <from-action>#{registrationBackBean.register}</from-action>  
+            <from-action>#{registrationBean.register}</from-action>  
             <from-outcome>registrationUnsuccesful</from-outcome>  
             <to-view-id>/registration-unsuccesful.xhtml</to-view-id>  
         </navigation-case>   
