@@ -6,8 +6,10 @@
 package DT.Entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,6 +36,8 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Extras.findByDescription", query = "SELECT e FROM Extras e WHERE e.description = :description"),
     @NamedQuery(name = "Extras.findByIsdeleted", query = "SELECT e FROM Extras e WHERE e.isdeleted = :isdeleted")})
 public class Extras implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "extraid")
+    private Collection<Reservationextras> reservationextrasCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -133,6 +137,14 @@ public class Extras implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Extras[ id=" + id + " ]";
+    }
+
+    public Collection<Reservationextras> getReservationextrasCollection() {
+        return reservationextrasCollection;
+    }
+
+    public void setReservationextrasCollection(Collection<Reservationextras> reservationextrasCollection) {
+        this.reservationextrasCollection = reservationextrasCollection;
     }
     
 }
