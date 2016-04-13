@@ -7,6 +7,7 @@ package DT.Beans;
 
 import DT.Entities.Principals;
 import DT.Facades.PrincipalsFacade;
+import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -21,14 +22,15 @@ import javax.faces.bean.SessionScoped;
  */
 @ManagedBean(name = "registrationBean")
 @SessionScoped
-public class RegistrationBean {
+public class RegistrationBean implements Serializable{
     
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
     @Size(min=2,max=5)
     private String firstName;
     @Size(min=2,max=5)
-    private String lastName;     
+    private String lastName;
+    @Size(min=5,max=20)
     private String password;
     private String repeatPassword;
     
