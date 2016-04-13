@@ -12,29 +12,29 @@
                     <p:messages />
 
                     <h:panelGrid columns="1" cellpadding="2">
-                        <h:outputLabel for="email" value="Email: " />
+                        <h:outputLabel for="email" value="Email:" />
                         <p:inputText id="email" value="#{registrationBean.email}" label="Email" required="true"/>
                         <p:message for="email" />
                         <h:outputText value="#{registrationBean.email}" />
                         
-                        <h:outputLabel for="firstName" value="First name: " />
+                        <h:outputLabel for="firstName" value="First name:" />
                         <p:inputText id="firstName" value="#{registrationBean.firstName}" label="First name" required="true"/>
                         <p:message for="firstName" />
                         <h:outputText value="#{registrationBean.firstName}" />
                         
-                        <h:outputLabel for="lastName" value="Last name: " />
+                        <h:outputLabel for="lastName" value="Last name:" />
                         <p:inputText id="lastName" value="#{registrationBean.lastName}" label="Last name" required="true" />
                         <p:message for="lastName" />
                         <h:outputText value="#{registrationBean.lastName}" />
                         
-                        <h:outputLabel for="password" value="Password: " />
+                        <h:outputLabel for="password" value="Password:" />
                         <p:password id="password" value="#{registrationBean.password}" match="passwordRepeat" label="Password 1" required="true" />
 
-                        <h:outputLabel for="passwordRepeat" value="Repeat password" />
-                        <p:password id="passwordRepeat" value="#{registrationBean.passwordRepeat}" label="Password 2" required="true" />                       
+                        <h:outputLabel for="passwordRepeat" value="Repeat password:" />
+                        <p:password id="passwordRepeat" value="#{registrationBean.repeatPassword}" label="Password 2" required="true" />                       
                     </h:panelGrid>
 
-                    <p:commandButton action="registrationBean.Register" value="Register" ajax="false" icon="ui-icon-check" validateClient="true"/>
+                    <p:commandButton action="#{registrationBean.register}" value="Register" ajax="false" validateClient="true"/>
                 </p:panel>
             </h:form>
         </div>
