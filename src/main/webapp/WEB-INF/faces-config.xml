@@ -6,7 +6,7 @@
     
     <navigation-rule>  
         <description>register new user</description>  
-        <from-view-id>/registrationPage.xhtml</from-view-id>  
+        <from-view-id>/user-registration.xhtml</from-view-id>  
         <navigation-case>  
             <from-action>#{registrationBean.register}</from-action>  
             <from-outcome>registrationSuccesful</from-outcome>  
