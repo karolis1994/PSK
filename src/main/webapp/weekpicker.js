@@ -19,7 +19,7 @@ $(document).ready(function() {
         }, 1);
     }
 
-    $('#weekSpinner_input').change(function() {
+    $('#spinnerForm\\:weekSpinner_input').change(function() {  
         numberOfDays = 6 + ((this.value - 1) * 7)
         
         endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - dayOfTheWeek + numberOfDays);

@@ -58,7 +58,7 @@ public class Houses implements Serializable {
     private Boolean isdeleted;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "houseid")
     private List<Reservations> reservationsList;
-    @OneToMany(mappedBy = "houseid")
+    @OneToMany(mappedBy = "houseid", fetch=FetchType.EAGER)
     private List<Paidservices> paidservicesList;
     @OneToMany(mappedBy = "houseid", fetch=FetchType.EAGER)
     private List<Extras> extrasList;

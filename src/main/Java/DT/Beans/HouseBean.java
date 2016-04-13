@@ -5,15 +5,14 @@
  */
 package DT.Beans;
 
-import DT.Entities.Extras;
 import DT.Entities.Houses;
+import DT.Entities.Paidservices;
 import DT.Facades.HouseFacade;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 
 /**
  *
@@ -27,8 +26,9 @@ public class HouseBean implements Serializable{
     private HouseFacade houseFacade;
     private List<Houses> houses;
     private Houses house; 
-    private List<Extras> extras;
- 
+    private List<Paidservices> paidServices;
+    private double cost;
+
     public Houses getHouse() {
         if (house == null) {
             house = new Houses();
@@ -62,11 +62,31 @@ public class HouseBean implements Serializable{
         return house;
     }
     
-    public List<Extras> getExtras() {
-        return extras;
+    public List<Paidservices> getPaidServices() {
+        if (paidServices == null) {
+            paidServices = house.getPaidservicesList();
+        }
+        
+        return paidServices;
     }
 
-    public void setExtras(List<Extras> extras) {
-        this.extras = extras;
+    public void setPaidServices(List<Paidservices> paidServices) {
+        this.paidServices = paidServices;
     }
+    
+    public double getCost() {
+        for (Paidservices ps : getPaidServices()) {
+            if (ps.getExtrasid() == null) {
+                cost = ps.getCost();
+                break;
+            }
+        }
+        
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+ 
 }

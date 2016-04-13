@@ -1,66 +1,77 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
+      template="/general_template.xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
-        <title>House reservation</title>
-        <script type="text/javascript" src="weekpicker.js"></script>    
+        <title>Vasarnamio rezervacija</title>
+        <script type="text/javascript" src="weekpicker.js"></script>
         <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
     </h:head>
-    <h:body>
-        <h3>Select starting week</h3>
+    <body>
+        <h3><h:outputText value="Pasirinkite pradžios savaitę"/></h3>
+        <h:outputText value="Kalendoriuje žemiau pasirinkite rezervacijos pradžios savaitę"/>
+        <br/>
+        <br/>
         <div class="week-picker"></div>
-        
+
         <br/>
-        Reservation from: <h:outputText id="resFrom"></h:outputText>
+        Reservacija nuo: <h:outputText id="resFrom"></h:outputText>
         <br/>
-        Reservation to: <h:outputText id="resTo"></h:outputText>
-        
-        <br/>
-        <br/>
-        
-        <h3><h:outputLabel for="weekSpinner" value="Select number of weeks" /></h3>
-        <p:spinner id="weekSpinner" value="1" min="1" max="100"/>
-        
-        <c:set var="a" value="#{reservationBean.setExtrasList(houseBean.house.getExtrasList())}" scope="request" />
-       
-        <h:form>
+        Reservacija iki: <h:outputText id="resTo"></h:outputText>
+
+        <h:form id="spinnerForm">
+            <h3><h:outputText value="Savaičių skaičius"/></h3>
+            <h:outputText value="Pasirinkite kiek savaičių norite rezervuoti"/>
             <br/>
-            <h3><h:outputLabel for="services-table" value="Select additional services"/></h3>
+            <br/>
+            <p:spinner id="weekSpinner" value="#{reservationBean.numberOfWeeks}" min="1" max="100">
+                <p:ajax update=":form:totalPrice" process="@this" />
+            </p:spinner>
+        </h:form>    
+
+        <c:set var="a" value="#{reservationBean.setExtrasList(houseBean.house.getExtrasList())}" scope="request" />
+        <c:set var="b" value="#{reservationBean.setHouse(houseBean.house)}" scope="request" />
+
+        <h:form id="form">            
+            <h3><h:outputLabel for="services-table" value="Papildomos paslaugos"/></h3>
             <h:dataTable id="services-table" value="#{reservationBean.extrasList}" var="extra" styleClass="services-table" rowClasses="tableOddRow, tableEvenRow">
                 <h:column>    				
-                    <f:facet name="header">Title</f:facet>    				
+                    <f:facet name="header">Pavadinimas</f:facet>    				
                     #{extra.title}
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Description</f:facet>
+                    <f:facet name="header">Aparašymas</f:facet>
                     #{extra.description}
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Price</f:facet>
-                    0 EUR
+                    <f:facet name="header">Kaina (EUR)</f:facet>
+                    <h:outputText id="totalPrice" value="#{extra.getPaidservicesList().get(0).getCost()}">             
+                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                    </h:outputText>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Selection</f:facet>
+                    <f:facet name="header">Pasirinkimas</f:facet>
                     <h:selectBooleanCheckbox binding="#{checkbox}">
-                        <f:ajax listener="#{reservationBean.extraSelectionChanged(extra, checkbox.value)}"/>
+                        <f:ajax listener="#{reservationBean.extraSelectionChanged(extra, checkbox.value)}" render="form:totalPrice"/>
                     </h:selectBooleanCheckbox>
                 </h:column>
             </h:dataTable>
-            
-            <h3>Total price:</h3>
-            <h:outputText value="#{reservationBean.totalPrice}"/>
+
+            <h3>Visa kaina:</h3>
+            <h:outputText id="totalPrice" value="#{reservationBean.totalPrice}">
+                <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText> EUR
             <br/>
             <br/>
-            
+
             <h:commandButton action="reservation-review" value="Continue" class="butt"/>
             <h:inputText class="startDate" value="#{reservationBean.reservedFrom}" style="visibility: hidden"/>
             <h:inputText class="endDate" value="#{reservationBean.reservedTo}" style="visibility: hidden"/>
         </h:form>
-         
-    </h:body>
-    
+    </body>
 </html>
