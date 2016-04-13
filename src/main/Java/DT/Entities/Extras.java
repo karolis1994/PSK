@@ -6,12 +6,12 @@
 package DT.Entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +37,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Extras.findByIsdeleted", query = "SELECT e FROM Extras e WHERE e.isdeleted = :isdeleted")})
 public class Extras implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "extraid")
-    private Collection<Reservationextras> reservationextrasCollection;
+    private List<Reservationextras> reservationextrasList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -53,7 +53,7 @@ public class Extras implements Serializable {
     private String description;
     @Column(name = "isdeleted")
     private Boolean isdeleted;
-    @OneToMany(mappedBy = "extrasid")
+    @OneToMany(mappedBy = "extrasid", fetch = FetchType.EAGER)
     private List<Paidservices> paidservicesList;
     @JoinColumn(name = "houseid", referencedColumnName = "id")
     @ManyToOne
@@ -139,12 +139,12 @@ public class Extras implements Serializable {
         return "DT.Entities.Extras[ id=" + id + " ]";
     }
 
-    public Collection<Reservationextras> getReservationextrasCollection() {
-        return reservationextrasCollection;
+    public List<Reservationextras> getReservationextrasList() {
+        return reservationextrasList;
     }
 
-    public void setReservationextrasCollection(Collection<Reservationextras> reservationextrasCollection) {
-        this.reservationextrasCollection = reservationextrasCollection;
+    public void setReservationextrasList(List<Reservationextras> reservationextrasList) {
+        this.reservationextrasList = reservationextrasList;
     }
     
 }

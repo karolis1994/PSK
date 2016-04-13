@@ -6,8 +6,8 @@
 package DT.Entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,7 +39,7 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Reservations.findByIscanceled", query = "SELECT r FROM Reservations r WHERE r.iscanceled = :iscanceled")})
 public class Reservations implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reservationid")
-    private Collection<Reservationextras> reservationextrasCollection;
+    private List<Reservationextras> reservationextrasList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -152,12 +152,12 @@ public class Reservations implements Serializable {
         return "DT.Entities.Reservations[ id=" + id + " ]";
     }
 
-    public Collection<Reservationextras> getReservationextrasCollection() {
-        return reservationextrasCollection;
+    public List<Reservationextras> getReservationextrasList() {
+        return reservationextrasList;
     }
 
-    public void setReservationextrasCollection(Collection<Reservationextras> reservationextrasCollection) {
-        this.reservationextrasCollection = reservationextrasCollection;
+    public void setReservationextrasList(List<Reservationextras> reservationextrasList) {
+        this.reservationextrasList = reservationextrasList;
     }
     
 }
