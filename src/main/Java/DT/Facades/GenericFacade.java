@@ -27,16 +27,16 @@ public abstract class GenericFacade<T> implements Serializable {
         this.entityClass = entityClass;
     }
     
-    public void create(Houses house) {
-        em.persist(house);
+    public void create(T entity) {
+        em.persist(entity);
     }
 
-    public void edit(Houses house) {
-        em.merge(house);
+    public void edit(T entity) {
+        em.merge(entity);
     }
 
-    public void remove(Houses house) {
-        em.remove(em.merge(house));
+    public void remove(T entity) {
+        em.remove(em.merge(entity));
     }
 
     public T find(Object id) {
