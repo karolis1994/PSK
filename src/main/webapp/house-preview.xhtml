@@ -1,45 +1,46 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-      template="templates/general_template.xhtml"
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <h:head>
-        <title>Vasarnamio peržiūra</title>
-        <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
-    </h:head>
-    <ui:define name="general_content">       
-        <c:set var="myHouse" value="#{houseBean.findHouseById(1)}" scope="request" />
-        <h1>#{myHouse.title}</h1>
-        <h4>Aprašymas: </h4>
-        <p>#{myHouse.description}</p>
-        <h4>Adresas: </h4>
-        #{myHouse.address}
-        <h4>Papildomos paslaugos:</h4>
-        <h:dataTable value="#{myHouse.extrasList}" var="extra" styleClass="services-table">
-            <h:column>    				
-              <f:facet name="header">Pavadinimas</f:facet>    				
-              #{extra.title}
-            </h:column>
-            <h:column>
-              <f:facet name="header">Aprašymas</f:facet>
-              #{extra.description}
-            </h:column>
-            <h:column>
-              <f:facet name="header">Kaina (EUR)</f:facet>
-                <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
-                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-                </h:outputText>
-            </h:column>
-        </h:dataTable>
-        <h4>Nuomos kaina savaitei:</h4> 
-        <h:outputText value="#{houseBean.cost}">
-            <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-        </h:outputText> EUR
-        <br/>
-        <br/>
-        <h:form>
-            <h:commandButton action="house-reservation" value="Make reservation"/>
-        </h:form>
-    </ui:define>
-</ui:composition>
+    <ui:composition template="templates/general_template.xhtml">
+        <ui:define name="general_content">   
+            <c:set var="myHouse" value="#{houseBean.findHouseById(1)}" scope="request" />
+            
+            <h1>#{myHouse.title}</h1>
+            <h4>Aprašymas: </h4>
+            <p>#{myHouse.description}</p>
+            <h4>Adresas: </h4>
+            #{myHouse.address}
+            
+            <h4>Papildomos paslaugos:</h4>
+            <h:dataTable value="#{myHouse.extrasList}" var="extra" styleClass="services-table">
+                <h:column>    				
+                  <f:facet name="header">Pavadinimas</f:facet>    				
+                  #{extra.title}
+                </h:column>
+                <h:column>
+                  <f:facet name="header">Aprašymas</f:facet>
+                  #{extra.description}
+                </h:column>
+                <h:column>
+                  <f:facet name="header">Kaina (EUR)</f:facet>
+                    <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
+                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                    </h:outputText>
+                </h:column>
+            </h:dataTable>
+            <h4>Nuomos kaina savaitei:</h4> 
+            <h:outputText value="#{houseBean.cost}">
+                <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText> EUR
+            <br/>
+            <br/>
+            <h:form>
+                <h:commandButton action="house-reservation" value="Rezervuoti"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

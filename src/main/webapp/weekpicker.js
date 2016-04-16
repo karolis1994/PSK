@@ -19,14 +19,14 @@ $(document).ready(function() {
         }, 1);
     }
 
-    $('#spinnerForm\\:weekSpinner_input').change(function() {  
+    $('#form\\:weekSpinner_input').change(function() {  
         numberOfDays = 6 + ((this.value - 1) * 7)
         
         endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - dayOfTheWeek + numberOfDays);
         selectCurrentWeek();
         
         $('.endDate').val($.datepicker.formatDate(dateFormat, endDate, settings));
-        $('#resTo').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, endDate, settings ));
+        $('#form\\:resTo').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, endDate, settings ));
         $('.week-picker').datepicker("refresh");
     });
 
@@ -36,6 +36,10 @@ $(document).ready(function() {
         minDate: 0,
         firstDay: 1,
         onSelect: function(dateText, inst) { 
+            $('#form').css({
+                'display': 'block'
+            });
+            
             settings = inst.settings;
 
             date = $(this).datepicker('getDate');
@@ -55,8 +59,8 @@ $(document).ready(function() {
             $('.startDate').val($.datepicker.formatDate(dateFormat, startDate, settings ));    
             $('.endDate').val($.datepicker.formatDate(dateFormat, endDate, settings ));   
             
-            $('#resFrom').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, startDate, settings ));
- +          $('#resTo').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, endDate, settings ));
+            $('#form\\:resFrom').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, startDate, settings ));
+ +          $('#form\\:resTo').text($.datepicker.formatDate(DATE_FORMAT_FOR_DISPLAY, endDate, settings ));
             
             selectCurrentWeek();
             
