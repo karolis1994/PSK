@@ -19,7 +19,7 @@ import javax.persistence.Query;
  */
 public abstract class GenericFacade<T> implements Serializable {
     @PersistenceContext(unitName = "DT_DT.ReservationSystem_war_1.0-SNAPSHOTPU")
-    private EntityManager em;
+    protected EntityManager em;
 
     protected Class<T> entityClass;
     
