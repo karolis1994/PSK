@@ -7,47 +7,55 @@ package DT.Beans;
 
 import DT.Entities.Principals;
 import DT.Facades.PrincipalsFacade;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 
 /**
  *
  * @author Karolis
  */
 @ManagedBean(name="recommendationRequestBean")
-@RequestScoped
-public class RecommendationRequestBean {
+@ViewScoped
+public class RecommendationRequestBean implements Serializable{
     
     private List<Principals> principalsList;
     
+    @EJB
     private PrincipalsFacade principalsFacade;
     
-    private String[] userNameList;
+    private List<String> userNameList;
     
     private String[] selectedUserNameList;
     private Map<String, Principals> principalsMap;
     
     @PostConstruct
     public void init() {
+        
+        principalsList = new ArrayList<Principals>();
         principalsList = principalsFacade.findAllApproved();
+        userNameList = new ArrayList<String>();
+        principalsMap = new HashMap<String, Principals>();
         
         int i = 0;
         for(Principals principal : principalsList) {
-            userNameList[i] = principal.getFirstname() + " " + principal.getLastname();
-            principalsMap.put(userNameList[i], principal);
+            userNameList.add(principal.getFirstname() + " " + principal.getLastname());
+            principalsMap.put(userNameList.get(i), principal);
             i++;
-        }
-        
+        }    
     }
     
     public void SendEmails() {
-        for(String name : selectedUserNameList) {
+        /*for(String name : selectedUserNameList) {
             Principals p = principalsMap.get(name);
             // siusti emaila = p.getEmail();
-        }
+        }*/
     }
     
     public List<Principals> getPrincipalsList() {
@@ -58,11 +66,11 @@ public class RecommendationRequestBean {
         this.principalsList = userList;
     }
     
-    public String[] getUserNameList() {
+    public List<String> getUserNameList() {
         return userNameList;
     }
 
-    public void setUserNameList(String[] userNameList) {
+    public void setUserNameList(List<String> userNameList) {
         this.userNameList = userNameList;
     }
 
