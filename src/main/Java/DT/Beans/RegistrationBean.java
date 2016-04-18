@@ -10,10 +10,9 @@ import DT.Facades.PrincipalsFacade;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-  
+import javax.validation.constraints.Size;  
 import javax.faces.bean.ManagedBean;    
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 
 /**
@@ -21,14 +20,14 @@ import javax.faces.bean.SessionScoped;
  * @author Karolis
  */
 @ManagedBean(name = "registrationBean")
-@SessionScoped
+@ViewScoped
 public class RegistrationBean implements Serializable{
     
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
-    @Size(min=2,max=5)
+    @Size(min=1,max=15)
     private String firstName;
-    @Size(min=2,max=5)
+    @Size(min=1,max=20)
     private String lastName;
     @Size(min=5,max=20)
     private String password;
@@ -37,7 +36,7 @@ public class RegistrationBean implements Serializable{
     private Principals principal;
     
     @EJB
-    PrincipalsFacade registrationFacade;
+    private PrincipalsFacade registrationFacade;
 
     public String getFirstName() {
         return firstName;
@@ -82,10 +81,17 @@ public class RegistrationBean implements Serializable{
     public String register() {
         if(registrationFacade.findByEmail(email).isEmpty()) {
             if(principal == null) {
-                principal = new Principals(1, email, firstName, lastName, Integer.toString(password.hashCode()));
-            } else {
-                registrationFacade.create(principal);
+                principal = new Principals();
+                principal.setEmail(email);
+                principal.setFirstname(firstName);
+                principal.setLastname(lastName);
+                principal.setPasswordhash(Integer.toString(password.hashCode()));
+                principal.setPoints(0);
+                principal.setIsadmin(Boolean.FALSE);
+                principal.setIsdeleted(Boolean.FALSE);
+                principal.setIsdeleted(Boolean.FALSE);
             }
+            registrationFacade.create(principal);
             return "registrationSuccesful";
         } else {
             return "registrationUnsuccesful";
