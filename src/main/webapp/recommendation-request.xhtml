@@ -13,7 +13,7 @@
                     <f:selectItems value="#{recommendationRequestBean.userNameList}" var="user" itemLabel="#{user}" itemValue="#{user}" />
                 </p:selectManyCheckbox>
 
-                <p:commandButton action="#{recommendationRequestBean.SendEmails}" value="Request" ajax="false" icon="ui-icon-check" validateClient="true"/>
+                <p:commandButton action="#{recommendationRequestBean.SendEmails}" value="Request" ajax="false" validateClient="true"/>
             </h:form>
         </div>
     </ui:define>

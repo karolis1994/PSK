@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-  <Resource id="PSK" type="javax.sql.DataSource">#Tue Mar 22 09:09:13 EET 2016
+  <Resource id="psk" type="javax.sql.DataSource">#Tue Mar 22 09:09:13 EET 2016
 jdbcDriver=org.postgresql.Driver
 password=a
 userName=postgres
