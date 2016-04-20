@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author donatas
+ * @author Laurynas
  */
 @Entity
 @Table(name = "payments")
