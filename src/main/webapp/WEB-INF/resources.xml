@@ -6,4 +6,10 @@ password=a
 userName=postgres
 jdbcUrl=jdbc\:postgresql\://localhost\:5432/PSK
 </Resource>
+  <Resource id="Labanoro" type="javax.sql.DataSource">#Mon Apr 18 21:39:38 EEST 2016
+jdbcDriver=org.postgresql.Driver
+password=
+userName=postgres
+jdbcUrl=jdbc\:postgresql\://localhost\:5432/postgres
+</Resource>
 </resources>

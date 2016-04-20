@@ -5,8 +5,6 @@
  */
 package DT.Entities;
 
-import DT.Entities.Extras;
-import DT.Entities.Reservations;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -22,7 +20,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Henrikas
+ * @author Laurynas
  */
 @Entity
 @Table(name = "reservationextras")
@@ -30,6 +28,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Reservationextras.findAll", query = "SELECT r FROM Reservationextras r"),
     @NamedQuery(name = "Reservationextras.findById", query = "SELECT r FROM Reservationextras r WHERE r.id = :id")})
 public class Reservationextras implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,7 +95,7 @@ public class Reservationextras implements Serializable {
 
     @Override
     public String toString() {
-        return "DT.Beans.Reservationextras[ id=" + id + " ]";
+        return "DT.Entities.Reservationextras[ id=" + id + " ]";
     }
     
 }

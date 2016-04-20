@@ -54,6 +54,16 @@ public abstract class GenericFacade<T> implements Serializable {
         q.setFirstResult(firstResult);
         return q.getResultList();
     }
+    
+    public List<T> findWhere(String whereClause) {
+        String queryString = String.format(
+                "SELECT o FROM %s o WHERE %s",
+                entityClass.getSimpleName(),
+                whereClause);
+        Query query = em.createQuery(queryString);
+        
+        return query.getResultList();
+    }
 
     public int getItemCount() {
         return ((Long) em.createQuery("SELECT count(o) FROM " + entityClass.getSimpleName() + " o").getSingleResult()).intValue();
