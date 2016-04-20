@@ -80,22 +80,26 @@ public class RegistrationBean implements Serializable{
     
     public String register() {
         if(registrationFacade.findByEmail(email).isEmpty()) {
-            if(principal == null) {
-                principal = new Principals();
-                principal.setEmail(email);
-                principal.setFirstname(firstName);
-                principal.setLastname(lastName);
-                principal.setPasswordhash(Integer.toString(password.hashCode()));
-                principal.setPoints(0);
-                principal.setIsadmin(Boolean.FALSE);
-                principal.setIsdeleted(Boolean.FALSE);
-                principal.setIsdeleted(Boolean.FALSE);
-            }
+            principal = new Principals();
+            principal.setEmail(email);
+            principal.setFirstname(firstName);
+            principal.setLastname(lastName);
+            principal.setPasswordhash(Integer.toString(password.hashCode()));
+            principal.setPoints(0);
+            principal.setIsadmin(Boolean.FALSE);
+            principal.setIsdeleted(Boolean.FALSE);
+            principal.setIsapproved(Boolean.FALSE);
             registrationFacade.create(principal);
-            return "registrationSuccesful";
-        } else {
-            return "registrationUnsuccesful";
+            return "REGISTRATION_SUCCESFUL";
+        } else{
+            principal = (Principals) registrationFacade.findByEmail(email).get(0);
+            if(principal.getIsdeleted() != null) {
+                if (principal.getIsdeleted()) {
+                    return "REGISTRATION_UNSUCCESFUL_RELOG";
+                }
+            }          
         }
+        return "REGISTRATION_UNSUCCESFUL";
     }  
     
 }
