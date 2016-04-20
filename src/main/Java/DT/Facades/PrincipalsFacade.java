@@ -8,32 +8,16 @@ package DT.Facades;
 import DT.Entities.Principals;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author Karolis
  */
 @Stateless
-public class PrincipalsFacade {
-    
-    @PersistenceContext(unitName = "DT_DT.ReservationSystem_war_1.0-SNAPSHOTPU")
-    private EntityManager em;
+public class PrincipalsFacade extends GenericFacade<Principals>{
 
     public PrincipalsFacade() {
-    }
-    
-    public void create(Principals principal) {
-        em.persist(principal);
-    }
-
-    public void edit(Principals principal) {
-        em.merge(principal);
-    }
-
-    public void remove(Principals principal) {
-        em.remove(em.merge(principal));
+        super(Principals.class);
     }
 
     public List findByEmail(String email) {
@@ -41,6 +25,7 @@ public class PrincipalsFacade {
                 .setParameter("email", email).getResultList();       
     }
 
+    @Override
     public List findAll() {
         return em.createNamedQuery("Principals.findAll").getResultList();
     }
