@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -53,7 +54,7 @@ public class Extras implements Serializable {
     private String description;
     @Column(name = "isdeleted")
     private Boolean isdeleted;
-    @OneToMany(mappedBy = "extrasid")
+    @OneToMany(mappedBy = "extrasid", fetch=FetchType.EAGER)
     private List<Paidservices> paidservicesList;
     @JoinColumn(name = "houseid", referencedColumnName = "id")
     @ManyToOne
