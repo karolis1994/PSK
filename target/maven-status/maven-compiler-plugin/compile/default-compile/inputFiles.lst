@@ -1,8 +1,29 @@
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Invitations.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Settings.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Houses.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Salts.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Beans\RecommendationRequestBean.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Extras.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Beans\ReservationBean.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Facades\PrincipalsFacade.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Facades\HouseFacade.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Beans\RegistrationBean.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Payments.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Principals.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Reservationextras.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Facades\GenericFacade.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Reservations.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Beans\AddHouseBean.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\InvitationsPK.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Entities\Paidservices.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Facades\ReservationFacade.java
+D:\Development\University\Software Development\PSK\src\main\java\DT\Beans\HouseBean.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Facades\HouseFacade.java
+C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Reservationextras.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Paidservices.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Settings.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Extras.java
-C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Facades\RegistrationFacade.java
+C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Facades\PrincipalsFacade.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Beans\HouseBean.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Salts.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Invitations.java
@@ -10,6 +31,8 @@ C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Beans\ReservationBean.jav
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Facades\ReservationFacade.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Reservations.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\InvitationsPK.java
+C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Beans\RecommendationApproveBean.java
+C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Beans\RecommendationRequestBean.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Beans\RegistrationBean.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Principals.java
 C:\Users\Karolis\Documents\GitHub\PSK\src\main\java\DT\Entities\Houses.java

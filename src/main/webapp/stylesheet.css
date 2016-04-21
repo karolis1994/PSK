@@ -58,6 +58,11 @@ td, th {
     display: none;
 }
 
+.formGrid.ui-panelgrid>*>tr,
+.formGrid.ui-panelgrid .ui-panelgrid-cell {
+    border: none;
+}
+
 .butt {
     margin: 0.8em 0 0.5em 0;
     padding: 0.5em 0.5em 0.5em 0.5em;
