@@ -7,7 +7,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <ui:composition template="templates/general_template.xhtml">
         <ui:define name="general_content">   
-            <c:set var="myHouse" value="#{houseBean.findHouseById(1)}" scope="request" />
+            <c:set var="myHouse" value="#{houseBean.findHouseById(1)}" scope="view" />
             
             <h1>#{myHouse.title}</h1>
             <h4>Aprašymas: </h4>
@@ -18,15 +18,15 @@
             <h4>Papildomos paslaugos:</h4>
             <h:dataTable value="#{myHouse.extrasList}" var="extra" styleClass="services-table">
                 <h:column>    				
-                  <f:facet name="header">Pavadinimas</f:facet>    				
-                  #{extra.title}
+                    <f:facet name="header">Pavadinimas</f:facet>    				
+                    #{extra.title}
                 </h:column>
                 <h:column>
-                  <f:facet name="header">Aprašymas</f:facet>
-                  #{extra.description}
+                    <f:facet name="header">Aprašymas</f:facet>
+                    #{extra.description}
                 </h:column>
                 <h:column>
-                  <f:facet name="header">Kaina (EUR)</f:facet>
+                    <f:facet name="header">Kaina (Taškais)</f:facet>
                     <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                     </h:outputText>
@@ -35,11 +35,12 @@
             <h4>Nuomos kaina savaitei:</h4> 
             <h:outputText value="#{houseBean.cost}">
                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-            </h:outputText> EUR
-            <br/>
+            </h:outputText> Taškai(-ų)
             <br/>
             <h:form>
-                <h:commandButton action="house-reservation" value="Rezervuoti"/>
+                <h:link styleClass="butt" value="Rezervuoti" outcome="house-reservation.xhtml">
+                    <f:param name="houseID" value="1" />
+                </h:link>
             </h:form>
         </ui:define>
     </ui:composition>

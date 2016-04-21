@@ -10,25 +10,25 @@ import DT.Entities.Paidservices;
 import DT.Facades.HouseFacade;
 import java.io.Serializable;
 import java.util.List;
-import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author Henrikas
  */
-@ManagedBean(name = "houseBean")
-@SessionScoped
+@Named(value = "houseBean")
+@ViewScoped
 public class HouseBean implements Serializable{
 
-    @EJB
+    @Inject
     private HouseFacade houseFacade;
     private List<Houses> houses;
     private Houses house; 
     private List<Paidservices> paidServices;
     private double cost;
-
+    
     public Houses getHouse() {
         if (house == null) {
             house = new Houses();

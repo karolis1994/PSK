@@ -11,6 +11,7 @@ import DT.Entities.Paidservices;
 import DT.Entities.Principals;
 import DT.Entities.Reservationextras;
 import DT.Entities.Reservations;
+import DT.Facades.HouseFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.ReservationFacade;
 import java.io.Serializable;
@@ -23,24 +24,31 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.view.ViewScoped;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author Henrikas
  */
-@ManagedBean(name = "reservationBean")
-@SessionScoped
+@Named(value = "reservationBean")
+@ViewScoped
 public class ReservationBean implements Serializable{
-    private final String DATE_FORMAT = "dd/mm/yy";
+    private final String DATE_FORMAT = "MM/dd/yy";
     private final String PAGE_AFTER_RESERVING = "index";
     
-    @EJB
+    @Inject
+    HouseBean houseBean;
+    
+    @Inject
     private PrincipalsFacade principalFacade;
     
-    @EJB
+    @Inject
+    private HouseFacade houseFacade;
+    
+    @Inject
     private ReservationFacade reservationFacade;
     private Reservations reservation;
     private String reservedFrom;
@@ -54,7 +62,15 @@ public class ReservationBean implements Serializable{
     private double housePrice = 0.0;
     private double totalHousePrice = 0.0;
     private Houses house;
+    private boolean extrasTableVisible = false;
+    private int houseID;
+    private boolean selectedExtrasEmpty = true;
 
+    public void init() {
+        house = houseFacade.find(houseID);
+    }
+ 
+    
     public String saveReservation() {
         parseDates();
         
@@ -93,10 +109,6 @@ public class ReservationBean implements Serializable{
         }
     }
     
-    public void weekSpinnerChanged() {
-        System.out.println(numberOfWeeks);
-    }
-    
     public double calculateTotalPrice() {
         totalPrice = getHousePrice() * numberOfWeeks;
         for(Extras se : selectedExtras) {
@@ -119,6 +131,13 @@ public class ReservationBean implements Serializable{
         } catch (ParseException ex) {
             Logger.getLogger(ReservationBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void reset() {
+        house = null;
+        numberOfWeeks = 1;
+        totalPrice = 0d;
+        selectedExtras = new ArrayList<>();
     }
     
     public double getTotalHousePrice() {
@@ -171,6 +190,10 @@ public class ReservationBean implements Serializable{
     }
     
     public List<Extras> getExtrasList() {
+        if (extrasList == null) {
+            extrasList = house.getExtrasList();
+        }
+        
         return extrasList;
     }
 
@@ -208,4 +231,30 @@ public class ReservationBean implements Serializable{
     public void setReservedTo(String reservedTo) {
         this.reservedTo = reservedTo;
     }
+    
+    public boolean isExtrasTableVisible() {
+        return extrasTableVisible;
+    }
+
+    public void setExtrasTableVisible(boolean extrasTableVisible) {
+        this.extrasTableVisible = extrasTableVisible;
+    }
+
+    public int getHouseID() {
+        return houseID;
+    }
+
+    public void setHouseID(int houseID) {
+        this.houseID = houseID;
+    }
+
+    public boolean isSelectedExtrasEmpty() {
+        return (getSelectedExtras().isEmpty());
+    }
+
+    public void setSelectedExtrasEmpty(boolean selectedExtrasEmpty) {
+        this.selectedExtrasEmpty = selectedExtrasEmpty;
+    }
+    
+    
 }
