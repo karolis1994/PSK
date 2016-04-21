@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
 /**
@@ -19,7 +21,7 @@ import javax.faces.bean.SessionScoped;
  * @author Henrikas
  */
 @ManagedBean(name = "houseBean")
-@SessionScoped
+@RequestScoped
 public class HouseBean implements Serializable{
 
     @EJB
@@ -28,6 +30,11 @@ public class HouseBean implements Serializable{
     private Houses house; 
     private List<Paidservices> paidServices;
     private double cost;
+    
+    @ManagedProperty(value="#{param.id}")
+    private String paramId;
+    public String getParamId() { return paramId; }
+    public void setParamId(String paramId) { this.paramId = paramId; }
 
     public Houses getHouse() {
         if (house == null) {
@@ -60,6 +67,10 @@ public class HouseBean implements Serializable{
     public Houses findHouseById(Integer id) {
         house = houseFacade.find(id);
         return house;
+    }
+    
+    public Houses findHouseByUrlId() {
+        return findHouseById(Integer.parseInt(paramId));
     }
     
     public List<Paidservices> getPaidServices() {

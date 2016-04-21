@@ -7,7 +7,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <ui:composition template="templates/general_template.xhtml">
         <ui:define name="general_content">   
-            <c:set var="myHouse" value="#{houseBean.findHouseById(1)}" scope="request" />
+            <c:set var="myHouse" value="#{houseBean.findHouseByUrlId()}" scope="request" />
             
             <h1>#{myHouse.title}</h1>
             <h4>Aprašymas: </h4>

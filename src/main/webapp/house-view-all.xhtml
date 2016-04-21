@@ -8,7 +8,16 @@
     <ui:define name="general_content">
         
         <p:panel header="Vasarnamiai">
-            <p:dataTable var="house" value="#{houseViewAllBean.allHouses}" style="margin-top: 5px;">
+            <h:form id="form">
+            <p:dataTable id="housestable" var="house" value="#{houseViewAllBean.allHouses}" 
+                         style="margin-top: 5px;"
+                         selection="#{houseViewAllBean.selectedHouse}"
+                         selectionMode="single"
+                         rowKey="#{house.id}">
+                
+                <p:ajax event="rowSelect" 
+                        listener="#{houseViewAllBean.navigateToSelected}" />
+                
                 <p:column headerText="Pavadinimas">
                     <h:outputText value="#{house.title}" />
                 </p:column>
@@ -21,6 +30,7 @@
                     <h:outputText value="#{house.description}" />
                 </p:column>
             </p:dataTable>  
+            </h:form>
         </p:panel>
         
     </ui:define>
