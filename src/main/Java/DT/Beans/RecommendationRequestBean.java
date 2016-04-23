@@ -60,9 +60,8 @@ public class RecommendationRequestBean implements Serializable{
         }    
     }
     
-    //mail - psk.labanoras@gmail.com pw - labanoras
     public void SendEmails() {
-        String uuid = UUID.randomUUID().toString();
+        /*String uuid = UUID.randomUUID().toString();
         Invitations invitation = new Invitations();
         String message;
         
@@ -86,7 +85,7 @@ public class RecommendationRequestBean implements Serializable{
         }
         if(error == 0) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Email sent."));
-        }
+        }*/
     }
     
     public List<Principals> getPrincipalsList() {

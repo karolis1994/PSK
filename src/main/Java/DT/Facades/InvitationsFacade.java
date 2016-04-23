@@ -7,11 +7,13 @@ package DT.Facades;
 
 import DT.Entities.Invitations;
 import java.util.List;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author Karolis
  */
+@Stateless
 public class InvitationsFacade extends GenericFacade<Invitations> {
     
     public InvitationsFacade() {
