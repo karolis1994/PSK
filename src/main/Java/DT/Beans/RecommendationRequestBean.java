@@ -5,17 +5,23 @@
  */
 package DT.Beans;
 
+import DT.Facades.GmailMail;
+import DT.Entities.Invitations;
 import DT.Entities.Principals;
+import DT.Facades.InvitationsFacade;
 import DT.Facades.PrincipalsFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -26,14 +32,17 @@ import javax.faces.bean.ViewScoped;
 public class RecommendationRequestBean implements Serializable{
     
     private List<Principals> principalsList;
+    private List<String> userNameList;  
+    private String[] selectedUserNameList;
+    private Map<String, Principals> principalsMap;
     
     @EJB
     private PrincipalsFacade principalsFacade;
+    @EJB
+    private InvitationsFacade invitationsFacade;
+    @EJB
+    private GmailMail mailFacade;
     
-    private List<String> userNameList;
-    
-    private String[] selectedUserNameList;
-    private Map<String, Principals> principalsMap;
     
     @PostConstruct
     public void init() {
@@ -51,11 +60,33 @@ public class RecommendationRequestBean implements Serializable{
         }    
     }
     
+    //mail - psk.labanoras@gmail.com pw - labanoras
     public void SendEmails() {
-        /*for(String name : selectedUserNameList) {
+        String uuid = UUID.randomUUID().toString();
+        Invitations invitation = new Invitations();
+        String message;
+        
+        int error = -1;
+        invitation.setUrlcode(uuid);
+        
+        //Siunciame kiekvienam pasirinktam vartotojui email'a
+        for(String name : selectedUserNameList) {
             Principals p = principalsMap.get(name);
-            // siusti emaila = p.getEmail();
-        }*/
+            invitation.setPrincipals(p); // Reikalingas prisijungusio vartotojo objektas
+            invitation.setPrincipals1(p);
+            invitationsFacade.create(invitation);
+            message = "User with the name: " + p.getFirstname() + " " + p.getLastname() + // Reikalingas prisijungusio vartotojo objektas
+                    " is asking for your approval. Click the link below to approve.\n" +
+                    ""; //Reikalingas sugeneruotas linkas.
+            error = mailFacade.sendMail(p.getEmail(), message);
+            if(error != 0) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: ", "Failed to send email."));
+                break;
+            }
+        }
+        if(error == 0) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Email sent."));
+        }
     }
     
     public List<Principals> getPrincipalsList() {
