@@ -84,6 +84,11 @@ public class RegistrationBean implements Serializable{
             principal.setEmail(email);
             principal.setFirstname(firstName);
             principal.setLastname(lastName);
+            /*
+            int x = (int )(Math.random() * xx + 1) - xx tai salts lenteleje esanciu saltu kiekis
+            SaltsFacade.find(x);
+            principal.setPasswordhash(SaltsFacade.hash(password, salt));
+            */
             principal.setPasswordhash(Integer.toString(password.hashCode()));
             principal.setPoints(0);
             principal.setIsadmin(Boolean.FALSE);
@@ -100,6 +105,6 @@ public class RegistrationBean implements Serializable{
             }          
         }
         return "REGISTRATION_UNSUCCESFUL";
-    }  
+    }
     
 }
