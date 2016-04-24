@@ -25,9 +25,14 @@
         <p:panel header="Vasarnamis">
             
             <h:form>
+            
+                <h:panelGrid columns="2" cellpadding="10">
+                    <p:commandButton value="Redaguoti" action="house-edit.xhtml">
+                        <f:param name="id" value="#{param.id}"/>
+                    </p:commandButton>
+                    <p:commandButton value="Ištrinti" type="button" onclick="PF('dlg1').show();" />
+                </h:panelGrid>
                 
-            <p:commandButton value="Ištrinti" type="button" onclick="PF('dlg1').show();" />
- 
             <h1>#{myHouse.title}</h1>
             <h4>Aprašymas: </h4>
             <p>#{myHouse.description}</p>
