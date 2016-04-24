@@ -70,7 +70,9 @@ public class HouseBean implements Serializable{
     }
     
     public Houses findHouseByUrlId() {
-        return findHouseById(Integer.parseInt(paramId));
+        if (paramId != null && !paramId.isEmpty())
+            return findHouseById(Integer.parseInt(paramId));
+        return null;
     }
     
     public List<Paidservices> getPaidServices() {
@@ -99,5 +101,12 @@ public class HouseBean implements Serializable{
     public void setCost(double cost) {
         this.cost = cost;
     }
- 
+    
+    public String removeHouse() {
+        Houses houseToDelete = findHouseByUrlId();
+        houseToDelete.setIsdeleted(true);
+        houseFacade.edit(houseToDelete);
+        
+        return "house-view-all.xhtml";
+    }
 }

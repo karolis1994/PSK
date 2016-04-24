@@ -39,7 +39,7 @@ public class HouseViewAllBean {
     
     @PostConstruct
     public void init() {
-        allHouses = houseFacade.findAll();
+        allHouses = houseFacade.findAllNotDeleted();
     }
     
     public void navigateToSelected(SelectEvent event) {

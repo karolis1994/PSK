@@ -47,6 +47,10 @@ public abstract class GenericFacade<T> implements Serializable {
         Query query = em.createQuery("SELECT o FROM " + entityClass.getSimpleName() + " o");
         return query.getResultList();
     }
+    
+    public List<T> findAllNotDeleted() {
+        return findWhere("o.isdeleted = FALSE");
+    }
 
     public List<T> findRange(int maxResults, int firstResult) {
         Query q = em.createQuery("SELECT o FROM " + entityClass.getSimpleName() + " o");
