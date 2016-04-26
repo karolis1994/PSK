@@ -8,11 +8,7 @@ and open the template in the editor.
     Author     : Henrikas
 */
 
-.services-table {
-    border: 0px solid gray;
-}
-
-td, th {
+.styled-table td, .styled-table th{
     margin: 0;
     border: 1px solid gray;
     padding: 0.4em;

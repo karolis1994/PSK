@@ -91,7 +91,12 @@
                 <br/>
                 <br/>
                 <h4><h:outputLabel for="extras-table" value="Papildomos paslaugos" rendered="#{!reservationBean.selectedExtrasEmpty}"></h:outputLabel></h4>
-                <h:dataTable id="extras-table" value="#{reservationBean.selectedExtras}" var="extra" rendered="#{!reservationBean.selectedExtrasEmpty}">
+                <h:dataTable 
+                    id="extras-table" 
+                    value="#{reservationBean.selectedExtras}" 
+                    var="extra" 
+                    rendered="#{!reservationBean.selectedExtrasEmpty}"
+                    styleClass="styled-table">
                     <h:column>    				  				
                         #{extra.title}
                     </h:column>
