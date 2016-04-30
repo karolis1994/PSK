@@ -33,36 +33,42 @@
                     <p:commandButton value="Ištrinti" type="button" onclick="PF('dlg1').show();" />
                 </h:panelGrid>
                 
-            <h1>#{myHouse.title}</h1>
-            <h4>Aprašymas: </h4>
-            <p>#{myHouse.description}</p>
-            <h4>Adresas: </h4>
-            #{myHouse.address}
+                <h1>#{myHouse.title}</h1>
+                <h4>Aprašymas: </h4>
+                <p>#{myHouse.description}</p>
+                <h4>Adresas: </h4>
+                #{myHouse.address}
 
-            <h4>Papildomos paslaugos:</h4>
-            <h:dataTable value="#{myHouse.extrasList}" var="extra" styleClass="styled-table">
-                <h:column>    				
-                    <f:facet name="header">Pavadinimas</f:facet>    				
-                    #{extra.title}
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Aprašymas</f:facet>
-                    #{extra.description}
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Kaina (Taškais)</f:facet>
-                    <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
-                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-                    </h:outputText>
-                </h:column>
-            </h:dataTable>
-            <h4>Nuomos kaina savaitei:</h4> 
-            <h:outputText value="#{houseBean.cost}">
-                <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-            </h:outputText> Taškai(-ų)
-            <br/>
+                <h4>Papildomos paslaugos:</h4>
+                <h:dataTable var="extra" value="#{myHouse.extrasList}" 
+                             styleClass="styled-table">
+                    <h:column>    				
+                        <f:facet name="header">Pavadinimas</f:facet>    				
+                        #{extra.title}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Aprašymas</f:facet>
+                        #{extra.description}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Kaina (Taškais)</f:facet>
+                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
+                            <f:convertNumber type="number" groupingUsed="true" 
+                                             minFractionDigits="2" pattern="#0.00"/>
+                        </h:outputText>
+                    </h:column>
+                </h:dataTable>
+                
+                <h4>Nuomos kaina savaitei:</h4> 
+                <h:outputText value="#{houseBean.cost}">
+                    <f:convertNumber type="number" groupingUsed="true" 
+                                     minFractionDigits="2" pattern="#0.00"/>
+                </h:outputText> Taškai(-ų)
+                
+                <br/>
+                
                 <h:link styleClass="butt" value="Rezervuoti" outcome="house-reservation.xhtml">
-                    <f:param name="houseID" value="1" />
+                    <f:param name="houseID" value="#{myHouse.id}" />
                 </h:link>
             </h:form>
             

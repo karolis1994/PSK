@@ -7,25 +7,55 @@
 
     <ui:define name="general_content">
         
-        <p:panel header="Rezervacijos">
+        <p:panel header="Rezervacijų istorija">
             <h:form id="form">
-                <p:dataTable var="reservation" value="#{reservationsHistoryBean.reservations}" 
-                         style="margin-top: 5px;">
-                
-                <p:column headerText="Vasarnamis">
-                    <h:outputText value="#{reservation.houseid.description}" />
-                </p:column>
-                
-                <p:column headerText="Nuo">
-                    <h:outputText value="#{reservation.reservedfrom}" />
-                </p:column>
+                <p:dataTable var="reservation" value="#{reservationsHistoryBean.reservations}">
+                    
+                    <p:column headerText="Vasarnamis">
+                        <h:link value="#{reservation.houseid.title}" outcome="house-preview.xhtml">
+                            <f:param name="id" value="1" />
+                        </h:link>
+                    </p:column>
 
-                <p:column headerText="Iki">
-                    <h:outputText value="#{reservation.reservedto}" />
-                </p:column>
-            </p:dataTable>  
+                    <p:column headerText="Nuo">
+                        <h:outputText value="#{reservation.reservedfrom}">             
+                            <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Iki">
+                        <h:outputText value="#{reservation.reservedto}">             
+                            <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Kaina">
+                        <h:outputText value="X"/>
+                    </p:column>
+                    
+                    <p:column >
+                        <p:commandLink value="Panaikinti" 
+                                       onclick="PF('dialog').show();"
+                                       actionListener="#{reservationsHistoryBean.preselectReservation(reservation)}"/>
+                    </p:column>
+                </p:dataTable> 
             </h:form>
+            
+             
         </p:panel>
+        
+        <p:dialog header="" widgetVar="dialog"
+                  modal="true" height="100" resizable="false">
+            <h:form>
+                <h:outputText value="Ar tikrai norite panaikinti rezervaciją?"/>
+                <br/>
+
+                <p:commandButton value="Ne" type="button" onclick="PF('dialog').hide();"/> 
+                <p:commandButton value="Taip" 
+                                 action="#{reservationsHistoryBean.cancelReservation()}" 
+                                 ajax="false"/> 
+            </h:form>
+        </p:dialog> 
         
     </ui:define>
     
