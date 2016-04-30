@@ -42,7 +42,7 @@
                     <br/>
                     <div class="step-header">Papildomos paslaugos</div>
                     <div class="hint">Pažymėkite, kurias paslaugas norite užsakyti rezervuojamam laikotrapiui</div>
-                    <h:dataTable id="services-table" value="#{reservationBean.extrasList}" var="extra" styleClass="services-table" rowClasses="tableOddRow, tableEvenRow">
+                    <h:dataTable styleClass="styled-table" value="#{reservationBean.extrasList}" var="extra" rowClasses="tableOddRow, tableEvenRow">
                         <h:column>    				
                             <f:facet name="header">Pavadinimas</f:facet>    				
                             #{extra.title}
@@ -90,13 +90,8 @@
                 Vasarnamio nuoma: <h:outputText value="#{reservationBean.totalHousePrice} Taškai(-ų) (#{reservationBean.housePrice} taškai už savaitę)"/>
                 <br/>
                 <br/>
-                <h4><h:outputLabel for="extras-table" value="Papildomos paslaugos" rendered="#{!reservationBean.selectedExtrasEmpty}"></h:outputLabel></h4>
-                <h:dataTable 
-                    id="extras-table" 
-                    value="#{reservationBean.selectedExtras}" 
-                    var="extra" 
-                    rendered="#{!reservationBean.selectedExtrasEmpty}"
-                    styleClass="styled-table">
+                <h4><h:outputLabel value="Papildomos paslaugos" rendered="#{!reservationBean.selectedExtrasEmpty}"></h:outputLabel></h4>
+                <h:dataTable styleClass="styled-table" value="#{reservationBean.selectedExtras}" var="extra" rendered="#{!reservationBean.selectedExtrasEmpty}">
                     <h:column>    				  				
                         #{extra.title}
                     </h:column>
