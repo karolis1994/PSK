@@ -90,17 +90,22 @@
                 Vasarnamio nuoma: <h:outputText value="#{reservationBean.totalHousePrice} Taškai(-ų) (#{reservationBean.housePrice} taškai už savaitę)"/>
                 <br/>
                 <br/>
+                
                 <h4><h:outputLabel value="Papildomos paslaugos" rendered="#{!reservationBean.selectedExtrasEmpty}"></h:outputLabel></h4>
                 <h:dataTable styleClass="styled-table" value="#{reservationBean.selectedExtras}" var="extra" rendered="#{!reservationBean.selectedExtrasEmpty}">
+                    
                     <h:column>    				  				
                         #{extra.title}
                     </h:column>
+                    
                     <h:column>
                         <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
                             <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                         </h:outputText> Taškai(-ų)
                     </h:column>
+                    
                 </h:dataTable>
+                
                 <h3>Viso:</h3>
                 <h:outputText id="review-total-price" value="#{reservationBean.totalPrice}">
                     <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>

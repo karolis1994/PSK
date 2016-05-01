@@ -7,6 +7,7 @@ package DT.Beans;
 
 import DT.Facades.GmailMail;
 import DT.Entities.Invitations;
+import DT.Entities.InvitationsPK;
 import DT.Entities.Principals;
 import DT.Facades.InvitationsFacade;
 import DT.Facades.PrincipalsFacade;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -41,17 +43,16 @@ public class RecommendationRequestBean implements Serializable{
     @EJB
     private InvitationsFacade invitationsFacade;
     @EJB
-    private GmailMail mailFacade;
-    
+    private GmailMail mailFacade;    
     
     @PostConstruct
     public void init() {
         
         principalsList = new ArrayList<Principals>();
-        principalsList = principalsFacade.findAllApproved();
         userNameList = new ArrayList<String>();
         principalsMap = new HashMap<String, Principals>();
         
+        principalsList = principalsFacade.findAllApproved();
         int i = 0;
         for(Principals principal : principalsList) {
             userNameList.add(principal.getFirstname() + " " + principal.getLastname());
@@ -60,32 +61,50 @@ public class RecommendationRequestBean implements Serializable{
         }    
     }
     
-    public void SendEmails() {
-        /*String uuid = UUID.randomUUID().toString();
+    public void SendEmails() throws Exception{
+        /*if(p.getIsApproved == true) { //reikia prisiregistravusio vartotojo duomenu.
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "You are an approved member already"));
+            return "";
+        }*/
+        
+        //sugeneruojam aktyvacijos rakta, sukuriam reikiamus laukus
+        String uuid = UUID.randomUUID().toString();
         Invitations invitation = new Invitations();
-        String message;
-        
-        int error = -1;
-        invitation.setUrlcode(uuid);
-        
-        //Siunciame kiekvienam pasirinktam vartotojui email'a
-        for(String name : selectedUserNameList) {
-            Principals p = principalsMap.get(name);
-            invitation.setPrincipals(p); // Reikalingas prisijungusio vartotojo objektas
-            invitation.setPrincipals1(p);
-            invitationsFacade.create(invitation);
-            message = "User with the name: " + p.getFirstname() + " " + p.getLastname() + // Reikalingas prisijungusio vartotojo objektas
+        //test
+        Principals user = principalsFacade.find(1); //reikalingas prisijungusio vartotojo objektas  
+        String message = "User with the name: " + user.getFirstname() + " " + user.getLastname() + // Reikalingas prisijungusio vartotojo objektas
                     " is asking for your approval. Click the link below to approve.\n" +
-                    ""; //Reikalingas sugeneruotas linkas.
-            error = mailFacade.sendMail(p.getEmail(), message);
-            if(error != 0) {
+                    "http://localhost:8080/DT.ReservationSystem/recommendation-approve.xhtml?key=" 
+                    + uuid; //Reikalingas sugeneruotas linkas.             
+        int error = -1;
+        int i = 0;
+
+        try {
+            invitation.setUrlcode(uuid);
+            String[] recipients = new String[selectedUserNameList.length];
+            InvitationsPK inv = new InvitationsPK();
+            inv.setSenderid(user.getId());
+                      
+            for(String name : selectedUserNameList) {
+                Principals p = principalsMap.get(name);
+                recipients[i] = p.getEmail();               
+                inv.setRecieverid(p.getId());
+                invitation = new Invitations(inv, uuid);
+                invitationsFacade.create(invitation);                          
+            }
+            error = mailFacade.sendMail(recipients, message);
+        } catch(EJBException e2) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "You have already sent an email to one of the marked people"));
+        } catch(Exception e) {
+            error = -1;
+        } 
+        finally {
+            if(error == -1) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: ", "Failed to send email."));
-                break;
+            } else if(error == 0) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Emails have been sent."));
             }
         }
-        if(error == 0) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Email sent."));
-        }*/
     }
     
     public List<Principals> getPrincipalsList() {

@@ -17,13 +17,13 @@
                         <p:message for="email" />
                         <h:outputText value="#{registrationBean.email}" />
                         
-                        <h:outputLabel for="firstName" value="First name" />
-                        <p:inputText id="firstName" value="#{registrationBean.firstName}" label="First name" required="true"/>
+                        <h:outputLabel for="firstName" value="First name" rendered="#{registrationBean.firstnameSetting}"/>
+                        <p:inputText id="firstName" value="#{registrationBean.firstName}" label="First name" required="false" rendered="#{registrationBean.firstnameSetting}"/>
                         <p:message for="firstName" />
                         <h:outputText value="#{registrationBean.firstName}" />
                         
-                        <h:outputLabel for="lastName" value="Last name" />
-                        <p:inputText id="lastName" value="#{registrationBean.lastName}" label="Last name" required="true" />
+                        <h:outputLabel for="lastName" value="Last name" rendered="#{registrationBean.lastnameSetting}"/>
+                        <p:inputText id="lastName" value="#{registrationBean.lastName}" label="Last name" required="false" rendered="#{registrationBean.lastnameSetting}"/>
                         <p:message for="lastName" />
                         <h:outputText value="#{registrationBean.lastName}" />
                         
