@@ -38,6 +38,13 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Payments.findByIspaid", query = "SELECT p FROM Payments p WHERE p.ispaid = :ispaid")})
 public class Payments implements Serializable {
 
+    @Column(name = "payedforfrom")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date payedforfrom;
+    @Column(name = "payedforto")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date payedforto;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -164,6 +171,22 @@ public class Payments implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Payments[ id=" + id + " ]";
+    }
+
+    public Date getPayedforfrom() {
+        return payedforfrom;
+    }
+
+    public void setPayedforfrom(Date payedforfrom) {
+        this.payedforfrom = payedforfrom;
+    }
+
+    public Date getPayedforto() {
+        return payedforto;
+    }
+
+    public void setPayedforto(Date payedforto) {
+        this.payedforto = payedforto;
     }
     
 }
