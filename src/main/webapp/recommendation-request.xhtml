@@ -8,12 +8,15 @@
     <ui:define name="general_content">
         <div>
             <h:form>
-                <h3>User list</h3>
+                <p:panel header="Recommendation request">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <h3>User list:</h3>
                 <p:selectManyCheckbox id="grid" value="#{recommendationRequestBean.selectedUserNameList}" layout="grid" columns="3">
                     <f:selectItems value="#{recommendationRequestBean.userNameList}" var="user" itemLabel="#{user}" itemValue="#{user}" />
                 </p:selectManyCheckbox>
 
                 <p:commandButton action="#{recommendationRequestBean.SendEmails}" value="Request" ajax="false" validateClient="true"/>
+                </p:panel>
             </h:form>
         </div>
     </ui:define>

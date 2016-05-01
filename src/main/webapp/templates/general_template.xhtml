@@ -15,14 +15,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>Labanoro draugai</title>
         
-        <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+        <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
         <base href="#{request.requestURL.substring(0, request.requestURL.length() - request.requestURI.length())}#{request.contextPath}/" />
         </h:head>
         <h:body>
             <h:form>            
                 <p:menubar>
                     <p:menuitem value="Pagrindinis" url="index.xhtml" />
-                <p:menuitem value="Vasarnamiai" url="house-view-all.xhtml" />
+                    <p:menuitem value="Vasarnamiai" url="house-view-all.xhtml" />
+                    <p:submenu label="Mokėjimai">
+                        <p:menuitem value="Metinis nario mokestis" url="payments/yearly-members-fee.xhtml" />
+                    </p:submenu>
                     <p:menuitem value="Administravimas" url="administration/add-house.xhtml" />
                 </p:menubar>
             </h:form>

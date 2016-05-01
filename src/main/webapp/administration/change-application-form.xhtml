@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="/templates/administration_template.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="administration_content">
+        <h:form>
+            <p:panel header="Aplikacijos formos keitimas">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <h:outputText value="Pažymėkite laukus, kuriuos norite matyti registracijos formoje." />
+                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <h:outputText value="Vardas: " />
+                    <p:selectBooleanCheckbox value="#{changeApplicationForm.firstname}" required="true"/>
+                    <h:outputText value="Pavardė: " />
+                    <p:selectBooleanCheckbox value="#{changeApplicationForm.lastname}" required="true"/>
+                    <p:commandButton action="#{changeApplicationForm.change}" value="Change" ajax="false"/>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+

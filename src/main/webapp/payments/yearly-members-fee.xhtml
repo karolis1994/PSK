@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="/templates/general_template.xhtml"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="general_content"> 
+        <h:form>
+            <p:panel header="Metinis nario mokestis">
+                    <p:commandButton value="Sumokėti nario mokestį" 
+                                     actionListener="#{membersFeeBean.payMembersFeeWithPoints}" 
+                                     ajax="false"/>
+            </p:panel>
+        </h:form>
+    </ui:define>
+    
+</ui:composition>

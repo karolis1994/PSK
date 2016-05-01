@@ -34,6 +34,10 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Paidservices.findByCost", query = "SELECT p FROM Paidservices p WHERE p.cost = :cost")})
 public class Paidservices implements Serializable {
 
+    @JoinColumn(name = "otherserviceid", referencedColumnName = "id")
+    @ManyToOne
+    private OtherService otherserviceid;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -128,6 +132,14 @@ public class Paidservices implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Paidservices[ id=" + id + " ]";
+    }
+
+    public OtherService getOtherserviceid() {
+        return otherserviceid;
+    }
+
+    public void setOtherserviceid(OtherService otherserviceid) {
+        this.otherserviceid = otherserviceid;
     }
     
 }
