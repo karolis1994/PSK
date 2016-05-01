@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+        <h:head>
+            
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>Labanoro draugai</title>
+        
+        <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+        <base href="#{request.requestURL.substring(0, request.requestURL.length() - request.requestURI.length())}#{request.contextPath}/" />
+        </h:head>
+    <body>
+         <div>
+            <h:form>
+                <p:panel header="Login">
+                    <p:messages />
+
+                    <h:panelGrid columns="1" cellpadding="2">
+                        <h:outputLabel for="email" value="Email" />
+                        <p:inputText id="email" value="#{loginBean.email}" label="Email" required="true"/>
+                        <p:message for="email" />
+                        <h:outputText value="#{loginBean.email}" />
+                        <h:outputLabel for="password" value="Password" />
+                        <p:password id="password" value="#{loginBean.password}"  label="Password 1" required="true" />
+                        </h:panelGrid>
+                    <h:panelGrid columns="1" cellpadding="5">
+                    <p:commandButton action="#{loginBean.login}" value="Login" ajax="false" validateClient="true"/>
+                    <div >
+                        <a href="https://www.facebook.com/dialog/oauth?client_id=1581543875491903&amp;scope=email&amp;redirect_uri=#{loginBean.getFBReturnUrl()}">
+                            <img src="img/login-with-facebook.png" alt="FaceBook login" style=";border:0"/>
+                        </a> 
+                    </div>
+                    </h:panelGrid>
+                </p:panel>
+
+            </h:form>
+
+        </div>
+
+    </body>
+</html>
