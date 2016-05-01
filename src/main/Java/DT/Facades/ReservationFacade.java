@@ -23,7 +23,19 @@ public class ReservationFacade extends GenericFacade<Reservations> {
     }
     
     public List<Reservations> findByPrincipal(Principals principal) {
-        Query query = em.createQuery("SELECT o FROM " + entityClass.getSimpleName() + " o WHERE o.principalid=:p");
+        Query query = em.createQuery(""
+                + "SELECT o "
+                + "FROM " + entityClass.getSimpleName() + " o "
+                + "WHERE o.principalid=:p");
+        query.setParameter("p", principal);
+        return query.getResultList();
+    }
+    
+    public List<Reservations> findByPrincipalNotCanceled(Principals principal) {
+        Query query = em.createQuery(""
+                + "SELECT o "
+                + "FROM " + entityClass.getSimpleName() + " o "
+                + "WHERE o.principalid=:p AND o.iscanceled=false");
         query.setParameter("p", principal);
         return query.getResultList();
     }
