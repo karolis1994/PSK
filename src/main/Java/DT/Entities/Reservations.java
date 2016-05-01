@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +39,7 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Reservations.findByReservedto", query = "SELECT r FROM Reservations r WHERE r.reservedto = :reservedto"),
     @NamedQuery(name = "Reservations.findByIscanceled", query = "SELECT r FROM Reservations r WHERE r.iscanceled = :iscanceled")})
 public class Reservations implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "reservationid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "reservationid", fetch=FetchType.EAGER)
     private List<Reservationextras> reservationextrasList;
 
     private static final long serialVersionUID = 1L;

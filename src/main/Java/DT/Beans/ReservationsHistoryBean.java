@@ -5,6 +5,7 @@
  */
 package DT.Beans;
 
+import DT.Entities.Extras;
 import DT.Entities.Principals;
 import DT.Entities.Reservations;
 import DT.Facades.PrincipalsFacade;
@@ -37,6 +38,7 @@ public class ReservationsHistoryBean implements Serializable {
     
     private List<Reservations> findReservations() {
         reservations = reservationFacade.findByPrincipalNotCanceled(getPrincipal());
+        
         return reservations;
     }
 
@@ -49,8 +51,6 @@ public class ReservationsHistoryBean implements Serializable {
     
     public void preselectReservation(Reservations reservation) {
         selectedReservation = reservation;
-        
-        System.out.println(reservation.getId());
     }
     
     public PrincipalsFacade getPrincipalsFacade() {

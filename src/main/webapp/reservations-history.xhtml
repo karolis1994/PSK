@@ -29,6 +29,18 @@
                         </h:outputText>
                     </p:column>
                     
+                    <p:column headerText="Papildomos paslaugos">
+                        <h:outputText value="-" 
+                                      rendered="#{reservation.reservationextrasList.isEmpty()}"/>
+                        <p:dataTable var="res" 
+                                     value="#{reservation.reservationextrasList}" 
+                                     rendered="#{!reservation.reservationextrasList.isEmpty()}">
+                            <p:column>
+                                <h:outputText value="#{res.extraid.title}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:column>
+                    
                     <p:column headerText="Kaina">
                         <h:outputText value="X"/>
                     </p:column>
@@ -46,14 +58,15 @@
         
         <p:dialog header="" widgetVar="dialog"
                   modal="true" height="100" resizable="false">
+            <h:outputText value="Ar tikrai norite panaikinti rezervaciją?"/>
+            <br/>
             <h:form>
-                <h:outputText value="Ar tikrai norite panaikinti rezervaciją?"/>
-                <br/>
-
-                <p:commandButton value="Ne" type="button" onclick="PF('dialog').hide();"/> 
-                <p:commandButton value="Taip" 
-                                 action="#{reservationsHistoryBean.cancelReservation()}" 
-                                 ajax="false"/> 
+                <h:panelGrid columns="2" cellpadding="10" style="margin-left: auto; margin-right: auto;">
+                    <p:commandButton value="Taip" 
+                                     action="#{reservationsHistoryBean.cancelReservation()}" 
+                                     ajax="false"/>
+                    <p:commandButton value="Ne" type="button" onclick="PF('dialog').hide();"/> 
+                </h:panelGrid>
             </h:form>
         </p:dialog> 
         
