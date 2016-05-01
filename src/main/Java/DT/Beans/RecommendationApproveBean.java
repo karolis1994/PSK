@@ -32,13 +32,6 @@ public class RecommendationApproveBean {
         this.key = key;
     }
     
-    @EJB
-    private PrincipalsFacade principalsFacade;
-    @EJB
-    private InvitationsFacade invitationFacade;
-    private Invitations invitation;
-    private Principals principal;
-    
     public boolean valid;
     public boolean isValid() {
         return valid;
@@ -46,6 +39,13 @@ public class RecommendationApproveBean {
     public void setValid(boolean valid) {
         this.valid = valid;
     }
+    
+    @EJB
+    private PrincipalsFacade principalsFacade;
+    @EJB
+    private InvitationsFacade invitationFacade;
+    private Invitations invitation;
+    private Principals principal;
     
     @PostConstruct
     public void init() {
@@ -57,14 +57,17 @@ public class RecommendationApproveBean {
     
     public boolean approve() {
         try {
-            System.out.println("test   " + key);
-            invitation = (Invitations) invitationFacade.findByURLCode(key).get(0);
+            invitation = (Invitations) invitationFacade.findByURLCode(key).get(0);          
         } catch(Exception e) {
             return false;
         }
-        principal = invitation.getPrincipals1();
-        principal.setIsapproved(true);
-        principalsFacade.edit(principal);
-        return true;
+        //if(invitation.getPrincipals1().equals( prisijunges vartotojas )) {
+            principal = invitation.getPrincipals1();
+            principal.setIsapproved(true);
+            principalsFacade.edit(principal);
+            return true;
+        //}
+        //else
+            //return false;
     }
 }
