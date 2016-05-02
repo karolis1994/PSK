@@ -28,12 +28,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.net.ssl.HttpsURLConnection;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
-import sun.net.www.http.HttpClient;
 
 /**
  *

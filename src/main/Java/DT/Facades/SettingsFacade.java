@@ -6,6 +6,7 @@
 package DT.Facades;
 
 import DT.Entities.Settings;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -15,52 +16,61 @@ import javax.persistence.NonUniqueResultException;
  * @author Karolis
  */
 @Stateless
-public class SettingsFacade extends GenericFacade<Settings>{
-    
+public class SettingsFacade extends GenericFacade<Settings> {
+
     public SettingsFacade() {
         super(Settings.class);
     }
-    
+
+    public Settings getSettingByName(String Name) {
+        List settingList = em.createNamedQuery("Settings.findBySettingname")
+                .setParameter("settingname", Name).getResultList();
+        if (settingList.isEmpty()) {
+            return null;
+        }
+        return (Settings) settingList.get(0);
+    }
+
     public Settings getFirstnameFieldSettings() {
         Settings res = new Settings();
         try {
             res = (Settings) em.createNamedQuery("Settings.findBySettingname").setParameter("settingname", "firstnamefield")
-                .getSingleResult();
-        } catch(NoResultException e1) {
+                    .getSingleResult();
+        } catch (NoResultException e1) {
             res.setSettingname("firstnamefield");
             res.setSettingvalue("true");
             em.persist(res);
             res = getFirstnameFieldSettings();
-        } catch(NonUniqueResultException e2) {
+        } catch (NonUniqueResultException e2) {
 
         }
         return res;
     }
-    
+
     public Settings getLastnameFieldSettings() {
         Settings res = new Settings();
         try {
             res = (Settings) em.createNamedQuery("Settings.findBySettingname").setParameter("settingname", "lastnamefield")
-                .getSingleResult();
-        } catch(NoResultException e1) {
+                    .getSingleResult();
+        } catch (NoResultException e1) {
             res.setSettingname("lastnamefield");
             res.setSettingvalue("true");
             em.persist(res);
             res = getLastnameFieldSettings();
-        } catch(NonUniqueResultException e2) {
-            
+        } catch (NonUniqueResultException e2) {
+
         }
         return res;
     }
-    
+
     public String getFirstnameFieldSetting() {
         Settings res = getFirstnameFieldSettings();
         return res.getSettingvalue();
     }
-    
+
     public String getLastnameFieldSetting() {
         Settings res = getLastnameFieldSettings();
         return res.getSettingvalue();
     }
-    
+
 }

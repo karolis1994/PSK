@@ -8,3 +8,10 @@ INSERT INTO otherservices (title, description)
 
 INSERT INTO paidservices (cost, otherserviceid)
     VALUES (10, (SELECT ID FROM otherservices WHERE title = 'Metinis nario mokestis'));
+
+--User Settings
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('MembershipCost','10')
+
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('maxUserAmmount','100')

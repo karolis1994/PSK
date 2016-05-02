@@ -15,7 +15,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>Authentication</filter-name>
-        <url-pattern>administration/*</url-pattern>
+        <url-pattern>/administration/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <servlet>
