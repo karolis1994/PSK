@@ -1,6 +1,6 @@
 -- Test user
-INSERT INTO principals (email, points, firstname, lastname, isadmin, isapproved, isdeleted, passwordhash)
-    VALUES ('a@a.a', 999, 'a', 'a', TRUE, TRUE, FALSE, -1);
+INSERT INTO principals (email, points, firstname, lastname, isadmin, isapproved, isdeleted, passwordhash, salt)
+    VALUES ('a@a.a', 999, 'a', 'a', TRUE, TRUE, FALSE, -1, '');
 
 -- Yearly member's fee
 INSERT INTO otherservices (title, description)
@@ -11,7 +11,7 @@ INSERT INTO paidservices (cost, otherserviceid)
 
 --User Settings
 INSERT INTO Settings (settingname, settingvalue)
-VALUES ('MembershipCost','10')
+VALUES ('MembershipCost','10');
 
 INSERT INTO Settings (settingname, settingvalue)
-VALUES ('maxUserAmmount','100')
+VALUES ('MaxUserAmmount','100');
