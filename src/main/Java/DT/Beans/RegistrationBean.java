@@ -8,13 +8,18 @@ package DT.Beans;
 import DT.Entities.Principals;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
+import DT.Services.IPasswordHasher;
+import DT.Services.PasswordHasherPBKDF2;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;  
 import javax.faces.bean.ManagedBean;    
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -27,21 +32,23 @@ public class RegistrationBean implements Serializable{
     
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
-    @Size(min=0,max=15)
+    @Size(min=0,max=20)
     private String firstName;
     @Size(min=0,max=25)
     private String lastName;
     @Size(min=5,max=20)
     private String password;
     private String repeatPassword;
-    private boolean firstnameSetting;
-    private boolean lastnameSetting;
+    private boolean firstnameSetting = true;
+    private boolean lastnameSetting = true;
     private Principals principal;
       
     @EJB
     private PrincipalsFacade registrationFacade;
     @EJB
     private SettingsFacade settingsFacade;
+    @EJB
+    private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
 
     public boolean isFirstnameSetting() {
         return firstnameSetting;
@@ -101,8 +108,8 @@ public class RegistrationBean implements Serializable{
     
     @PostConstruct
     public void init(){
-        firstnameSetting = "true".equals(settingsFacade.getFirstnameFieldSetting());
-        lastnameSetting = "true".equals(settingsFacade.getLastnameFieldSetting());
+        //firstnameSetting = "true".equals(settingsFacade.getSettingByName("firstnamesetting"));
+        //lastnameSetting = "true".equals(settingsFacade.getSettingByName("lastnamesetting"));
     }
     
     public String register() {
@@ -115,12 +122,14 @@ public class RegistrationBean implements Serializable{
             if(lastName != null)
                 principal.setLastname(lastName); 
             else principal.setLastname("noname");
-            /*
-            int x = (int )(Math.random() * xx + 1) - xx tai salts lenteleje esanciu saltu kiekis
-            SaltsFacade.find(x);
-            principal.setPasswordhash(SaltsFacade.hash(password, salt)); //pasigooglint heshavima slaptazdozio.
-            */
-            principal.setPasswordhash(Integer.toString(password.hashCode()));
+            byte[] salt = passwordHasher.createSalt();
+            principal.setSalt(salt.toString());
+            try {
+            principal.setPasswordhash(passwordHasher.createHash(password, salt));
+            } catch(Exception e) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klaida: ", "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui."));
+                return "";
+            }
             principal.setPoints(0);
             principal.setIsadmin(Boolean.FALSE);
             principal.setIsdeleted(Boolean.FALSE);

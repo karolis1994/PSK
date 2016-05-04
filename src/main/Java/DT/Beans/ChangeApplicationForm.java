@@ -40,18 +40,16 @@ public class ChangeApplicationForm {
     
     @PostConstruct
     public void init() {
-        firstnameSettings = settingsFacade.getFirstnameFieldSettings();
-        lastnameSettings = settingsFacade.getLastnameFieldSettings();
-        firstname = "true".equals(firstnameSettings.getSettingvalue());
-        lastname = "true".equals(lastnameSettings.getSettingvalue());
+        //firstnameSetting = "true".equals(settingsFacade.getSettingByName("firstnamesetting"));
+        //lastnameSetting = "true".equals(settingsFacade.getSettingByName("lastnamesetting"));
     }
     
     
     public void change() {
-        firstnameSettings.setSettingvalue(String.valueOf(firstname));
+        /*firstnameSettings.setSettingvalue(String.valueOf(firstname));
         lastnameSettings.setSettingvalue(String.valueOf(lastname));
         settingsFacade.edit(firstnameSettings);
         settingsFacade.edit(lastnameSettings);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Settings updated"));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Forma atnaujinta"));*/
     }
 }
