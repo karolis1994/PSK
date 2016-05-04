@@ -7,11 +7,12 @@
     
     <ui:define name="general_content">
         <div>
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
             <h:panelGroup layout="block" rendered="#{recommendationApproveBean.valid}">
-                <p>You successfully approved!</p>
+                <p>Sėkmingai patvirtintas naudotojas!</p>
              </h:panelGroup>
              <h:panelGroup layout="block" rendered="#{!recommendationApproveBean.valid}">
-                <p>Approval failed! Please use the link again.</p> 
+                <p>Patvirtinimas nepavyko! Bandykite pasinaudoti nuoroda dar kartą.</p> 
              </h:panelGroup>
         </div>
     </ui:define>
