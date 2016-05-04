@@ -31,46 +31,4 @@ public class SettingsFacade extends GenericFacade<Settings> {
         return (Settings) settingList.get(0);
     }
 
-    public Settings getFirstnameFieldSettings() {
-        Settings res = new Settings();
-        try {
-            res = (Settings) em.createNamedQuery("Settings.findBySettingname").setParameter("settingname", "firstnamefield")
-                    .getSingleResult();
-        } catch (NoResultException e1) {
-            res.setSettingname("firstnamefield");
-            res.setSettingvalue("true");
-            em.persist(res);
-            res = getFirstnameFieldSettings();
-        } catch (NonUniqueResultException e2) {
-
-        }
-        return res;
-    }
-
-    public Settings getLastnameFieldSettings() {
-        Settings res = new Settings();
-        try {
-            res = (Settings) em.createNamedQuery("Settings.findBySettingname").setParameter("settingname", "lastnamefield")
-                    .getSingleResult();
-        } catch (NoResultException e1) {
-            res.setSettingname("lastnamefield");
-            res.setSettingvalue("true");
-            em.persist(res);
-            res = getLastnameFieldSettings();
-        } catch (NonUniqueResultException e2) {
-
-        }
-        return res;
-    }
-
-    public String getFirstnameFieldSetting() {
-        Settings res = getFirstnameFieldSettings();
-        return res.getSettingvalue();
-    }
-
-    public String getLastnameFieldSetting() {
-        Settings res = getLastnameFieldSettings();
-        return res.getSettingvalue();
-    }
-
 }
