@@ -6,6 +6,7 @@
 package DT.Entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -20,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,6 +37,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Principals.findByFirstname", query = "SELECT p FROM Principals p WHERE p.firstname = :firstname"),
     @NamedQuery(name = "Principals.findByLastname", query = "SELECT p FROM Principals p WHERE p.lastname = :lastname"),
     @NamedQuery(name = "Principals.findByPasswordhash", query = "SELECT p FROM Principals p WHERE p.passwordhash = :passwordhash"),
+    @NamedQuery(name = "Principals.findBySalt", query = "SELECT p FROM Principals p WHERE p.salt = :salt"),
     @NamedQuery(name = "Principals.findByGroupno", query = "SELECT p FROM Principals p WHERE p.groupno = :groupno"),
     @NamedQuery(name = "Principals.findByIsadmin", query = "SELECT p FROM Principals p WHERE p.isadmin = :isadmin"),
     @NamedQuery(name = "Principals.findByIsapproved", query = "SELECT p FROM Principals p WHERE p.isapproved = :isapproved"),
@@ -70,6 +73,11 @@ public class Principals implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "passwordhash")
     private String passwordhash;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "salt")
+    private String salt;
     @Column(name = "groupno")
     private Integer groupno;
     @Column(name = "isadmin")
@@ -212,6 +220,14 @@ public class Principals implements Serializable {
 
     public void setPaymentsList(List<Payments> paymentsList) {
         this.paymentsList = paymentsList;
+    }
+    
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     @Override

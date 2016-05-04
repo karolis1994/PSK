@@ -28,7 +28,8 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Invitations.findAll", query = "SELECT i FROM Invitations i"),
     @NamedQuery(name = "Invitations.findByRecieverid", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.recieverid = :recieverid"),
     @NamedQuery(name = "Invitations.findBySenderid", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.senderid = :senderid"),
-    @NamedQuery(name = "Invitations.findByUrlcode", query = "SELECT i FROM Invitations i WHERE i.urlcode = :urlcode")})
+    @NamedQuery(name = "Invitations.findByUrlcode", query = "SELECT i FROM Invitations i WHERE i.urlcode = :urlcode"),
+    @NamedQuery(name = "Invitations.findByIsActivated", query = "SELECT i FROM Invitations i WHERE i.isactivated = :isactivated")})
 public class Invitations implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,6 +46,8 @@ public class Invitations implements Serializable {
     @JoinColumn(name = "senderid", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Principals principals1;
+    @Column(name = "isactivated")
+    private Boolean isactivated;
 
     public Invitations() {
     }
@@ -117,6 +120,14 @@ public class Invitations implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Invitations[ invitationsPK=" + invitationsPK + " ]";
+    }
+
+    public Boolean getIsactivated() {
+        return isactivated;
+    }
+
+    public void setIsactivated(Boolean isactivated) {
+        this.isactivated = isactivated;
     }
     
 }
