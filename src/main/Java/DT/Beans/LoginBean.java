@@ -89,7 +89,7 @@ public class LoginBean {
         
         FacesContext.getCurrentInstance()
                 .getExternalContext()
-                .redirect("index.xhtml");
+                .redirect("logged-in/index.xhtml");
     }
 
     public String getFBReturnUrl() {
@@ -112,7 +112,7 @@ public class LoginBean {
         String fbemail = user.getEmail();
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.setAttribute("authUserEmail", fbemail);
-        return "index.xhtml";
+        return "logged-in/index.xhtml";
     }
     
 // IN case we drop fb4j api
@@ -161,7 +161,7 @@ public class LoginBean {
 //        }
 //        // int responseCode = con.getResponseCode();
 //
-//        return "index.xhtml";
+//        return "logged-in/index.xhtml";
 //    }
 
 }

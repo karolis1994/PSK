@@ -66,6 +66,6 @@ public class MembersFeeBean {
                
         paymentsFacade.create(payment);
         
-        return "index.xhtml";
+        return "logged-in/index.xhtml";
     }
 }

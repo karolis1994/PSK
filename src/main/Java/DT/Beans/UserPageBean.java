@@ -37,7 +37,7 @@ public class UserPageBean {
         
         //atjungiame vartotoją
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "/index.xhtml?faces-redirect=true";
+        return "logged-in//index.xhtml?faces-redirect=true";
     }
     
 }

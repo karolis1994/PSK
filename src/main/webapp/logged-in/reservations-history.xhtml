@@ -12,7 +12,7 @@
                 <p:dataTable var="reservation" value="#{reservationsHistoryBean.reservations}">
                     
                     <p:column headerText="Vasarnamis">
-                        <h:link value="#{reservation.houseid.title}" outcome="house-preview.xhtml">
+                        <h:link value="#{reservation.houseid.title}" outcome="logged-in/house-preview.xhtml">
                             <f:param name="id" value="1" />
                         </h:link>
                     </p:column>
