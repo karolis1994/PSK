@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS Houses(
   Address VARCHAR (255),
   IsClosed BOOLEAN,
   IsDeleted BOOLEAN,
-  Version SERIAL
+  Version SERIAL,
+  Capacity INT
 );
 CREATE TABLE IF NOT EXISTS Extras(
   ID SERIAL PRIMARY KEY NOT NULL,

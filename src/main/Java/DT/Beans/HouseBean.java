@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 /**
@@ -40,6 +41,11 @@ public class HouseBean implements Serializable{
     private String address;
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
+    
+    @Min(1)
+    private int capacity;
+    public int getCapacity() { return capacity; }
+    public void setCapacity(int capacity) { this.capacity = capacity; }
     
     @EJB
     private HouseFacade houseFacade;
@@ -66,6 +72,7 @@ public class HouseBean implements Serializable{
         title = house.getTitle();
         description = house.getDescription();
         address = house.getAddress();
+        capacity = house.getCapacity();
     }
     
     public Houses getHouse() {
@@ -148,6 +155,7 @@ public class HouseBean implements Serializable{
         houseToUpdate.setTitle(title);
         houseToUpdate.setDescription(description);
         houseToUpdate.setAddress(address);
+        houseToUpdate.setCapacity(capacity);
         
         houseFacade.edit(houseToUpdate);
         

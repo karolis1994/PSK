@@ -8,9 +8,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-import org.primefaces.component.inputtext.InputText;
-import org.primefaces.context.RequestContext;
+
 
 /**
  * @author Laurynas
@@ -37,6 +37,11 @@ public class AddHouseBean implements Serializable {
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
     
+    @Min(1)
+    private int capacity;
+    public int getCapacity() { return capacity; }
+    public void setCapacity(int capacity) { this.capacity = capacity; }
+    
     @EJB
     private HouseFacade houseFacade;
     
@@ -54,7 +59,7 @@ public class AddHouseBean implements Serializable {
                 house.setAddress(address);
                 house.setIsclosed(Boolean.FALSE);
                 house.setIsdeleted(Boolean.FALSE);
-                
+                house.setCapacity(capacity);
             }
             houseFacade.create(house);
             

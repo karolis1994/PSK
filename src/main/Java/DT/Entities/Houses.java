@@ -37,6 +37,9 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Houses.findByIsclosed", query = "SELECT h FROM Houses h WHERE h.isclosed = :isclosed"),
     @NamedQuery(name = "Houses.findByIsdeleted", query = "SELECT h FROM Houses h WHERE h.isdeleted = :isdeleted")})
 public class Houses implements Serializable {
+
+    @Column(name = "capacity")
+    private Integer capacity;
     @Basic(optional = false)
     @Column(name = "version")
     @Version
@@ -178,6 +181,14 @@ public class Houses implements Serializable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
     }
     
 }

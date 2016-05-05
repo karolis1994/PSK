@@ -8,23 +8,22 @@
             
             <h:form>
                 <p:panel header="Naujo vasarnamio pridėjimas" style="border: none;">
+                    
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
                      
                     <p:panelGrid columns="2" styleClass="formGrid">
                         <h:outputLabel for="title" value="Pavadnimas:" />
                         <p:inputText id="title" value="#{addHouseBean.title}" label="Pavadinimas" required="true"/>
-                        <p:message for="title" />
-                        <h:outputText value="#{addHouseBean.title}" />
-                        
+
                         <h:outputLabel for="title" value="Aprašymas:" />
                         <p:inputText id="description" value="#{addHouseBean.description}" label="Aprašymas" required="false"/>
-                        <p:message for="description" />
-                        <h:outputText value="#{addHouseBean.description}" />
-                        
+
                         <h:outputLabel for="address" value="Adresas: " />
                         <p:inputText id="address" value="#{addHouseBean.address}" label="Adresas" required="true"/>
-                        <p:message for="address" />
-                        <h:outputText value="#{addHouseBean.address}" />
+
+                        <h:outputLabel for="capacity" value="Vietų skaičius: " />
+                        <p:inputText id="capacity" value="#{addHouseBean.capacity}" label="Vietų skaičius" required="true"/>
+
                     </p:panelGrid>
 
                     <p:commandButton actionListener="#{addHouseBean.save}" value="Pridėti" ajax="true" validateClient="true"/>

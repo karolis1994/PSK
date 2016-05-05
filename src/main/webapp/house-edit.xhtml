@@ -10,6 +10,8 @@
         <h:form>
             <p:panel header="Vasarnamis" style="border: none;">
             
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                
                 <p:panelGrid columns="2" styleClass="formGrid">
                     <h:outputLabel for="title" value="Pavadnimas:" />
                     <p:inputText id="title" value="#{houseBean.title}" label="Pavadinimas" required="true"/>
@@ -19,12 +21,15 @@
 
                     <h:outputLabel for="address" value="Adresas: " />
                     <p:inputText id="address" value="#{houseBean.address}" label="Adresas" required="true"/>
+                    
+                    <h:outputLabel for="capacity" value="Vietų skaičius: " />
+                    <p:inputText id="capacity" value="#{houseBean.capacity}" label="Vietų skaičius" required="true"/>
                 </p:panelGrid>
-                
-                <p:commandButton value="Išsaugoti" action="#{houseBean.updateHouse()}">
+
+                <p:commandButton value="Išsaugoti" action="#{houseBean.updateHouse()}" validateClient="true" ajax="true">
                     <f:param name="id" value="#{param.id}" />
                 </p:commandButton>
-            
+
             </p:panel>
         </h:form>
     </ui:define>
