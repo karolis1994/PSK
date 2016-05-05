@@ -20,6 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -33,6 +34,10 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Paidservices.findById", query = "SELECT p FROM Paidservices p WHERE p.id = :id"),
     @NamedQuery(name = "Paidservices.findByCost", query = "SELECT p FROM Paidservices p WHERE p.cost = :cost")})
 public class Paidservices implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
 
     @JoinColumn(name = "otherserviceid", referencedColumnName = "id")
     @ManyToOne
@@ -140,6 +145,14 @@ public class Paidservices implements Serializable {
 
     public void setOtherserviceid(OtherService otherserviceid) {
         this.otherserviceid = otherserviceid;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 }

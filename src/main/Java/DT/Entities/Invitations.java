@@ -15,23 +15,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
  *
- * @author Laurynas
+ * @author Ace
  */
 @Entity
 @Table(name = "invitations")
 @NamedQueries({
     @NamedQuery(name = "Invitations.findAll", query = "SELECT i FROM Invitations i"),
-    @NamedQuery(name = "Invitations.findByRecieverid", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.recieverid = :recieverid"),
+    @NamedQuery(name = "Invitations.findByRecieveremail", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.recieveremail = :recieveremail"),
     @NamedQuery(name = "Invitations.findBySenderid", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.senderid = :senderid"),
     @NamedQuery(name = "Invitations.findByUrlcode", query = "SELECT i FROM Invitations i WHERE i.urlcode = :urlcode"),
-    @NamedQuery(name = "Invitations.findByIsActivated", query = "SELECT i FROM Invitations i WHERE i.isactivated = :isactivated")})
+    @NamedQuery(name = "Invitations.findByIsactivated", query = "SELECT i FROM Invitations i WHERE i.isactivated = :isactivated"),
+    @NamedQuery(name = "Invitations.findByVersion", query = "SELECT i FROM Invitations i WHERE i.version = :version")})
 public class Invitations implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected InvitationsPK invitationsPK;
@@ -40,14 +41,18 @@ public class Invitations implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "urlcode")
     private String urlcode;
-    @JoinColumn(name = "recieverid", referencedColumnName = "id", insertable = false, updatable = false)
+    @Column(name = "isactivated")
+    private Boolean isactivated;
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
+    @JoinColumn(name = "recieveremail", referencedColumnName = "email", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Principals principals;
     @JoinColumn(name = "senderid", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Principals principals1;
-    @Column(name = "isactivated")
-    private Boolean isactivated;
 
     public Invitations() {
     }
@@ -61,8 +66,8 @@ public class Invitations implements Serializable {
         this.urlcode = urlcode;
     }
 
-    public Invitations(int recieverid, int senderid) {
-        this.invitationsPK = new InvitationsPK(recieverid, senderid);
+    public Invitations(String recieveremail, int senderid) {
+        this.invitationsPK = new InvitationsPK(recieveremail, senderid);
     }
 
     public InvitationsPK getInvitationsPK() {
@@ -79,6 +84,22 @@ public class Invitations implements Serializable {
 
     public void setUrlcode(String urlcode) {
         this.urlcode = urlcode;
+    }
+
+    public Boolean getIsactivated() {
+        return isactivated;
+    }
+
+    public void setIsactivated(Boolean isactivated) {
+        this.isactivated = isactivated;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public Principals getPrincipals() {
@@ -120,14 +141,6 @@ public class Invitations implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Invitations[ invitationsPK=" + invitationsPK + " ]";
-    }
-
-    public Boolean getIsactivated() {
-        return isactivated;
-    }
-
-    public void setIsactivated(Boolean isactivated) {
-        this.isactivated = isactivated;
     }
     
 }

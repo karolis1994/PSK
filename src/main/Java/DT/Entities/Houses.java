@@ -19,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -36,6 +37,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Houses.findByIsclosed", query = "SELECT h FROM Houses h WHERE h.isclosed = :isclosed"),
     @NamedQuery(name = "Houses.findByIsdeleted", query = "SELECT h FROM Houses h WHERE h.isdeleted = :isdeleted")})
 public class Houses implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -165,6 +170,14 @@ public class Houses implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Houses[ id=" + id + " ]";
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 }

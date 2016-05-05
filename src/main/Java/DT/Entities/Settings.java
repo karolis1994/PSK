@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -29,6 +30,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Settings.findBySettingname", query = "SELECT s FROM Settings s WHERE s.settingname = :settingname"),
     @NamedQuery(name = "Settings.findBySettingvalue", query = "SELECT s FROM Settings s WHERE s.settingvalue = :settingvalue")})
 public class Settings implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -97,6 +102,14 @@ public class Settings implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Settings[ id=" + id + " ]";
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 }

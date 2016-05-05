@@ -10,6 +10,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -17,11 +18,12 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class InvitationsPK implements Serializable {
-
     @Basic(optional = false)
     @NotNull
-    @Column(name = "recieverid")
-    private int recieverid;
+    @Size(min = 1, max = 255)
+    @Column(name = "recieveremail")
+    private String recieveremail;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "senderid")
@@ -30,17 +32,9 @@ public class InvitationsPK implements Serializable {
     public InvitationsPK() {
     }
 
-    public InvitationsPK(int recieverid, int senderid) {
-        this.recieverid = recieverid;
+    public InvitationsPK(String recieveremail, int senderid) {
+        this.recieveremail = recieveremail;
         this.senderid = senderid;
-    }
-
-    public int getRecieverid() {
-        return recieverid;
-    }
-
-    public void setRecieverid(int recieverid) {
-        this.recieverid = recieverid;
     }
 
     public int getSenderid() {
@@ -54,7 +48,7 @@ public class InvitationsPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) recieverid;
+       // hash += (int) recieveremail;
         hash += (int) senderid;
         return hash;
     }
@@ -66,7 +60,7 @@ public class InvitationsPK implements Serializable {
             return false;
         }
         InvitationsPK other = (InvitationsPK) object;
-        if (this.recieverid != other.recieverid) {
+        if (this.recieveremail != other.recieveremail) {
             return false;
         }
         if (this.senderid != other.senderid) {
@@ -77,7 +71,11 @@ public class InvitationsPK implements Serializable {
 
     @Override
     public String toString() {
-        return "DT.Entities.InvitationsPK[ recieverid=" + recieverid + ", senderid=" + senderid + " ]";
+        return "DT.Entities.InvitationsPK[ recieveremail=" + recieveremail + ", senderid=" + senderid + " ]";
     }
+
+    public String getRecieveremail() { return recieveremail; }
+
+    public void setRecieveremail(String recieveremail) { this.recieveremail = recieveremail; }
     
 }

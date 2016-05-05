@@ -12,6 +12,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -27,6 +28,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "OtherService.findByDescription", query = "SELECT o FROM OtherService o WHERE o.description = :description"),
     @NamedQuery(name = "OtherService.findByIsdeleted", query = "SELECT o FROM OtherService o WHERE o.isdeleted = :isdeleted")})
 public class OtherService implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
 
     @OneToMany(mappedBy = "otherserviceid")
     private List<Paidservices> paidservicesList;
@@ -116,6 +121,14 @@ public class OtherService implements Serializable {
 
     public void setPaidservicesList(List<Paidservices> paidservicesList) {
         this.paidservicesList = paidservicesList;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 }

@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 /**
  *
@@ -28,6 +29,10 @@ import javax.persistence.Table;
     @NamedQuery(name = "Reservationextras.findAll", query = "SELECT r FROM Reservationextras r"),
     @NamedQuery(name = "Reservationextras.findById", query = "SELECT r FROM Reservationextras r WHERE r.id = :id")})
 public class Reservationextras implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -96,6 +101,14 @@ public class Reservationextras implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Reservationextras[ id=" + id + " ]";
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 }

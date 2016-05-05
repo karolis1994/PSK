@@ -21,6 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -36,6 +37,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Extras.findByDescription", query = "SELECT e FROM Extras e WHERE e.description = :description"),
     @NamedQuery(name = "Extras.findByIsdeleted", query = "SELECT e FROM Extras e WHERE e.isdeleted = :isdeleted")})
 public class Extras implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "extraid")
     private List<Reservationextras> reservationextrasList;
@@ -146,6 +151,14 @@ public class Extras implements Serializable {
 
     public void setReservationextrasList(List<Reservationextras> reservationextrasList) {
         this.reservationextrasList = reservationextrasList;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 }

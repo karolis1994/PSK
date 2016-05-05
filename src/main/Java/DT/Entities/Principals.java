@@ -6,7 +6,6 @@
 package DT.Entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -19,13 +18,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Laurynas
+ * @author Aurimas
  */
 @Entity
 @Table(name = "principals")
@@ -41,9 +40,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Principals.findByGroupno", query = "SELECT p FROM Principals p WHERE p.groupno = :groupno"),
     @NamedQuery(name = "Principals.findByIsadmin", query = "SELECT p FROM Principals p WHERE p.isadmin = :isadmin"),
     @NamedQuery(name = "Principals.findByIsapproved", query = "SELECT p FROM Principals p WHERE p.isapproved = :isapproved"),
-    @NamedQuery(name = "Principals.findByIsdeleted", query = "SELECT p FROM Principals p WHERE p.isdeleted = :isdeleted")})
+    @NamedQuery(name = "Principals.findByIsdeleted", query = "SELECT p FROM Principals p WHERE p.isdeleted = :isdeleted"),
+    @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,14 +67,10 @@ public class Principals implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "lastname")
     private String lastname;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "passwordhash")
     private String passwordhash;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "salt")
     private String salt;
     @Column(name = "groupno")
@@ -86,14 +81,14 @@ public class Principals implements Serializable {
     private Boolean isapproved;
     @Column(name = "isdeleted")
     private Boolean isdeleted;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
-    private List<Reservations> reservationsList;
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "principals")
     private List<Invitations> invitationsList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "principals1")
     private List<Invitations> invitationsList1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
-    private List<Payments> paymentsList;
 
     public Principals() {
     }
@@ -102,12 +97,12 @@ public class Principals implements Serializable {
         this.id = id;
     }
 
-    public Principals(Integer id, String email, String firstname, String lastname, String passwordhash) {
+    public Principals(Integer id, String email, String firstname, String lastname, int version) {
         this.id = id;
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.passwordhash = passwordhash;
+        this.version = version;
     }
 
     public Integer getId() {
@@ -158,6 +153,14 @@ public class Principals implements Serializable {
         this.passwordhash = passwordhash;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
     public Integer getGroupno() {
         return groupno;
     }
@@ -190,12 +193,12 @@ public class Principals implements Serializable {
         this.isdeleted = isdeleted;
     }
 
-    public List<Reservations> getReservationsList() {
-        return reservationsList;
+    public int getVersion() {
+        return version;
     }
 
-    public void setReservationsList(List<Reservations> reservationsList) {
-        this.reservationsList = reservationsList;
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public List<Invitations> getInvitationsList() {
@@ -212,22 +215,6 @@ public class Principals implements Serializable {
 
     public void setInvitationsList1(List<Invitations> invitationsList1) {
         this.invitationsList1 = invitationsList1;
-    }
-
-    public List<Payments> getPaymentsList() {
-        return paymentsList;
-    }
-
-    public void setPaymentsList(List<Payments> paymentsList) {
-        this.paymentsList = paymentsList;
-    }
-    
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     @Override

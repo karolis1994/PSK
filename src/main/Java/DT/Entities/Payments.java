@@ -20,6 +20,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -37,6 +38,10 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Payments.findByAmmount", query = "SELECT p FROM Payments p WHERE p.ammount = :ammount"),
     @NamedQuery(name = "Payments.findByIspaid", query = "SELECT p FROM Payments p WHERE p.ispaid = :ispaid")})
 public class Payments implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
 
     @Column(name = "payedforfrom")
     @Temporal(TemporalType.TIMESTAMP)
@@ -187,6 +192,14 @@ public class Payments implements Serializable {
 
     public void setPayedforto(Date payedforto) {
         this.payedforto = payedforto;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 }

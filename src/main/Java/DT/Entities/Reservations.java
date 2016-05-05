@@ -24,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -39,6 +40,10 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Reservations.findByReservedto", query = "SELECT r FROM Reservations r WHERE r.reservedto = :reservedto"),
     @NamedQuery(name = "Reservations.findByIscanceled", query = "SELECT r FROM Reservations r WHERE r.iscanceled = :iscanceled")})
 public class Reservations implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "version")
+    @Version
+    private int version;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reservationid", fetch=FetchType.EAGER)
     private List<Reservationextras> reservationextrasList;
 
@@ -159,6 +164,14 @@ public class Reservations implements Serializable {
 
     public void setReservationextrasList(List<Reservationextras> reservationextrasList) {
         this.reservationextrasList = reservationextrasList;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 }
