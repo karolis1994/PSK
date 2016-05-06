@@ -87,10 +87,6 @@ public class RecommendationApproveBean {
         } catch(Exception e) {
             return false;
         }
-        /*if(recommendation.getIsactivated()) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Jūs jau esate patvirtinęs šį prašymą."));
-            return true;
-        }*/
         
         //Patikriname ar prisijungęs vartotojas yra tas, kuriam buvo siūstas prašymas
         if(recommendation.getRecieverid().equals(loggedInPrincipal)) {
