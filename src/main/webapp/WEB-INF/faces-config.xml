@@ -10,17 +10,17 @@
         <navigation-case>  
             <from-action>#{registrationBean.register}</from-action>  
             <from-outcome>REGISTRATION_SUCCESFUL</from-outcome>  
-            <to-view-id>/registration-succesful.xhtml</to-view-id>  
+            <to-view-id>/logged-in/registration-succesful.xhtml</to-view-id>  
         </navigation-case>  
         <navigation-case>  
             <from-action>#{registrationBean.register}</from-action>  
             <from-outcome>REGISTRATION_UNSUCCESFUL</from-outcome>  
-            <to-view-id>/registration-unsuccesful.xhtml</to-view-id>  
+            <to-view-id>/logged-in/registration-unsuccesful.xhtml</to-view-id>  
         </navigation-case>
         <navigation-case>  
             <from-action>#{registrationBean.register}</from-action>  
             <from-outcome>REGISTRATION_UNSUCCESFUL_RELOG</from-outcome>  
-            <to-view-id>/registration-unsuccesful-relog.xhtml</to-view-id>  
+            <to-view-id>/logged-in/registration-unsuccesful-relog.xhtml</to-view-id>  
         </navigation-case>      
     </navigation-rule>
     
