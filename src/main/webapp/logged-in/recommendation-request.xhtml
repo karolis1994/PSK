@@ -8,14 +8,14 @@
     <ui:define name="general_content">
         <div>
             <h:form>
-                <p:panel header="Recommendation request">
-                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-                <h3>User list:</h3>
-                <p:selectManyCheckbox id="grid" value="#{recommendationRequestBean.selectedUserNameList}" layout="grid" columns="3">
-                    <f:selectItems value="#{recommendationRequestBean.userNameList}" var="user" itemLabel="#{user}" itemValue="#{user}" />
-                </p:selectManyCheckbox>
+                <p:panel header="Rekomendacijos prašymas">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                        <h:outputText value="Email vartotojo, kurio norite prašyti patvirtinimo: " />
+                        <p:inputText value="#{recommendationRequestBean.inputEmail}"/>
 
-                <p:commandButton action="#{recommendationRequestBean.SendEmails}" value="Request" ajax="false" validateClient="true"/>
+                        <p:commandButton action="#{recommendationRequestBean.SendEmails}" value="Prašyti" ajax="false" validateClient="true"/>
+                    </h:panelGrid>
                 </p:panel>
             </h:form>
         </div>

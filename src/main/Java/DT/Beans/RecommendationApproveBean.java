@@ -7,8 +7,12 @@ package DT.Beans;
 
 import DT.Entities.Invitations;
 import DT.Entities.Principals;
+import DT.Entities.Recommendations;
+import DT.Entities.Settings;
 import DT.Facades.InvitationsFacade;
 import DT.Facades.PrincipalsFacade;
+import DT.Facades.RecommendationsFacade;
+import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -43,13 +47,19 @@ public class RecommendationApproveBean {
         this.valid = valid;
     }
     
+    private Recommendations recommendation;
+    private Principals principal;
+    private Principals loggedInPrincipal;
+    private Settings minRecommendations;
+    
+    private int currentlyAcceptedRecommendations;
+    
     @EJB
     private PrincipalsFacade principalsFacade;
     @EJB
-    private InvitationsFacade invitationFacade;
-    private Invitations invitation;
-    private Principals principal;
-    private Principals loggedInPrincipal;
+    private RecommendationsFacade recommendationsFacade;
+    @EJB
+    private SettingsFacade settingsFacade;
     
     @PostConstruct
     public void init() {
@@ -62,7 +72,9 @@ public class RecommendationApproveBean {
             return;
         }
         loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail).get(0);
-        
+
+        minRecommendations = (Settings) settingsFacade.getSettingByName("MinRecommendations");
+              
         if(key != null)
             valid = approve();
         else
@@ -71,17 +83,40 @@ public class RecommendationApproveBean {
     
     public boolean approve() {
         try {
-            invitation = (Invitations) invitationFacade.findByURLCode(key).get(0);          
+            recommendation = (Recommendations) recommendationsFacade.findByURLCode(key).get(0);          
         } catch(Exception e) {
             return false;
         }
-        //if(invitation.getPrincipals1().equals( prisijunges vartotojas )) {
-            principal = invitation.getPrincipals1();
-            principal.setIsapproved(true);
-            principalsFacade.edit(principal);
+        /*if(recommendation.getIsactivated()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Jūs jau esate patvirtinęs šį prašymą."));
             return true;
-        //}
-        //else
-            //return false;
+        }*/
+        
+        //Patikriname ar prisijungęs vartotojas yra tas, kuriam buvo siūstas prašymas
+        if(recommendation.getRecieverid().equals(loggedInPrincipal)) {
+            //patvirtiname rekomendaciją
+            recommendation.setIsactivated(Boolean.TRUE);
+            recommendationsFacade.edit(recommendation);
+            
+            //Patikriname ar kol kas patvirtintų pakvietimų skaičius tenkina reikiamą ribą
+            currentlyAcceptedRecommendations = recommendationsFacade
+                    .findByApprovedSender(recommendation.getSenderid().getId()).size();      
+            int minRecommendationsCount = Integer.parseInt(minRecommendations.getSettingvalue());
+            System.out.println("test   "+currentlyAcceptedRecommendations+" " + minRecommendationsCount);
+            if(currentlyAcceptedRecommendations < minRecommendationsCount) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                        FacesMessage.SEVERITY_INFO, "", "Prašymas patvirtintas"));
+                return true;
+            } else {      
+                principal = recommendation.getSenderid();
+                principal.setIsapproved(true);
+                principalsFacade.edit(principal);
+                return true;
+            }
+        }
+        else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Šio prašymo jūs negalite patvirtinti, nes jis nebuvo siūstas jums."));
+            return false;
+        }
     }
 }

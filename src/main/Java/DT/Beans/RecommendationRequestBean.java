@@ -6,19 +6,14 @@
 package DT.Beans;
 
 import DT.Services.MailSMTP;
-import DT.Entities.Invitations;
-import DT.Entities.InvitationsPK;
 import DT.Entities.Principals;
-import DT.Facades.InvitationsFacade;
+import DT.Entities.Recommendations;
+import DT.Entities.Settings;
 import DT.Facades.PrincipalsFacade;
+import DT.Facades.RecommendationsFacade;
+import DT.Facades.SettingsFacade;
 import DT.Services.IMail;
-import DT.Services.IPasswordHasher;
-import DT.Services.PasswordHasherPBKDF2;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -27,9 +22,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Pattern;
 
 /**
  *
@@ -41,16 +36,26 @@ public class RecommendationRequestBean implements Serializable{
     
     private static final String SUBJECT = "Prašymas priimti į klubą";
     
-    private List<Principals> principalsList;
-    private List<String> userNameList;  
-    private String[] selectedUserNameList;
-    private Map<String, Principals> principalsMap;
-    private Principals loggedInPrincipal;
+    @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
+    private String inputEmail;
+    public String getInputEmail() {
+        return inputEmail;
+    }
+    public void setInputEmail(String inputEmail) {
+        this.inputEmail = inputEmail;
+    }
     
+    private Principals loggedInPrincipal;
+    private Principals inputPrincipal;
+    private Settings maxRecommendations;
+    private int currentlySentRecommendations;
+    
+    @EJB
+    private SettingsFacade settingsFacade;
     @EJB
     private PrincipalsFacade principalsFacade;
     @EJB
-    private InvitationsFacade invitationsFacade;
+    private RecommendationsFacade recommendationsFacade;
     @EJB
     private final IMail mailSMTP = new MailSMTP();
     
@@ -60,94 +65,72 @@ public class RecommendationRequestBean implements Serializable{
         //Gauname prisijungusio naudotojo objekta
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         String loggedInEmail = (String) session.getAttribute("authUserEmail");
-        loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail).get(0);
+        loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail).get(0);      
+              
+        maxRecommendations = (Settings) settingsFacade.getSettingByName("MaxRecommendations");
+        currentlySentRecommendations = recommendationsFacade.findBySender(loggedInPrincipal.getId()).size();
         
-        /*principalsList = new ArrayList<Principals>();
-        userNameList = new ArrayList<String>();
-        principalsMap = new HashMap<String, Principals>();
-        
-        principalsList = principalsFacade.findAllApproved();
-        int i = 0;
-        for(Principals principal : principalsList) {
-            userNameList.add(principal.getFirstname() + " " + principal.getLastname());
-            principalsMap.put(userNameList.get(i), principal);
-            i++;
-        }*/    
     }
     
     public void SendEmails() throws Exception{
+        //Patikriname ar narys jau nėra patvirtintas
         if(loggedInPrincipal.getIsapproved() == true) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "You are an approved member already"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Jums jau yra suteiktas patvirtinto nario statusas."));
+            return;
+        }
+        //Patikriname ar išsiūstų prašymų skaičius neviršija leistinos ribos
+        if(currentlySentRecommendations >= Integer.parseInt(maxRecommendations.getSettingvalue())) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Daugiau prašymų siūsti nebegalima."));
+            return;
+        }
+        //Patikriname ar yra narys užsiregistravęs su įvestu email
+        inputPrincipal = new Principals();
+        inputPrincipal.setIsapproved(Boolean.FALSE);
+        try {
+            inputPrincipal = (Principals) principalsFacade.findByEmail(inputEmail).get(0);
+        } catch(IndexOutOfBoundsException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Narys su įvestu email neegzistuoja."));
+            return;
+        }    
+        //Patikriname ar narys kuriam siunčiame yra patvirtintas
+        if(!inputPrincipal.getIsapproved()){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Narys su įvestu email nėra patvirtintas narys."));
             return;
         }
         
-        /*//sugeneruojam aktyvacijos rakta, sukuriam reikiamus laukus
+        //sugeneruojam aktyvacijos rakta, sukuriam reikiamus laukus
         String uuid = UUID.randomUUID().toString();
-        Invitations invitation = new Invitations();
+        Recommendations recommendation = new Recommendations();
         
-        //test
-        Principals user = principalsFacade.find(1); //reikalingas prisijungusio vartotojo objektas  
-        //Gauname internetio adreso bazinį url, jį priskiriam prie žinutės
+        //Gauname internetio adreso bazinį url, jį pridedam prie žinutės
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String url = request.getRequestURL().toString();
         String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
-        String message = "User with the name: " + user.getFirstname() + " " + user.getLastname() + // Reikalingas prisijungusio vartotojo objektas
-                    " is asking for your approval. Click the link below to approve.\n" +
-                    + baseURL +"logged-in/recommendation-approve.xhtml?key=" 
-                    + uuid; //Reikalingas sugeneruotas linkas.             
+        String message = "Naudotojas vardu " + loggedInPrincipal.getFirstname() + " " + loggedInPrincipal.getLastname() + // Reikalingas prisijungusio vartotojo objektas
+                    " prašo jūsų patvirtinimo. Paspauskite nuorodą apačioje jį patvirtinti.\n" +
+                    baseURL + "logged-in/recommendation-approve.xhtml?key=" +
+                    uuid;          
         int error = -1;
         int i = 0;
 
         try {
-            invitation.setUrlcode(uuid);
-            String[] recipients = new String[selectedUserNameList.length];
-            InvitationsPK inv = new InvitationsPK();
-            inv.setSenderid(user.getId());
-                      
-            for(String name : selectedUserNameList) {
-                Principals p = principalsMap.get(name);
-                recipients[i] = p.getEmail();               
-                inv.setRecieverid(p.getId());
-                invitation = new Invitations(inv, uuid);
-                invitationsFacade.create(invitation);                          
-            }
-            error = mailSMTP.sendMail(recipients, message, SUBJECT);
+            recommendation.setUrlcode(uuid);
+            recommendation.setSenderid(loggedInPrincipal);
+            recommendation.setRecieverid(inputPrincipal);
+            recommendationsFacade.create(recommendation);                          
+            error = mailSMTP.sendMail(inputPrincipal.getEmail(), SUBJECT, message);
         } catch(EJBException e2) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "You have already sent an email to one of the marked people"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Email jau buvo išsiūstas šiam žmogui."));
         } catch(Exception e) {
             error = -1;
         } 
         finally {
             if(error == -1) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: ", "Failed to send email."));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: ", "Nepavyko išsiūsti email."));
             } else if(error == 0) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Emails have been sent."));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Email buvo išsiūstas."));
             }
-        }*/
-    }
-    
-    public List<Principals> getPrincipalsList() {
-        return principalsList;
-    }
-
-    public void setPrincipalsList(List<Principals> userList) {
-        this.principalsList = userList;
-    }
-    
-    public List<String> getUserNameList() {
-        return userNameList;
-    }
-
-    public void setUserNameList(List<String> userNameList) {
-        this.userNameList = userNameList;
-    }
-
-    public String[] getSelectedUserNameList() {
-        return selectedUserNameList;
-    }
-
-    public void setSelectedUserNameList(String[] selectedUserNameList) {
-        this.selectedUserNameList = selectedUserNameList;
+        }
     }
     
 }
