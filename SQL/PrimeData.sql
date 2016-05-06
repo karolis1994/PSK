@@ -15,3 +15,10 @@ VALUES ('MembershipCost','10');
 
 INSERT INTO Settings (settingname, settingvalue)
 VALUES ('MaxUserAmmount','100');
+
+--Recommendation Settings
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('MinRecommendations','2');
+
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('MaxRecommendations','5');
