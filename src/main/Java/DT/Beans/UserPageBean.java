@@ -10,6 +10,7 @@ import DT.Facades.PrincipalsFacade;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpSession;
  * @author Karolis
  */
 @ManagedBean(name="userPageBean")
+@ViewScoped
 public class UserPageBean {
     private Principals loggedInPrincipal;
     @EJB
