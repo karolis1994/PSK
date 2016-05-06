@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="/templates/administration_template.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="administration_content">
+        <h:form>
+            <p:panel header="Rekomendacijų nustatymai">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <h:outputText value="Pažymėkite laukus, kuriuos norite matyti registracijos formoje." />
+                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <h:outputText value="Maksimalus leidžiamų išsiūsti prašymų skaičius: " />
+                    <p:inputText value="#{changeRecommendationSettings.maxRecommendationsValue}" required="true"/>
+                    <h:outputText value="Minimalus reikalingų patvirtinimų skaičius: " />
+                    <p:inputText value="#{changeRecommendationSettings.minRecommendationsValue}" required="true"/>
+                    
+                    <p:commandButton action="#{changeRecommendationSettings.change}" value="Pakeisti" ajax="false"/>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
