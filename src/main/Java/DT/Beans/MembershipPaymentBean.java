@@ -1,6 +1,5 @@
 package DT.Beans;
 
-import DT.Entities.Paidservices;
 import DT.Entities.Payments;
 import DT.Entities.Principals;
 import DT.Facades.PaidServicesFacade;
@@ -18,7 +17,7 @@ import javax.faces.bean.RequestScoped;
 
 @ManagedBean(name = "membersFeeBean")
 @RequestScoped
-public class MembersFeeBean {
+public class MembershipPaymentBean {
     
     @EJB
     PrincipalsFacade principalsFacade;
@@ -41,8 +40,6 @@ public class MembersFeeBean {
         // Pay
         Principals payer = principalsFacade.find(1);
         
-        
-        
         int payerPoints = payer.getPoints();
         payerPoints -= 10;
         payer.setPoints(payerPoints);
@@ -59,9 +56,7 @@ public class MembersFeeBean {
         payment.setAmmount(0);
         payment.setCreatedat(new Date());
         payment.setIspaid(false);
-        payment.setPayedforfrom(calendar.getTime());
         calendar.add(Calendar.YEAR, 1);
-        payment.setPayedforto(calendar.getTime());
         payment.setPaidserviceid(paidServicesFacade.find(1));
                
         paymentsFacade.create(payment);

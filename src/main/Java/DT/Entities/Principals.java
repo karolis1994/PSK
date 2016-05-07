@@ -7,6 +7,7 @@ package DT.Entities;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -19,6 +20,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -47,6 +50,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Principals.findByIsdeleted", query = "SELECT p FROM Principals p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
+
+    @Column(name = "membershipuntill")
+    @Temporal(TemporalType.DATE)
+    private Date membershipuntill;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
+    private List<Payments> paymentsList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderid")
     private Collection<Recommendations> recommendationsCollection;
@@ -268,6 +278,22 @@ public class Principals implements Serializable {
 
     public void setRecommendationsCollection1(Collection<Recommendations> recommendationsCollection1) {
         this.recommendationsCollection1 = recommendationsCollection1;
+    }
+
+    public Date getMembershipuntill() {
+        return membershipuntill;
+    }
+
+    public void setMembershipuntill(Date membershipuntill) {
+        this.membershipuntill = membershipuntill;
+    }
+
+    public List<Payments> getPaymentsList() {
+        return paymentsList;
+    }
+
+    public void setPaymentsList(List<Payments> paymentsList) {
+        this.paymentsList = paymentsList;
     }
     
 }

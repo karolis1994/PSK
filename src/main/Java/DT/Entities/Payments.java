@@ -43,13 +43,6 @@ public class Payments implements Serializable {
     @Version
     private int version;
 
-    @Column(name = "payedforfrom")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date payedforfrom;
-    @Column(name = "payedforto")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date payedforto;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -176,22 +169,6 @@ public class Payments implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Payments[ id=" + id + " ]";
-    }
-
-    public Date getPayedforfrom() {
-        return payedforfrom;
-    }
-
-    public void setPayedforfrom(Date payedforfrom) {
-        this.payedforfrom = payedforfrom;
-    }
-
-    public Date getPayedforto() {
-        return payedforto;
-    }
-
-    public void setPayedforto(Date payedforto) {
-        this.payedforto = payedforto;
     }
 
     public int getVersion() {
