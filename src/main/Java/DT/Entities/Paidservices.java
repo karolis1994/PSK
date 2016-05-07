@@ -34,6 +34,12 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Paidservices.findById", query = "SELECT p FROM Paidservices p WHERE p.id = :id"),
     @NamedQuery(name = "Paidservices.findByCost", query = "SELECT p FROM Paidservices p WHERE p.cost = :cost")})
 public class Paidservices implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "costinpoints")
+    private int costInPoints;
+    
     @Basic(optional = false)
     @Column(name = "version")
     @Version
@@ -153,6 +159,14 @@ public class Paidservices implements Serializable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public int getCostInPoints() {
+        return costInPoints;
+    }
+
+    public void setCostInPoints(int costInPoints) {
+        this.costInPoints = costInPoints;
     }
     
 }

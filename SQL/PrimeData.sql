@@ -6,8 +6,8 @@ INSERT INTO principals (email, points, firstname, lastname, isadmin, isapproved,
 INSERT INTO otherservices (title, description)
     VALUES ('Metinis nario mokestis', 'Mokestis kurį turi sumokėti kiekvienas narys.');
 
-INSERT INTO paidservices (cost, otherserviceid)
-    VALUES (10, (SELECT ID FROM otherservices WHERE title = 'Metinis nario mokestis'));
+INSERT INTO paidservices (cost, costinpoints, otherserviceid)
+    VALUES (10, 10, (SELECT ID FROM otherservices WHERE title = 'Metinis nario mokestis' LIMIT 1));
 
 --User Settings
 INSERT INTO Settings (settingname, settingvalue)

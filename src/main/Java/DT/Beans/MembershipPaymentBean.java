@@ -1,5 +1,6 @@
 package DT.Beans;
 
+import DT.Entities.Paidservices;
 import DT.Entities.Payments;
 import DT.Entities.Principals;
 import DT.Facades.PaidServicesFacade;
@@ -37,30 +38,19 @@ public class MembershipPaymentBean {
     
     public String payMembersFeeWithPoints() {
         
-        // Pay
         Principals payer = principalsFacade.find(1);
+        Paidservices membership = paidServicesFacade.find(1); // TODO proper way to retreive membership fee.
         
-        int payerPoints = payer.getPoints();
-        payerPoints -= 10;
-        payer.setPoints(payerPoints);
-        
-        principalsFacade.edit(payer);
+        try {
+            paymentsFacade.PayWithPoints(payer, membership);
+        } catch (Exception e) {
+            
+        }
         
         // Create payment
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        
-        Payments payment = new Payments();
-        
-        payment.setPrincipalid(payer);
-        payment.setAmmount(0);
-        payment.setCreatedat(new Date());
-        payment.setIspaid(false);
-        calendar.add(Calendar.YEAR, 1);
-        payment.setPaidserviceid(paidServicesFacade.find(1));
-               
-        paymentsFacade.create(payment);
-        
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(new Date());
+
         return "logged-in/index.xhtml";
     }
 }

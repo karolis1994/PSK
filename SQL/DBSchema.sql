@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS PaidServices(
   ExtrasID INT NULL REFERENCES Extras(ID),
   OtherServiceID INT NULL REFERENCES OtherServices(ID),
   Cost FLOAT NOT NULL,
+  CostInPoints INT NOT NULL,
   Version SERIAL,
   CHECK (HouseID IS NOT NULL OR ExtrasID IS NOT NULL OR OtherServiceID IS NOT NULL)
 );
@@ -78,6 +79,7 @@ CREATE TABLE IF NOT EXISTS Payments(
   PayedAt TIMESTAMP WITH TIME ZONE,
   Ammount FLOAT NOT NULL,
   IsPaid BOOLEAN,
+  PaidWithPoints BOOLEAN,
   Version SERIAL
 );
 CREATE TABLE IF NOT EXISTS Reservations(

@@ -38,6 +38,9 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Payments.findByAmmount", query = "SELECT p FROM Payments p WHERE p.ammount = :ammount"),
     @NamedQuery(name = "Payments.findByIspaid", query = "SELECT p FROM Payments p WHERE p.ispaid = :ispaid")})
 public class Payments implements Serializable {
+
+    @Column(name = "paidwithpoints")
+    private Boolean paidWithPoints;
     @Basic(optional = false)
     @Column(name = "version")
     @Version
@@ -178,5 +181,13 @@ public class Payments implements Serializable {
     public void setVersion(int version) {
         this.version = version;
     }
-    
+
+    public Boolean getPaidWithPoints() {
+        return paidWithPoints;
+    }
+
+    public void setPaidWithPoints(Boolean paidWithPoints) {
+        this.paidWithPoints = paidWithPoints;
+    }
+
 }
