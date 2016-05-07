@@ -104,7 +104,11 @@ public class Payments implements Serializable {
     public Date getCreatedat() {
         return createdat;
     }
-
+    
+    public String getCreatedDateString() {
+        return String.format("%tY-%tm-%td", createdat,createdat,createdat);
+    }
+    
     public void setCreatedat(Date createdat) {
         this.createdat = createdat;
     }

@@ -67,7 +67,7 @@ public class Paidservices implements Serializable {
     private Houses houseid;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paidserviceid")
     private List<Payments> paymentsList;
-
+    
     public Paidservices() {
     }
 
@@ -80,6 +80,18 @@ public class Paidservices implements Serializable {
         this.cost = cost;
     }
 
+    public String getTitle() {
+        if (houseid != null) {
+            return houseid.getTitle();
+        } else if (extrasid != null) {
+            return extrasid.getTitle();
+        } else if (otherserviceid != null) {
+            return otherserviceid.getTitle();
+        }
+        
+        return "";
+    }
+    
     public Integer getId() {
         return id;
     }

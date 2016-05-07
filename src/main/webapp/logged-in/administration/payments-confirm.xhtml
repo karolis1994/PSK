@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="/templates/administration_template.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+        <ui:define name="administration_content">
+            <p:panel header="Mokėjimų patvirtinimas" style="border: none;">
+
+            <h:form>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                    
+                    <p:commandButton value="Patvirtinti" 
+                                     actionListener="#{paymentsConfirmBean.confirmSelected()}" 
+                                     ajax="false"/>
+                    
+                    <p:dataTable id="paymentsTable" var="payment" value="#{paymentsConfirmBean.payments}" 
+                         style="margin-top: 5px;"
+                         selection="#{paymentsConfirmBean.selectedPayment}"
+                         selectionMode="single"
+                         rowKey="#{payment.id}">
+                
+<!--                        <p:ajax event="rowSelect" 
+                                listener="#{houseViewAllBean.navigateToSelected}" />-->
+
+                        <p:column headerText="Mokėtojas">
+                            <h:outputText value="#{payment.principalid.firstname} #{payment.principalid.lastname}" />
+                        </p:column>
+                        <p:column headerText="Paslauga">
+                            <h:outputText value="#{payment.paidserviceid.title}" />
+                        </p:column>
+                        <p:column headerText="Sumokėta">
+                            <h:outputText value="#{payment.ammount}" />
+                        </p:column>
+                        <p:column headerText="Mokėjimas patvirtintas">
+                            <h:outputText value="#{payment.ispaid}" />
+                        </p:column>
+                        <p:column headerText="Mokėjimas sukurtas">
+                            <h:outputText value="#{payment.createdDateString}" />
+                        </p:column>
+                    </p:dataTable>
+                    
+            </h:form>
+
+            </p:panel>            
+        </ui:define>
+
+</ui:composition>
