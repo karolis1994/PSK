@@ -28,6 +28,7 @@ import javax.faces.view.ViewScoped;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -37,7 +38,7 @@ import javax.inject.Named;
 @ViewScoped
 public class ReservationBean implements Serializable{
     private final String DATE_FORMAT = "MM/dd/yy";
-    private final String PAGE_AFTER_RESERVING = "index";
+    private final String PAGE_AFTER_RESERVING = "reservations-history";
     
     @Inject
     HouseBean houseBean;
@@ -75,7 +76,7 @@ public class ReservationBean implements Serializable{
         parseDates();
         
         // WARNING: FOR TESTING ONLY
-        Principals princ = (Principals) principalFacade.findByEmail("zen@gmail.com").get(0);
+        Principals princ = (Principals) principalFacade.findByEmail("a@a.a").get(0);
         
         Reservations res = new Reservations();
         res.setHouseid(house);

@@ -128,7 +128,7 @@ public class HouseBean implements Serializable{
     
     public double getCost() {
         for (Paidservices ps : getPaidServices()) {
-            if (ps.getExtrasid() == null) {
+            if (ps.getHouseid() != null) {
                 cost = ps.getCost();
                 break;
             }
