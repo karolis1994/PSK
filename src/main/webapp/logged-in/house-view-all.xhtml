@@ -8,8 +8,9 @@
     <ui:define name="general_content">
         
         <p:panel header="Vasarnamiai">
+            <p:panelGrid columns="2">
             <h:form id="form">
-            <p:dataTable id="housestable" var="house" value="#{houseViewAllBean.allHouses}" 
+                <p:dataTable id="housestable" var="house" value="#{houseViewAllBean.filteredHouses}" 
                          style="margin-top: 5px;"
                          selection="#{houseViewAllBean.selectedHouse}"
                          selectionMode="single"
@@ -35,6 +36,57 @@
                 </p:column>
             </p:dataTable>  
             </h:form>
+            
+            <p:panel>
+                 <h:form>
+                    <p:panel>
+                        <h:outputText value="Laisva:"/>
+                        <p:commandButton value="X" ajax="false"
+                                         action="#{houseViewAllBean.resetDatesFilter()}" 
+                                         style="float: right;"/>
+                        <br/>
+                        Nuo:
+                        <p:calendar readonlyInput="true" pattern="dd/M/yy" 
+                                    value="#{houseViewAllBean.dateFromFilter}"></p:calendar>
+                        Iki:
+                        <br/>
+                        <p:calendar readonlyInput="true" pattern="dd/M/yy"
+                                    value="#{houseViewAllBean.dateToFilter}"></p:calendar>
+                        <p:commandButton value="Pritaikyti filtrą" ajax="false"
+                                         action="#{houseViewAllBean.filter()}"/>
+                    </p:panel>
+                    
+                    
+                    <br/>
+                    <!--
+                    <p:panel>
+                        <h:outputText value="Kaina:"/>
+                        <p:commandButton value="X" type="button" style="float: right;"/>
+                        <br/>
+                        Nuo: <p:inputText/>
+                        Iki <p:inputText/>
+                        <p:commandButton value="Pritaikyti filtrą" type="button"/>
+                    </p:panel>
+                    -->
+                    <p:panel>
+                        <h:outputText value="Vietų skaičius"/>
+                        <p:commandButton value="X" ajax="false"
+                                         action="#{houseViewAllBean.resetCapacityFilter()}" 
+                                         style="float: right;"/>
+                        <br/>
+                        <p:inputText value="#{houseViewAllBean.capacityFilter}"/>
+                        <p:commandButton value="Pritaikyti filtrą" ajax="false"
+                                         action="#{houseViewAllBean.filter()}"/>
+                    </p:panel>
+                    
+                    
+                    <p:commandButton value="Išvalyti visus filtrus" ajax="false"
+                                     action="#{houseViewAllBean.resetAllFilters()}"/>
+                 
+                 </h:form>
+            </p:panel>
+            
+            </p:panelGrid>
         </p:panel>
         
     </ui:define>

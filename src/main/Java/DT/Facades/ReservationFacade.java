@@ -5,8 +5,10 @@
  */
 package DT.Facades;
 
+import DT.Entities.Houses;
 import DT.Entities.Principals;
 import DT.Entities.Reservations;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -37,6 +39,17 @@ public class ReservationFacade extends GenericFacade<Reservations> {
                 + "FROM " + entityClass.getSimpleName() + " o "
                 + "WHERE o.principalid=:p AND o.iscanceled=false");
         query.setParameter("p", principal);
+        return query.getResultList();
+    }
+    
+    public List<Reservations> findByDatesCoveredNotCanceled(Date from, Date to) {
+        Query query = em.createQuery(""
+                + "SELECT o "
+                + "FROM " + entityClass.getSimpleName() + " o "
+                + "WHERE ((o.reservedfrom <= :from AND o.reservedto >= :from) OR (o.reservedfrom <= :to AND o.reservedto >= :to)) "
+                + "AND o.iscanceled=false");
+        query.setParameter("from", from);
+        query.setParameter("to", to);
         return query.getResultList();
     }
 }
