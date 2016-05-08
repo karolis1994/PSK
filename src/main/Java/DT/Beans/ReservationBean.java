@@ -59,9 +59,9 @@ public class ReservationBean implements Serializable{
     private Date reservedToParsed;
     private List<Extras> extrasList;
     private List<Extras> selectedExtras = new ArrayList<>();
-    private double totalPrice = 0.0;
-    private double housePrice = 0.0;
-    private double totalHousePrice = 0.0;
+    private int totalPrice = 0;
+    private int housePrice = 0;
+    private int totalHousePrice = 0;
     private Houses house;
     private boolean extrasTableVisible = false;
     private int houseID;
@@ -77,6 +77,7 @@ public class ReservationBean implements Serializable{
         
         // WARNING: FOR TESTING ONLY
         Principals princ = (Principals) principalFacade.findByEmail("a@a.a").get(0);
+        princ.setPoints(princ.getPoints() - totalPrice);
         
         Reservations res = new Reservations();
         res.setHouseid(house);
@@ -110,7 +111,7 @@ public class ReservationBean implements Serializable{
         }
     }
     
-    public double calculateTotalPrice() {
+    public int calculateTotalPrice() {
         totalPrice = getHousePrice() * numberOfWeeks;
         for(Extras se : selectedExtras) {
             totalPrice += se.getPaidservicesList().get(0).getCost();
@@ -137,16 +138,16 @@ public class ReservationBean implements Serializable{
     public void reset() {
         house = null;
         numberOfWeeks = 1;
-        totalPrice = 0d;
+        totalPrice = 0;
         selectedExtras = new ArrayList<>();
     }
     
-    public double getTotalHousePrice() {
+    public int getTotalHousePrice() {
         totalHousePrice = housePrice * numberOfWeeks;
         return totalHousePrice;
     }
 
-    public void setTotalHousePrice(double totalHousePrice) {
+    public void setTotalHousePrice(int totalHousePrice) {
         this.totalHousePrice = totalHousePrice;
     }
     
@@ -157,11 +158,11 @@ public class ReservationBean implements Serializable{
         this.numberOfWeeks = numberOfWeeks;
     }
     
-    public double getHousePrice() {
-        if (housePrice == 0d) {
+    public int getHousePrice() {
+        if (housePrice == 0) {
             for (Paidservices ps : house.getPaidservicesList()) {
                 if (ps.getExtrasid() == null) {
-                    housePrice = ps.getCost();
+                    housePrice = ps.getCostInPoints();
                 }
             }
         }
@@ -169,7 +170,7 @@ public class ReservationBean implements Serializable{
         return housePrice;
     }
 
-    public void setHousePrice(double housePrice) {
+    public void setHousePrice(int housePrice) {
         this.housePrice = housePrice;
     }
 
@@ -181,12 +182,12 @@ public class ReservationBean implements Serializable{
         this.house = house;
     }
 
-    public double getTotalPrice() {
+    public int getTotalPrice() {
         calculateTotalPrice();
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
     
