@@ -7,7 +7,9 @@ package DT.Entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,6 +41,8 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Payments.findByAmmount", query = "SELECT p FROM Payments p WHERE p.ammount = :ammount"),
     @NamedQuery(name = "Payments.findByIspaid", query = "SELECT p FROM Payments p WHERE p.ispaid = :ispaid")})
 public class Payments implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentid")
+    private List<Reservations> reservationsList;
 
     @Column(name = "paidwithpoints")
     private Boolean paidWithPoints;
@@ -192,6 +197,14 @@ public class Payments implements Serializable {
 
     public void setPaidWithPoints(Boolean paidWithPoints) {
         this.paidWithPoints = paidWithPoints;
+    }
+
+    public List<Reservations> getReservationsList() {
+        return reservationsList;
+    }
+
+    public void setReservationsList(List<Reservations> reservationsList) {
+        this.reservationsList = reservationsList;
     }
 
 }

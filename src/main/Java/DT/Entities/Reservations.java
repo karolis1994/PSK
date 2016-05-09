@@ -40,6 +40,9 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Reservations.findByReservedto", query = "SELECT r FROM Reservations r WHERE r.reservedto = :reservedto"),
     @NamedQuery(name = "Reservations.findByIscanceled", query = "SELECT r FROM Reservations r WHERE r.iscanceled = :iscanceled")})
 public class Reservations implements Serializable {
+    @JoinColumn(name = "paymentid", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Payments paymentid;
     @Basic(optional = false)
     @Column(name = "version")
     @Version
@@ -172,6 +175,14 @@ public class Reservations implements Serializable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public Payments getPaymentid() {
+        return paymentid;
+    }
+
+    public void setPaymentid(Payments paymentid) {
+        this.paymentid = paymentid;
     }
     
 }
