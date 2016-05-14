@@ -6,48 +6,43 @@
 package DT.Beans;
 
 import DT.Entities.Invitations;
-import DT.Entities.InvitationsPK;
 import DT.Entities.Principals;
 import DT.Facades.InvitationsFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Services.IMail;
 import DT.Services.MailSMTP;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.inject.Named;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;    
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Pattern;
 
 /**
  *
  * @author Aurimas
  */
-@Named(value = "memberInvitationBean")
+@ManagedBean(name = "memberInvitationBean")
 @ViewScoped
 public class MemberInvitationBean{
     private static final String SUBJECT = "Kvietimas užsiregistruoti į labanoro draugų sistemą";
-    private List<Principals> principalsList;
-    private List<String> userNameList;  
-    private String[] selectedUserNameList;
-    private Map<String, Principals> principalsMap;
+   
+    @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
+    private String inputEmail;
     private Principals loggedInPrincipal;
-    private String receiverEmail;
-    private MailSMTP send;
-    private MemberInvitationBean memberInvitationBean = new MemberInvitationBean();
+  //  private MemberInvitationBean memberInvitationBean = new MemberInvitationBean();
     
     @EJB
     private PrincipalsFacade principalsFacade;
     @EJB
     private InvitationsFacade invitationsFacade;  
-    
+    @EJB
+    private final IMail mailSMTP = new MailSMTP();
+     
     @PostConstruct
     public void init() {
         
@@ -62,27 +57,24 @@ public class MemberInvitationBean{
         String uuid = UUID.randomUUID().toString();
         Invitations invitation = new Invitations();
         //test
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String url = request.getRequestURL().toString();
+        String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
         String message = "Sveiki, mūsų sistemos vartotojas " + loggedInPrincipal.getFirstname() + " " + loggedInPrincipal.getLastname() +
                          " jus kviečia prisijungti prie Labanoro draugų. Kad tai padarytumėte paspauskite nuorodą apačioje.\n" +
-                         "http://localhost:8080/DT.ReservationSystem/user-registration.xhtml?key=" 
+                          baseURL +"user-registration.xhtml?key=" 
                          + uuid; //Reikalingas sugeneruotas linkas.             
         int error = -1;
         int i = 0;
 
         try {
-            invitation.setUrlcode(uuid);
-                       
-            InvitationsPK inv = new InvitationsPK();
-            inv.setSenderid(loggedInPrincipal.getId());        
-            memberInvitationBean.setReceiverID(receiverEmail);
-            String recipient = memberInvitationBean.getReceiverID();             
-            inv.setRecieveremail(recipient);
-            invitation = new Invitations(
-                    inv, 
-                    uuid);
+            invitation.setUrlcode(uuid);         
+            invitation.setSenderid(loggedInPrincipal);  
+            invitation.setIsactivated(Boolean.FALSE);
+          //  memberInvitationBean.setInputEmail(inputEmail);
             invitationsFacade.create(invitation); 
                     
-            error = send.sendMail(recipient, SUBJECT, message);
+            error = mailSMTP.sendMail(inputEmail , SUBJECT, message);
         } catch(Exception e) {
             error = -1;
         } 
@@ -94,20 +86,10 @@ public class MemberInvitationBean{
             }
         }
     }
-    
-    public List<Principals> getPrincipalsList() { return principalsList; }
-
-    public void setPrincipalsList(List<Principals> userList) { this.principalsList = userList; }
-    
-    public List<String> getUserNameList() { return userNameList; }
-
-    public void setUserNameList(List<String> userNameList) { this.userNameList = userNameList; }
-
-    public String[] getSelectedUserNameList() { return selectedUserNameList; }
-
-    public void setSelectedUserNameList(String[] selectedUserNameList) { this.selectedUserNameList = selectedUserNameList; }
-
-    public String getReceiverID() { return receiverEmail; }
-
-    public void setReceiverID(String recieverID) { this.receiverEmail = recieverID; }
+    public String getInputEmail() {
+        return inputEmail;
+    }
+    public void setInputEmail(String inputEmail) {
+        this.inputEmail = inputEmail;
+    }
 }

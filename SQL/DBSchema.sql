@@ -20,9 +20,8 @@ CREATE TABLE IF NOT EXISTS Settings(
   Version SERIAL
 );
 CREATE TABLE IF NOT EXISTS Invitations(
-  RecieverEmail VARCHAR(255) NULL REFERENCES Principals(Email),
+  ID SERIAL PRIMARY KEY NOT NULL,
   SenderID INT NOT NULL REFERENCES Principals(ID),
-  PRIMARY KEY(RecieverEmail, SenderID),
   URLCode VARCHAR(255) NOT NULL,
   IsActivated BOOLEAN NULL,
   Version SERIAL

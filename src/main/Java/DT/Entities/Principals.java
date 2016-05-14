@@ -105,10 +105,8 @@ public class Principals implements Serializable {
     @Column(name = "version")
     @Version
     private int version;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principals")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderid")
     private List<Invitations> invitationsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principals1")
-    private List<Invitations> invitationsList1;
     
     public Principals() {
     }
@@ -229,14 +227,6 @@ public class Principals implements Serializable {
         this.invitationsList = invitationsList;
     }
 
-    public List<Invitations> getInvitationsList1() {
-        return invitationsList1;
-    }
-
-    public void setInvitationsList1(List<Invitations> invitationsList1) {
-        this.invitationsList1 = invitationsList1;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;
