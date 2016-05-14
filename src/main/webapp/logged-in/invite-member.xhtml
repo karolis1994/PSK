@@ -15,7 +15,7 @@
                         <h:outputLabel for="inputEmail" value="El. paštas:" />
                         <p:inputText id="inputEmail" value="#{memberInvitationBean.inputEmail}" label="inputEmail" required="true"/>
                      </p:panelGrid>
-                    <p:commandButton action="#{memberInvitationBean.sendInvitation}" value="Pakviesti" ajax="false" validateClient="true"/>
+                    <p:commandButton actionListener="#{memberInvitationBean.SendInvitation}" value="Pakviesti" ajax="false" validateClient="true"/>
                 </p:panel>
             </h:form>   
         </ui:define>
