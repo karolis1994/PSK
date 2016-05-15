@@ -52,4 +52,16 @@ public class ReservationFacade extends GenericFacade<Reservations> {
         query.setParameter("to", to);
         return query.getResultList();
     }
+    
+    public List<Reservations> findByDatesCoveredNotCanceledExtraIdNull(Date from, Date to) {
+        Query query = em.createQuery(""
+                + "SELECT o "
+                + "FROM " + entityClass.getSimpleName() + " o "
+                + "WHERE ((o.reservedfrom <= :from AND o.reservedto >= :from) OR (o.reservedfrom <= :to AND o.reservedto >= :to)) "
+                + "AND o.iscanceled=false"
+                + "AND o.extraid=null");
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+        return query.getResultList();
+    }
 }
