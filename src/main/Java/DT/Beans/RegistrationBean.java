@@ -11,6 +11,9 @@ import DT.Facades.SettingsFacade;
 import DT.Services.IPasswordHasher;
 import DT.Services.PasswordHasherPBKDF2;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -42,7 +45,7 @@ public class RegistrationBean implements Serializable{
     private String repeatPassword;
     private String address;
     @Past
-    private String birthdate;
+    private Date birthdate;
     @Pattern(regexp="\\+370\\d{8}|8\\d{8}")
     private String phoneNumber;
     @Size(max=250)
@@ -82,7 +85,8 @@ public class RegistrationBean implements Serializable{
                 return "";
             }
             principal.setAddress(address);
-            principal.setBirthdate(birthdate);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            principal.setBirthdate(df.format(birthdate));
             principal.setPhonenumber(phoneNumber);
             if(about != null) {
                 principal.setAbout(about);
@@ -152,11 +156,11 @@ public class RegistrationBean implements Serializable{
         this.address = address;
     }
 
-    public String getBirthdate() {
+    public Date getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(String birthdate) {
+    public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
     }
 

@@ -6,11 +6,8 @@
 package DT.Entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,15 +15,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,7 +27,6 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "principals")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Principals.findAll", query = "SELECT p FROM Principals p"),
     @NamedQuery(name = "Principals.findById", query = "SELECT p FROM Principals p WHERE p.id = :id"),
@@ -42,46 +34,20 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Principals.findByPoints", query = "SELECT p FROM Principals p WHERE p.points = :points"),
     @NamedQuery(name = "Principals.findByFirstname", query = "SELECT p FROM Principals p WHERE p.firstname = :firstname"),
     @NamedQuery(name = "Principals.findByLastname", query = "SELECT p FROM Principals p WHERE p.lastname = :lastname"),
+    @NamedQuery(name = "Principals.findByAddress", query = "SELECT p FROM Principals p WHERE p.address = :address"),
+    @NamedQuery(name = "Principals.findByPhonenumber", query = "SELECT p FROM Principals p WHERE p.phonenumber = :phonenumber"),
+    @NamedQuery(name = "Principals.findByBirthdate", query = "SELECT p FROM Principals p WHERE p.birthdate = :birthdate"),
+    @NamedQuery(name = "Principals.findByAbout", query = "SELECT p FROM Principals p WHERE p.about = :about"),
     @NamedQuery(name = "Principals.findByPasswordhash", query = "SELECT p FROM Principals p WHERE p.passwordhash = :passwordhash"),
     @NamedQuery(name = "Principals.findBySalt", query = "SELECT p FROM Principals p WHERE p.salt = :salt"),
     @NamedQuery(name = "Principals.findByGroupno", query = "SELECT p FROM Principals p WHERE p.groupno = :groupno"),
     @NamedQuery(name = "Principals.findByIsadmin", query = "SELECT p FROM Principals p WHERE p.isadmin = :isadmin"),
     @NamedQuery(name = "Principals.findByIsapproved", query = "SELECT p FROM Principals p WHERE p.isapproved = :isapproved"),
     @NamedQuery(name = "Principals.findByIsdeleted", query = "SELECT p FROM Principals p WHERE p.isdeleted = :isdeleted"),
+    @NamedQuery(name = "Principals.findByMembershipuntill", query = "SELECT p FROM Principals p WHERE p.membershipuntill = :membershipuntill"),
     @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
 
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "address")
-    private String address;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "phonenumber")
-    private String phonenumber;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "birthdate")
-    private String birthdate;
-    @Size(max = 255)
-    @Column(name = "about")
-    private String about;
-
-    @Column(name = "membershipuntill")
-    @Temporal(TemporalType.DATE)
-    private Date membershipuntill;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
-    private List<Payments> paymentsList;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderid")
-    private Collection<Recommendations> recommendationsCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recieverid")
-    private Collection<Recommendations> recommendationsCollection1;
-    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,6 +72,24 @@ public class Principals implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "lastname")
     private String lastname;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "address")
+    private String address;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "phonenumber")
+    private String phonenumber;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "birthdate")
+    private String birthdate;
+    @Size(max = 255)
+    @Column(name = "about")
+    private String about;
     @Size(max = 255)
     @Column(name = "passwordhash")
     private String passwordhash;
@@ -120,13 +104,13 @@ public class Principals implements Serializable {
     private Boolean isapproved;
     @Column(name = "isdeleted")
     private Boolean isdeleted;
+    @Column(name = "membershipuntill")
+    @Temporal(TemporalType.DATE)
+    private Date membershipuntill;
     @Basic(optional = false)
     @Column(name = "version")
-    @Version
     private int version;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderid")
-    private List<Invitations> invitationsList;
-    
+
     public Principals() {
     }
 
@@ -134,11 +118,14 @@ public class Principals implements Serializable {
         this.id = id;
     }
 
-    public Principals(Integer id, String email, String firstname, String lastname, int version) {
+    public Principals(Integer id, String email, String firstname, String lastname, String address, String phonenumber, String birthdate, int version) {
         this.id = id;
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.address = address;
+        this.phonenumber = phonenumber;
+        this.birthdate = birthdate;
         this.version = version;
     }
 
@@ -180,6 +167,38 @@ public class Principals implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     public String getPasswordhash() {
@@ -230,20 +249,20 @@ public class Principals implements Serializable {
         this.isdeleted = isdeleted;
     }
 
+    public Date getMembershipuntill() {
+        return membershipuntill;
+    }
+
+    public void setMembershipuntill(Date membershipuntill) {
+        this.membershipuntill = membershipuntill;
+    }
+
     public int getVersion() {
         return version;
     }
 
     public void setVersion(int version) {
         this.version = version;
-    }
-    
-    public List<Invitations> getInvitationsList() {
-        return invitationsList;
-    }
-
-    public void setInvitationsList(List<Invitations> invitationsList) {
-        this.invitationsList = invitationsList;
     }
 
     @Override
@@ -269,72 +288,6 @@ public class Principals implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Principals[ id=" + id + " ]";
-    }
-    
-    @XmlTransient
-    public Collection<Recommendations> getRecommendationsCollection() {
-        return recommendationsCollection;
-    }
-
-    public void setRecommendationsCollection(Collection<Recommendations> recommendationsCollection) {
-        this.recommendationsCollection = recommendationsCollection;
-    }
-
-    @XmlTransient
-    public Collection<Recommendations> getRecommendationsCollection1() {
-        return recommendationsCollection1;
-    }
-
-    public void setRecommendationsCollection1(Collection<Recommendations> recommendationsCollection1) {
-        this.recommendationsCollection1 = recommendationsCollection1;
-    }
-
-    public Date getMembershipuntill() {
-        return membershipuntill;
-    }
-
-    public void setMembershipuntill(Date membershipuntill) {
-        this.membershipuntill = membershipuntill;
-    }
-
-    public List<Payments> getPaymentsList() {
-        return paymentsList;
-    }
-
-    public void setPaymentsList(List<Payments> paymentsList) {
-        this.paymentsList = paymentsList;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhonenumber() {
-        return phonenumber;
-    }
-
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
-    }
-
-    public String getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public String getAbout() {
-        return about;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
     }
     
 }

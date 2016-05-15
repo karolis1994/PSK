@@ -18,9 +18,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author Karolis
  */
-@ManagedBean(name="userPageBean")
+@ManagedBean(name="userProfileChangeBean")
 @ViewScoped
-public class UserPageBean {
+public class UserProfileChangeBean {
+    
     private Principals loggedInPrincipal;
     @EJB
     private PrincipalsFacade principalsFacade;
@@ -39,7 +40,7 @@ public class UserPageBean {
         
         //atjungiame vartotoją
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "logged-in//index.xhtml?faces-redirect=true";
+        return "login.xhtml?faces-redirect=true";
     }
     
 }

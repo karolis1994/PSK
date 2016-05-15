@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="/templates/general_template.xhtml">
+    
+    <ui:define name="general_content">
+        <div>
+            <p:panel id="politics" header="Naudotojo #{userProfileBean.firstname} #{userProfileBean.lastname} anketa">
+                <h:panelGrid columns="2" cellpadding="5">
+                    
+                    <h:outputLabel for="firstnameProfile" value="Vardas" />
+                    <h:outputText id="firstnameProfile" value="#{userProfileBean.firstname}" />
+                    
+                    <h:outputLabel for="lastnameProfile" value="Pavardė" />
+                    <h:outputText id="lastnameProfile" value="#{userProfileBean.lastname}" />
+                    
+                    <h:outputLabel for="birthdateProfile" value="Gimimo data" />
+                    <h:outputText id="birthdateProfile" value="#{userProfileBean.birthdate}" />
+                    
+                    <h:outputLabel for="emailProfile" value="Email" />
+                    <h:outputText id="emailProfile" value="#{userProfileBean.email}" />
+                    
+                    <h:outputLabel for="phoneNumberProfile" value="Telefono numeris" />
+                    <h:outputText id="phoneNumberProfile" value="#{userProfileBean.phoneNumber}" />
+                    
+                    <h:outputLabel for="addressProfile" value="Adresas" />
+                    <h:outputText id="addressProfile" value="#{userProfileBean.address}" />
+                    
+                    <h:outputLabel for="aboutProfile" value="Apie mane" rendered="#{userProfileBean.aboutField}"/>
+                    <h:outputText id="aboutProfile" value="#{userProfileBean.about}" rendered="#{userProfileBean.aboutField}"/>
+                    
+                    <!--paveikslėlis-->
+                    
+                </h:panelGrid>
+            </p:panel>
+        </div>
+    </ui:define>
+    
+</ui:composition>
+

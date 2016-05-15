@@ -12,41 +12,41 @@
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
 
                     <h:panelGrid columns="1" cellpadding="2">
-                        <h:outputLabel for="email" value="Email *" />
-                        <p:inputText id="email" value="#{registrationBean.email}" label="Email" required="true"/>
-                        <p:message for="email" />
+                        <h:outputLabel for="emailRegistration" value="Email *" />
+                        <p:inputText id="emailRegistration" value="#{registrationBean.email}" label="Email" required="true"/>
+                        <p:message for="emailRegistration" />
                         
-                        <h:outputLabel for="password" value="Slaptažodis *" />
-                        <p:password id="password" value="#{registrationBean.password}" match="passwordRepeat" label="Slaptažodis" required="true" />
+                        <h:outputLabel for="passwordRegistration" value="Slaptažodis *" />
+                        <p:password id="passwordRegistration" value="#{registrationBean.password}" match="passwordRepeat" label="Slaptažodis" required="true" />
 
-                        <h:outputLabel for="passwordRepeat" value="Pakartokite slaptažodį *" />
-                        <p:password id="passwordRepeat" value="#{registrationBean.repeatPassword}" label="Pakartokite slaptažodį" required="true" />   
+                        <h:outputLabel for="passwordRepeatRegistration" value="Pakartokite slaptažodį *" />
+                        <p:password id="passwordRepeatRegistration" value="#{registrationBean.repeatPassword}" label="Pakartokite slaptažodį" required="true" />   
                         
-                        <h:outputLabel for="firstname" value="Vardas *"/>
-                        <p:inputText id="firstname" value="#{registrationBean.firstname}" label="Vardas" required="true"/>
-                        <p:message for="firstname" />
+                        <h:outputLabel for="firstnameRegistration" value="Vardas *"/>
+                        <p:inputText id="firstnameRegistration" value="#{registrationBean.firstname}" label="Vardas" required="true"/>
+                        <p:message for="firstnameRegistration" />
                         
-                        <h:outputLabel for="lastname" value="Pavardė *"/>
-                        <p:inputText id="lastname" value="#{registrationBean.lastname}" label="Pavardė" required="true"/>
-                        <p:message for="lastname" />
+                        <h:outputLabel for="lastnameRegistration" value="Pavardė *"/>
+                        <p:inputText id="lastnameRegistration" value="#{registrationBean.lastname}" label="Pavardė" required="true"/>
+                        <p:message for="lastnameRegistration" />
                         
-                        <h:outputLabel for="birthdate" value="Gimimo data [yyyy-mm-dd] *"/>
-                        <p:inputText id="birthdate" value="#{registrationBean.birthdate}" label="Gimimo data" required="true">
+                        <h:outputLabel for="birthdateRegistration" value="Gimimo data [yyyy-mm-dd] *"/>
+                        <p:inputText id="birthdateRegistration" value="#{registrationBean.birthdate}" label="Gimimo data" required="true">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </p:inputText>
-                        <p:message for="birthdate" />
+                        <p:message for="birthdateRegistration" />
                         
-                        <h:outputLabel for="address" value="Adresas *"/>
-                        <p:inputText id="address" value="#{registrationBean.address}" label="Adresas" required="true"/>
-                        <p:message for="address" />               
+                        <h:outputLabel for="addressRegistration" value="Adresas *"/>
+                        <p:inputText id="addressRegistration" value="#{registrationBean.address}" label="Adresas" required="true"/>
+                        <p:message for="addressRegistration" />               
  
-                        <h:outputLabel for="phoneNumber" value="Telefono numeris *" />
-                        <p:inputText id="phoneNumber" value="#{registrationBean.phoneNumber}" label="Telefono numeris" required="true"/>
-                        <p:message for="phoneNumber" />
+                        <h:outputLabel for="phoneNumberRegistration" value="Telefono numeris *" />
+                        <p:inputText id="phoneNumberRegistration" value="#{registrationBean.phoneNumber}" label="Telefono numeris" required="true"/>
+                        <p:message for="phoneNumberRegistration" />
                         
-                        <h:outputLabel for="about" value="Trumpas jūsų prisistatymas" rendered="#{registrationBean.aboutField}"/>
-                        <p:inputTextarea id="about" value="#{registrationBean.about}" rows="5" cols="30" counter="remainingChars" maxlength="250" counterTemplate="{0} characters remaining." autoResize="false" rendered="#{registrationBean.aboutField}"/>
-                        <h:outputText id="remainingChars" rendered="#{registrationBean.aboutField}"/>                 
+                        <h:outputLabel for="aboutRegistration" value="Trumpas jūsų prisistatymas" rendered="#{registrationBean.aboutField}"/>
+                        <p:inputTextarea id="aboutRegistration" value="#{registrationBean.about}" rows="5" cols="30" counter="remainingCharsRegistration" maxlength="250" counterTemplate="{0} characters remaining." autoResize="false" rendered="#{registrationBean.aboutField}"/>
+                        <h:outputText id="remainingCharsRegistration" rendered="#{registrationBean.aboutField}"/>                 
                                             
                     </h:panelGrid>
 
