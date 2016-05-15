@@ -8,8 +8,10 @@ package DT.Entities;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -27,15 +29,18 @@ import javax.validation.constraints.Size;
 @Table(name = "invitations")
 @NamedQueries({
     @NamedQuery(name = "Invitations.findAll", query = "SELECT i FROM Invitations i"),
-    @NamedQuery(name = "Invitations.findByRecieveremail", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.recieveremail = :recieveremail"),
-    @NamedQuery(name = "Invitations.findBySenderid", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.senderid = :senderid"),
+    @NamedQuery(name = "Invitations.findById", query = "SELECT i FROM Invitations i WHERE i.id = :id"),
     @NamedQuery(name = "Invitations.findByUrlcode", query = "SELECT i FROM Invitations i WHERE i.urlcode = :urlcode"),
     @NamedQuery(name = "Invitations.findByIsactivated", query = "SELECT i FROM Invitations i WHERE i.isactivated = :isactivated"),
     @NamedQuery(name = "Invitations.findByVersion", query = "SELECT i FROM Invitations i WHERE i.version = :version")})
 public class Invitations implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected InvitationsPK invitationsPK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -47,35 +52,29 @@ public class Invitations implements Serializable {
     @Column(name = "version")
     @Version
     private int version;
-    @JoinColumn(name = "recieveremail", referencedColumnName = "email", insertable = false, updatable = false)
+    @JoinColumn(name = "senderid", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Principals principals;
-    @JoinColumn(name = "senderid", referencedColumnName = "id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Principals principals1;
+    private Principals senderid;
 
     public Invitations() {
     }
 
-    public Invitations(InvitationsPK invitationsPK) {
-        this.invitationsPK = invitationsPK;
+    public Invitations(Integer id) {
+        this.id = id;
     }
 
-    public Invitations(InvitationsPK invitationsPK, String urlcode) {
-        this.invitationsPK = invitationsPK;
+    public Invitations(Integer id, String urlcode, int version) {
+        this.id = id;
         this.urlcode = urlcode;
+        this.version = version;
     }
 
-    public Invitations(String recieveremail, int senderid) {
-        this.invitationsPK = new InvitationsPK(recieveremail, senderid);
+    public Integer getId() {
+        return id;
     }
 
-    public InvitationsPK getInvitationsPK() {
-        return invitationsPK;
-    }
-
-    public void setInvitationsPK(InvitationsPK invitationsPK) {
-        this.invitationsPK = invitationsPK;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUrlcode() {
@@ -102,26 +101,18 @@ public class Invitations implements Serializable {
         this.version = version;
     }
 
-    public Principals getPrincipals() {
-        return principals;
+    public Principals getSenderid() {
+        return senderid;
     }
 
-    public void setPrincipals(Principals principals) {
-        this.principals = principals;
-    }
-
-    public Principals getPrincipals1() {
-        return principals1;
-    }
-
-    public void setPrincipals1(Principals principals1) {
-        this.principals1 = principals1;
+    public void setSenderid(Principals senderid) {
+        this.senderid = senderid;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (invitationsPK != null ? invitationsPK.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -132,7 +123,7 @@ public class Invitations implements Serializable {
             return false;
         }
         Invitations other = (Invitations) object;
-        if ((this.invitationsPK == null && other.invitationsPK != null) || (this.invitationsPK != null && !this.invitationsPK.equals(other.invitationsPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -140,7 +131,7 @@ public class Invitations implements Serializable {
 
     @Override
     public String toString() {
-        return "DT.Entities.Invitations[ invitationsPK=" + invitationsPK + " ]";
+        return "DT.Entities.Invitations[ id=" + id + " ]";
     }
     
 }

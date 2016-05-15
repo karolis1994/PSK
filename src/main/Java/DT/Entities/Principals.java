@@ -51,6 +51,25 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "address")
+    private String address;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "phonenumber")
+    private String phonenumber;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "birthdate")
+    private String birthdate;
+    @Size(max = 255)
+    @Column(name = "about")
+    private String about;
+
     @Column(name = "membershipuntill")
     @Temporal(TemporalType.DATE)
     private Date membershipuntill;
@@ -105,10 +124,8 @@ public class Principals implements Serializable {
     @Column(name = "version")
     @Version
     private int version;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principals")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderid")
     private List<Invitations> invitationsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principals1")
-    private List<Invitations> invitationsList1;
     
     public Principals() {
     }
@@ -229,14 +246,6 @@ public class Principals implements Serializable {
         this.invitationsList = invitationsList;
     }
 
-    public List<Invitations> getInvitationsList1() {
-        return invitationsList1;
-    }
-
-    public void setInvitationsList1(List<Invitations> invitationsList1) {
-        this.invitationsList1 = invitationsList1;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -294,6 +303,38 @@ public class Principals implements Serializable {
 
     public void setPaymentsList(List<Payments> paymentsList) {
         this.paymentsList = paymentsList;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
     
 }

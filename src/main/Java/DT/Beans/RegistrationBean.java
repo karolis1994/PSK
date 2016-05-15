@@ -19,7 +19,6 @@ import javax.validation.constraints.Size;
 import javax.faces.bean.ManagedBean;    
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Past;
 import org.primefaces.model.UploadedFile;
 
@@ -81,6 +80,12 @@ public class RegistrationBean implements Serializable{
             } catch(Exception e) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klaida: ", "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui."));
                 return "";
+            }
+            principal.setAddress(address);
+            principal.setBirthdate(birthdate);
+            principal.setPhonenumber(phoneNumber);
+            if(about != null) {
+                principal.setAbout(about);
             }
             principal.setPoints(0);
             principal.setIsadmin(Boolean.FALSE);
