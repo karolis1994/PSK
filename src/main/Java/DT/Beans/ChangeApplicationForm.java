@@ -19,37 +19,52 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean(name="changeApplicationForm")
 public class ChangeApplicationForm {
-    private boolean firstname;
-    public boolean isFirstname() {
-        return firstname;
-    }
-    public void setFirstname(boolean firstname) {
-        this.firstname = firstname;
-    }   
-    private boolean lastname;
-    public boolean isLastname() {
-        return lastname;
-    }
-    public void setLastname(boolean lastname) {
-        this.lastname = lastname;
-    }
-    private Settings firstnameSettings;
-    private Settings lastnameSettings;
+       
+    private boolean picture;    
+    private boolean about;      
+    
+    private Settings PictureSettings;
+    private Settings AboutSettings;
+    
     @EJB
     SettingsFacade settingsFacade;
     
     @PostConstruct
     public void init() {
-        //firstnameSetting = "true".equals(settingsFacade.getSettingByName("firstnamesetting"));
-        //lastnameSetting = "true".equals(settingsFacade.getSettingByName("lastnamesetting"));
+        //užkrauname nustatymus  
+        AboutSettings = settingsFacade.getSettingByName("AboutField");
+        PictureSettings = settingsFacade.getSettingByName("PictureField");
+        
+        about = "true".equals(AboutSettings.getSettingvalue());
+        picture = "true".equals(PictureSettings.getSettingvalue());
+        
     }
     
     
     public void change() {
-        /*firstnameSettings.setSettingvalue(String.valueOf(firstname));
-        lastnameSettings.setSettingvalue(String.valueOf(lastname));
-        settingsFacade.edit(firstnameSettings);
-        settingsFacade.edit(lastnameSettings);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Forma atnaujinta"));*/
+        AboutSettings.setSettingvalue(String.valueOf(about)); 
+        PictureSettings.setSettingvalue(String.valueOf(picture));                      
+        
+        settingsFacade.edit(AboutSettings);
+        settingsFacade.edit(PictureSettings);                
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Forma atnaujinta"));
     }
+
+    public boolean isPicture() {
+        return picture;
+    }
+
+    public void setPicture(boolean picture) {
+        this.picture = picture;
+    }
+
+    public boolean isAbout() {
+        return about;
+    }
+
+    public void setAbout(boolean about) {
+        this.about = about;
+    }  
+    
 }

@@ -20,6 +20,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Past;
+import org.primefaces.model.UploadedFile;
 
 
 /**
@@ -33,14 +35,24 @@ public class RegistrationBean implements Serializable{
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
     @Size(min=0,max=20)
-    private String firstName;
+    private String firstname;
     @Size(min=0,max=25)
-    private String lastName;
+    private String lastname;
     @Size(min=5,max=20)
     private String password;
     private String repeatPassword;
-    private boolean firstnameSetting = true;
-    private boolean lastnameSetting = true;
+    private String address;
+    @Past
+    private String birthdate;
+    @Pattern(regexp="\\+370\\d{8}|8\\d{8}")
+    private String phoneNumber;
+    @Size(max=250)
+    private String about;
+    private UploadedFile picture;
+    
+    private boolean aboutField = true;
+    private boolean pictureField = true;
+    
     private Principals principal;
       
     @EJB
@@ -49,83 +61,23 @@ public class RegistrationBean implements Serializable{
     private SettingsFacade settingsFacade;
     @EJB
     private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
-
-    public boolean isFirstnameSetting() {
-        return firstnameSetting;
-    }
-
-    public void setFirstnameSetting(boolean firstnameSetting) {
-        this.firstnameSetting = firstnameSetting;
-    }
-
-    public boolean isLastnameSetting() {
-        return lastnameSetting;
-    }
-
-    public void setLastnameSetting(boolean lastnameSetting) {
-        this.lastnameSetting = lastnameSetting;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRepeatPassword() {
-        return repeatPassword;
-    }
-
-    public void setRepeatPassword(String repeatPassword) {
-        this.repeatPassword = repeatPassword;
-    }
     
     @PostConstruct
     public void init(){
-        //firstnameSetting = "true".equals(settingsFacade.getSettingByName("firstnamesetting"));
-        //lastnameSetting = "true".equals(settingsFacade.getSettingByName("lastnamesetting"));
+        aboutField = "true".equals(settingsFacade.getSettingByName("AboutField").getSettingvalue());
+        pictureField = "true".equals(settingsFacade.getSettingByName("PictureField").getSettingvalue());
     }
     
     public String register() {
         if(registrationFacade.findByEmail(email).isEmpty()) {
             principal = new Principals();
             principal.setEmail(email);
-            if(firstName != null)
-                principal.setFirstname(firstName);   
-            else principal.setFirstname("noname");       
-            if(lastName != null)
-                principal.setLastname(lastName); 
-            else principal.setLastname("noname");
+            principal.setFirstname(firstname);
+            principal.setLastname(lastname);
             byte[] salt = passwordHasher.createSalt();
             principal.setSalt(salt.toString());
             try {
-            principal.setPasswordhash(passwordHasher.createHash(password, salt));
+                principal.setPasswordhash(passwordHasher.createHash(password, salt));
             } catch(Exception e) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klaida: ", "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui."));
                 return "";
@@ -146,5 +98,95 @@ public class RegistrationBean implements Serializable{
         }
         return "REGISTRATION_UNSUCCESFUL";
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }    
+    
+    public boolean isAboutField() {
+        return aboutField;
+    }
+
+    public void setAboutField(boolean aboutField) {
+        this.aboutField = aboutField;
+    }
+
+    public boolean isPictureField() {
+        return pictureField;
+    }
+
+    public void setPictureField(boolean pictureField) {
+        this.pictureField = pictureField;
+    }
+    
+    
     
 }

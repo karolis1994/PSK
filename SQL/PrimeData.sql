@@ -1,6 +1,6 @@
 -- Test user
-INSERT INTO principals (email, points, firstname, lastname, isadmin, isapproved, isdeleted, passwordhash, salt)
-    VALUES ('a@a.a', 999, 'a', 'a', TRUE, TRUE, FALSE, -1, '');
+INSERT INTO principals (email, points, firstname, lastname, address, phonenumber, birthdate, about, isadmin, isapproved, isdeleted, passwordhash, salt)
+    VALUES ('a@a.a', 999, 'a', 'a', 'no adress', '123', '1994-02-18', 'lalala', TRUE, TRUE, FALSE, -1, '');
 
 -- Yearly member's fee
 INSERT INTO otherservices (title, description)
@@ -22,6 +22,13 @@ VALUES ('MinRecommendations','2');
 
 INSERT INTO Settings (settingname, settingvalue)
 VALUES ('MaxRecommendations','5');
+
+--Registration form Settings
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('AboutField', 'false');
+
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('PictureField', 'false');
 
 --Houses
 INSERT INTO Houses (id, title, description, address, isclosed, isdeleted, capacity)
