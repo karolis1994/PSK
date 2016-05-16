@@ -41,8 +41,6 @@ public class GroupingByDaysReserved implements Grouping, Serializable {
         List<Reservations> reservations = 
                 reservationFacade.findByDatesCoveringNotCanceledExtraIdNull(from.getTime(), to.getTime());
         
-        System.out.println("Number of reservations found: " + reservations.size());
-        
         for (Principals p : principals) {
             int numOfDaysReserved = countNumberDaysReservedInPreviousYear(p, reservations);
             principalsMap.put(p, numOfDaysReserved);
@@ -53,12 +51,7 @@ public class GroupingByDaysReserved implements Grouping, Serializable {
         int leftToAssignInCurrentGroup = groupSize;
         int groupNumber = 1;
         
-        System.out.println("Group size: " + groupSize);
-        
-        for (Map.Entry pair : principalsMap.entrySet()) {
-            
-            System.out.println("Map key: " + pair.getKey() + " Map value: " + pair.getValue());
-            
+        for (Map.Entry pair : principalsMap.entrySet()) {           
             ((Principals) pair.getKey()).setGroupno(groupNumber);
             leftToAssignInCurrentGroup--;
             if (leftToAssignInCurrentGroup == 0) {
@@ -67,18 +60,12 @@ public class GroupingByDaysReserved implements Grouping, Serializable {
             }
         }
         
-        for (Principals p : principals) {
-            System.out.println("Principal: " + p.getFirstname() + " Group no: " + p.getGroupno());
-        }
-        
         return principals;
     }
     
     private void setDates() {
         Calendar currentDate = Calendar.getInstance();
         currentDate.add(Calendar.YEAR, -1);
-        
-        System.out.println("Current date " + currentDate.getTime());
         
         from = Calendar.getInstance();
         from.add(Calendar.YEAR, -1);
@@ -96,9 +83,6 @@ public class GroupingByDaysReserved implements Grouping, Serializable {
         to.set(Calendar.HOUR_OF_DAY, 23);
         to.set(Calendar.MINUTE, 59);
         to.set(Calendar.SECOND, 59);
-        
-        System.out.println(from.getTime());
-        System.out.println(to.getTime());
     }
     
     private int countNumberDaysReservedInPreviousYear(Principals principal, List<Reservations> reservations) {
