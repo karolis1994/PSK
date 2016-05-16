@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -37,6 +38,8 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Extras.findByDescription", query = "SELECT e FROM Extras e WHERE e.description = :description"),
     @NamedQuery(name = "Extras.findByIsdeleted", query = "SELECT e FROM Extras e WHERE e.isdeleted = :isdeleted")})
 public class Extras implements Serializable {
+    @OneToMany(mappedBy = "extraid")
+    private List<Reservations> reservationsList;
     @Basic(optional = false)
     @Column(name = "version")
     @Version
@@ -159,6 +162,15 @@ public class Extras implements Serializable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    @XmlTransient
+    public List<Reservations> getReservationsList() {
+        return reservationsList;
+    }
+
+    public void setReservationsList(List<Reservations> reservationsList) {
+        this.reservationsList = reservationsList;
     }
     
 }

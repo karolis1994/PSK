@@ -7,7 +7,9 @@ package DT.Entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,11 +17,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -47,6 +51,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Principals.findByMembershipuntill", query = "SELECT p FROM Principals p WHERE p.membershipuntill = :membershipuntill"),
     @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
+    private List<Reservations> reservationsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
+    private List<Payments> paymentsList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -288,6 +296,24 @@ public class Principals implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Principals[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public List<Reservations> getReservationsList() {
+        return reservationsList;
+    }
+
+    public void setReservationsList(List<Reservations> reservationsList) {
+        this.reservationsList = reservationsList;
+    }
+
+    @XmlTransient
+    public List<Payments> getPaymentsList() {
+        return paymentsList;
+    }
+
+    public void setPaymentsList(List<Payments> paymentsList) {
+        this.paymentsList = paymentsList;
     }
     
 }
