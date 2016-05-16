@@ -8,24 +8,25 @@ package DT.Beans;
 import DT.Entities.Principals;
 import DT.Entities.Reservations;
 import DT.Facades.ReservationFacade;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  *
  * @author Henrikas
  */
 @Alternative
-public class GroupingByDaysReserved implements Grouping {
+public class GroupingByDaysReserved implements Grouping, Serializable {
 
     @Inject
     private ReservationFacade reservationFacade;
@@ -38,25 +39,36 @@ public class GroupingByDaysReserved implements Grouping {
         setDates();
         
         List<Reservations> reservations = 
-                reservationFacade.findByDatesCoveredNotCanceledExtraIdNull(from.getTime(), to.getTime());
+                reservationFacade.findByDatesCoveringNotCanceledExtraIdNull(from.getTime(), to.getTime());
+        
+        System.out.println("Number of reservations found: " + reservations.size());
         
         for (Principals p : principals) {
             int numOfDaysReserved = countNumberDaysReservedInPreviousYear(p, reservations);
             principalsMap.put(p, numOfDaysReserved);
         }
-        
         principalsMap = sortMapByValues(principalsMap);
         
         int groupSize = (int) Math.ceil((double)principals.size() / (double)numberOfGroups);
         int leftToAssignInCurrentGroup = groupSize;
         int groupNumber = 1;
         
+        System.out.println("Group size: " + groupSize);
+        
         for (Map.Entry pair : principalsMap.entrySet()) {
+            
+            System.out.println("Map key: " + pair.getKey() + " Map value: " + pair.getValue());
+            
             ((Principals) pair.getKey()).setGroupno(groupNumber);
             leftToAssignInCurrentGroup--;
             if (leftToAssignInCurrentGroup == 0) {
+                leftToAssignInCurrentGroup = groupSize;
                 groupNumber++;
             }
+        }
+        
+        for (Principals p : principals) {
+            System.out.println("Principal: " + p.getFirstname() + " Group no: " + p.getGroupno());
         }
         
         return principals;
@@ -66,14 +78,24 @@ public class GroupingByDaysReserved implements Grouping {
         Calendar currentDate = Calendar.getInstance();
         currentDate.add(Calendar.YEAR, -1);
         
-        from = currentDate;
-        to = currentDate;
+        System.out.println("Current date " + currentDate.getTime());
+        
+        from = Calendar.getInstance();
+        from.add(Calendar.YEAR, -1);
+        to = Calendar.getInstance();
+        to.add(Calendar.YEAR, -1);
 
         from.set(Calendar.MONTH, Calendar.JANUARY);
         from.set(Calendar.DAY_OF_MONTH, 1);
+        from.set(Calendar.HOUR_OF_DAY, 0);
+        from.set(Calendar.MINUTE, 0);
+        from.set(Calendar.SECOND, 0);
         
-        from.set(Calendar.MONTH, Calendar.DECEMBER);
-        from.set(Calendar.DAY_OF_MONTH, from.getActualMaximum(Calendar.DAY_OF_MONTH));
+        to.set(Calendar.MONTH, Calendar.DECEMBER);
+        to.set(Calendar.DAY_OF_MONTH, from.getActualMaximum(Calendar.DAY_OF_MONTH));
+        to.set(Calendar.HOUR_OF_DAY, 23);
+        to.set(Calendar.MINUTE, 59);
+        to.set(Calendar.SECOND, 59);
         
         System.out.println(from.getTime());
         System.out.println(to.getTime());
@@ -93,7 +115,7 @@ public class GroupingByDaysReserved implements Grouping {
                     endTime = to.getTimeInMillis();
                 
                 long diffTime = endTime - startTime;
-                diffDays += (diffTime / (1000 * 60 * 60 * 24));
+                diffDays += (diffTime / (1000 * 60 * 60 * 24)) + 1;
             }
         }
         
@@ -113,11 +135,12 @@ public class GroupingByDaysReserved implements Grouping {
         });
 
         // Convert sorted map back to a Map
-        HashMap<Principals, Integer> sortedMap = new HashMap<>();
+        HashMap<Principals, Integer> sortedMap = new LinkedHashMap<>();
         for (Iterator<Map.Entry<Principals, Integer>> it = list.iterator(); it.hasNext();) {
                 Map.Entry<Principals, Integer> entry = it.next();
                 sortedMap.put(entry.getKey(), entry.getValue());
         }
+        
         return sortedMap;
     }
     
