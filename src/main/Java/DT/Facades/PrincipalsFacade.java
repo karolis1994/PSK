@@ -35,4 +35,9 @@ public class PrincipalsFacade extends GenericFacade<Principals>{
                 .setParameter("isapproved", true).getResultList();
     }
     
+    public Principals findByFacebookID(String facebookID) {
+        List<Principals> result = em.createNamedQuery("Principals.findByFacebookID")
+                .setParameter("facebookid", facebookID).getResultList();
+        return result.get(0);
+    }
 }

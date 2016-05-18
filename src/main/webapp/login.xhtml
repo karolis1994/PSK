@@ -33,7 +33,7 @@ and open the template in the editor.
                         <p:password id="password" value="#{loginBean.password}"  label="Password 1" required="true" />
                         </h:panelGrid>
                     <h:panelGrid columns="1" cellpadding="5">
-                    <p:commandButton action="#{loginBean.login}" value="Login" ajax="false" validateClient="true"/>
+                        <p:commandButton action="#{loginBean.login}" value="Login" ajax="false" validateClient="true" style="width:202px;"/>
                     <div >
                         <a href="https://www.facebook.com/dialog/oauth?client_id=1581543875491903&amp;scope=email&amp;redirect_uri=#{loginBean.getFBReturnUrl()}">
                             <img src="img/login-with-facebook.png" alt="FaceBook login" style=";border:0"/>

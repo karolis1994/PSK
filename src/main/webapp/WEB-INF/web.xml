@@ -4,6 +4,24 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <context-param>
+        <param-name>paypal-authtoken</param-name>
+        <param-value>rc0yWBLErmCUJFo53aVVnhuo6-uwrAn9nSkl41jlIRG5ScbhTdvvSlPb4-i</param-value>
+    </context-param>
+    <context-param>
+        <param-name>paypal-posturl</param-name>
+        <param-value>https://www.sandbox.paypal.com/cgi-bin/webscr</param-value>
+    </context-param>
+    <context-param>
+        <param-name>paypal-business</param-name>
+        <param-value>labanorodraugai@gmail.com</param-value>
+    </context-param>
+    <context-param>
+        <param-name>paypal-returnurl</param-name>
+        <param-value>http://localhost:8080/DT.ReservationSystem/logged-in/payments/yearly-members-fee.xhtml</param-value>
+    </context-param>
+    
+    
     <filter>
         <filter-name>Authentication</filter-name>
         <filter-class>DT.Filters.Authentication</filter-class>

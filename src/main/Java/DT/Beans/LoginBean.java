@@ -5,6 +5,8 @@
  */
 package DT.Beans;
 
+import DT.Entities.Principals;
+import DT.Facades.PrincipalsFacade;
 import facebook4j.Account;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
@@ -22,12 +24,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -38,7 +43,8 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author donatas
  */
-@ManagedBean(name = "loginBean")
+
+@Named("loginBean")
 @RequestScoped
 public class LoginBean {
 
@@ -47,11 +53,17 @@ public class LoginBean {
 
     @Pattern(regexp = "[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
+    
+    @EJB
+    private PrincipalsFacade principalsFacade;
+    
     @Size(min = 5)
     private String password;
 
-    @ManagedProperty(value = "#{param.code}")
     private String code;
+    
+    @Inject
+    private UserSessionBean userSessionBean;
 
     public String getCode() {
         return code;
@@ -77,10 +89,9 @@ public class LoginBean {
         this.password = password;
     }
 
-    /**
-     * Creates a new instance of LoginBean
-     */
-    public LoginBean() {
+    @PostConstruct
+    void init() {
+        code = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("code");
     }
 
     public void login() throws IOException {
@@ -110,6 +121,12 @@ public class LoginBean {
         facebook.setOAuthAccessToken(token);
         User user = facebook.getUser(facebook.getId(), new Reading().fields("email"));
         String fbemail = user.getEmail();
+        
+        // Setting current user to UserSessionBean
+        String facebookUserID = user.getId();
+        Principals currentUser = principalsFacade.findByFacebookID(facebookUserID);
+        userSessionBean.setUser(currentUser);
+        
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.setAttribute("authUserEmail", fbemail);
         return "logged-in/index.xhtml";

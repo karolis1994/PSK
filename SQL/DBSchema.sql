@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS Principals(
   IsApproved BOOLEAN NULL,
   IsDeleted BOOLEAN NULL,
   MembershipUntill DATE NULL,
+  FacebookID VARCHAR(128) NULL UNIQUE,
   Version SERIAL
 );
 CREATE TABLE IF NOT EXISTS Settings(

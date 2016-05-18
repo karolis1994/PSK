@@ -49,8 +49,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Principals.findByIsapproved", query = "SELECT p FROM Principals p WHERE p.isapproved = :isapproved"),
     @NamedQuery(name = "Principals.findByIsdeleted", query = "SELECT p FROM Principals p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Principals.findByMembershipuntill", query = "SELECT p FROM Principals p WHERE p.membershipuntill = :membershipuntill"),
-    @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
+    @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version"),
+    @NamedQuery(name = "Principals.findByFacebookID", query = "SELECT p FROM Principals p WHERE p.facebookid = :facebookid")})
 public class Principals implements Serializable {
+
+    @Size(max = 128)
+    @Column(name = "facebookid")
+    private String facebookid;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
     private List<Reservations> reservationsList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
@@ -314,6 +319,14 @@ public class Principals implements Serializable {
 
     public void setPaymentsList(List<Payments> paymentsList) {
         this.paymentsList = paymentsList;
+    }
+
+    public String getFacebookid() {
+        return facebookid;
+    }
+
+    public void setFacebookid(String facebookid) {
+        this.facebookid = facebookid;
     }
     
 }

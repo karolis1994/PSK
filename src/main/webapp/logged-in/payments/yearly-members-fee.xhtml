@@ -7,9 +7,15 @@
     <ui:define name="general_content"> 
         <h:form>
             <p:panel header="Metinis nario mokestis">
-                    <p:commandButton value="Sumokėti nario mokestį" 
-                                     actionListener="#{membersFeeBean.payMembersFeeWithPoints}" 
-                                     ajax="false"/>
+                <p>
+                    #{membershipPaymentBean.membershipValidUntill}
+                </p>
+                <p>
+                    Norėdami pratęsti narystę sumokėkite metinį nario mokestį.
+                </p>
+                <p:commandButton value="Sumokėti nario mokestį klubo taškais" 
+                                 actionListener="#{membershipPaymentBean.payMembersFeeWithPoints}" 
+                                 ajax="false"/>
             </p:panel>
         </h:form>
     </ui:define>

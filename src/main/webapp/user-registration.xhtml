@@ -17,7 +17,7 @@
                         <p:message for="emailRegistration" />
                         
                         <h:outputLabel for="passwordRegistration" value="Slaptažodis *" />
-                        <p:password id="passwordRegistration" value="#{registrationBean.password}" match="passwordRepeat" label="Slaptažodis" required="true" />
+                        <p:password id="passwordRegistration" value="#{registrationBean.password}" match="passwordRepeatRegistration" label="Slaptažodis" required="true" />
 
                         <h:outputLabel for="passwordRepeatRegistration" value="Pakartokite slaptažodį *" />
                         <p:password id="passwordRepeatRegistration" value="#{registrationBean.repeatPassword}" label="Pakartokite slaptažodį" required="true" />   
