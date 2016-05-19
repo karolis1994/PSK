@@ -9,12 +9,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -98,6 +102,33 @@ public class MembershipPaymentBean implements Serializable {
         
         payer.setMembershipuntill(membershipUntill);
         principalsFacade.edit(payer);
+        
+        return "logged-in/index.xhtml";
+    }
+    
+    public String payMembersFeeWithPayPal() throws IOException {
+        
+        Paidservices membership = paidServicesFacade.find(1);
+        double price = membership.getCost();
+        DecimalFormat df = new DecimalFormat("#.00"); 
+        Map<String, String> response = PayPalHelper.getCheckOutToken(df.format(price), membership.getTitle());
+        
+        if ("success".equals(response.get("ACK").toLowerCase()))
+        {
+            String token = response.get("TOKEN");
+            
+            if (token != null)
+            {
+                String paymentUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + token;
+                
+                paymentsFacade.createPayPalPayment(userSessionBean.getUser(), membership, token);
+                
+                ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+                externalContext.redirect(paymentUrl);
+                
+                return paymentUrl;
+            }
+        }
         
         return "logged-in/index.xhtml";
     }

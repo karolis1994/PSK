@@ -25,6 +25,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -41,6 +42,10 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Payments.findByAmmount", query = "SELECT p FROM Payments p WHERE p.ammount = :ammount"),
     @NamedQuery(name = "Payments.findByIspaid", query = "SELECT p FROM Payments p WHERE p.ispaid = :ispaid")})
 public class Payments implements Serializable {
+
+    @Size(max = 128)
+    @Column(name = "paymentno")
+    private String paymentno;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentid")
     private List<Reservations> reservationsList;
 
@@ -57,8 +62,6 @@ public class Payments implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "paymentno")
-    private Integer paymentno;
     @Column(name = "createdat")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdat;
@@ -98,13 +101,6 @@ public class Payments implements Serializable {
         this.id = id;
     }
 
-    public Integer getPaymentno() {
-        return paymentno;
-    }
-
-    public void setPaymentno(Integer paymentno) {
-        this.paymentno = paymentno;
-    }
 
     public Date getCreatedat() {
         return createdat;
@@ -205,6 +201,14 @@ public class Payments implements Serializable {
 
     public void setReservationsList(List<Reservations> reservationsList) {
         this.reservationsList = reservationsList;
+    }
+
+    public String getPaymentno() {
+        return paymentno;
+    }
+
+    public void setPaymentno(String paymentno) {
+        this.paymentno = paymentno;
     }
 
 }

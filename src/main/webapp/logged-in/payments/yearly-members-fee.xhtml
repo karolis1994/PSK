@@ -16,6 +16,10 @@
                 <p:commandButton value="Sumokėti nario mokestį klubo taškais" 
                                  actionListener="#{membershipPaymentBean.payMembersFeeWithPoints}" 
                                  ajax="false"/>
+                
+                <p:commandButton value="Sumokėti nario mokestį PayPal sistemoje" 
+                                 action="#{membershipPaymentBean.payMembersFeeWithPayPal}" 
+                                 ajax="false"/>
             </p:panel>
         </h:form>
     </ui:define>

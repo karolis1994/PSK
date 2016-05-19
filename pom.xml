@@ -13,8 +13,15 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+            
     <dependencies>
+        <dependency>
+            <groupId>PayPal</groupId>
+            <artifactId>paypalnvm</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/PayPal.jar</systemPath>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
@@ -71,6 +78,15 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <archiveClasses>false</archiveClasses>
+                    <webResources>
+                        <resource>
+                            <directory>lib</directory>
+                            <targetPath>WEB-INF/lib</targetPath>
+                            <includes>
+                                 <include>**/*.jar</include>
+                            </includes>
+                         </resource>
+                    </webResources>
                 </configuration>
             </plugin>
             <plugin>

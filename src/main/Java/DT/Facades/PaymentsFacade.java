@@ -10,6 +10,7 @@ import DT.Entities.Paidservices;
 import DT.Entities.Payments;
 import DT.Entities.Principals;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -25,6 +26,52 @@ public class PaymentsFacade extends GenericFacade<Payments> {
     
     public PaymentsFacade() {
         super(Payments.class);
+    }
+    
+    public void createPayPalPayment(Principals principal, Paidservices paidService, String paymentNo) {
+        
+        double price = paidService.getCost();
+        
+        // Create payment object
+        Payments payment = new Payments();
+        
+        payment.setPaidWithPoints(false);
+        payment.setAmmount(price);
+        payment.setCreatedat(new Date());
+        payment.setIspaid(false);
+        payment.setPaidserviceid(paidService);
+        payment.setPrincipalid(principal);
+        payment.setVersion(1);
+        payment.setPaymentno(paymentNo);
+        
+        create(payment);
+    }
+    
+    public Payments findByPaymentNo(String paymentNo) {
+        List<Payments> result = em.createNamedQuery("Payments.findByPaymentno")
+                .setParameter("paymentno", paymentNo).getResultList();
+        
+        if (result.size() > 0)
+        {
+            return result.get(0);
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    public void completePayment(String paymentNo) {
+        
+        Payments payment = findByPaymentNo(paymentNo);
+        
+        if (payment != null)
+        {
+            payment.setIspaid(true);
+            payment.setPayedat(new Date());
+            
+            edit(payment);
+        }
     }
     
     public void PayWithPoints(Principals principal, Paidservices paidService) throws Exception {
