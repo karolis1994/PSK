@@ -9,13 +9,13 @@
         <h:form>
             <p:panel header="Mokėjimo patvirtinimas">
                 <p>
-                    #{payPalCompleteBean.payment.ammount} EUR
+                    #{payPalCompleteBean.payPalCompleteText}
                 </p>
                 <p:commandButton value="Patvirtinti mokėjimą" 
                                  actionListener="#{payPalCompleteBean.confirmPayment}" 
                                  ajax="false">
-                    <f:setPropertyActionListener target="#{payPalCompleteBean.paymentNo}" value="#{param.token}" />
-                    <f:setPropertyActionListener target="#{payPalCompleteBean.payerID}" value="#{param.PayerID}" />
+                    <f:param name="token" value="#{param.token}" />
+                    <f:param name="PayerID" value="#{param.PayerID}" />
                 </p:commandButton>
             </p:panel>
         </h:form>

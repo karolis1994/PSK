@@ -6,6 +6,7 @@
 package DT.Beans;
 
 import DT.Entities.Payments;
+import java.text.DecimalFormat;
 import java.util.Map;
 import paypalnvp.core.PayPal;
 import paypalnvp.fields.Currency;
@@ -14,6 +15,7 @@ import paypalnvp.fields.PaymentAction;
 import paypalnvp.fields.PaymentItem;
 import paypalnvp.profile.BaseProfile;
 import paypalnvp.profile.Profile;
+import paypalnvp.request.DoExpressCheckoutPayment;
 import paypalnvp.request.GetExpressCheckoutDetails;
 import paypalnvp.request.SetExpressCheckout;
 /*
@@ -75,7 +77,7 @@ public class PayPalHelper {
         return response;
     }
     
-    public static Map<String, String> doExpressCheckoutPayment(Payments payment) {
+    public static Map<String, String> doExpressCheckoutPayment(Payments payment, String payerID) {
         
         /* set user - these are your credentials from paypal */
         Profile user = new BaseProfile.Builder("labanorodraugai_api1.gmail.com",
@@ -84,11 +86,22 @@ public class PayPalHelper {
         /* create new instance of paypal nvp */
         PayPal pp = new PayPal(user, PayPal.Environment.SANDBOX);
         
-        String token = payment.getPaymentno().toString();
-//        String payerId = 
+        PaymentItem item = new PaymentItem();
+        DecimalFormat df = new DecimalFormat("#.00"); 
+        item.setAmount(df.format(payment.getAmmount()));
         
-//        DoExpressCheckoutPayment doEC = new DoExpressCheckoutPayment(payment, token, PaymentAction.SALE, payerId);
+        PaymentItem[] items = {item};
+        
+        Payment paymentPP = new Payment(items);
+        paymentPP.setCurrency(Currency.EUR);
+        
+        String token = payment.getPaymentno();
+        
+        DoExpressCheckoutPayment doEC = new DoExpressCheckoutPayment(paymentPP, token, PaymentAction.SALE, payerID);
     
-        return null;
+        pp.setResponse(doEC);
+        
+        Map<String, String> response = doEC.getNVPResponse();
+        return response;
     } 
 }
