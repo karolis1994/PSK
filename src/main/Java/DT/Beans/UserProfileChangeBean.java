@@ -67,8 +67,7 @@ public class UserProfileChangeBean {
     
     @PostConstruct
     public void init(){
-        //loggedInPrincipal = userSessionBean.getUser();
-        loggedInPrincipal = (Principals) principalsFacade.find(2);
+        loggedInPrincipal = userSessionBean.getUser();
         
         sdf = new SimpleDateFormat("yyyy-MM-dd");
         
