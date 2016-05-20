@@ -20,8 +20,7 @@ import javax.faces.context.FacesContext;
 @ManagedBean(name="changeApplicationForm")
 public class ChangeApplicationForm {
        
-    private boolean picture;    
-    private boolean about;      
+    // Fields ------------------------------------------------------------------
     
     private Settings PictureSettings;
     private Settings AboutSettings;
@@ -29,9 +28,14 @@ public class ChangeApplicationForm {
     @EJB
     SettingsFacade settingsFacade;
     
+    private boolean picture;    
+    private boolean about;   
+    
+    // Methods -----------------------------------------------------------------
+    
     @PostConstruct
     public void init() {
-        //užkrauname nustatymus  
+        //Loading settings 
         AboutSettings = settingsFacade.getSettingByName("AboutField");
         PictureSettings = settingsFacade.getSettingByName("PictureField");
         
@@ -39,18 +43,19 @@ public class ChangeApplicationForm {
         picture = "true".equals(PictureSettings.getSettingvalue());
         
     }
-    
-    
+
+    //Method to change settings
     public void change() {
+        //Setting fields and updating database
         AboutSettings.setSettingvalue(String.valueOf(about)); 
         PictureSettings.setSettingvalue(String.valueOf(picture));                      
-        
         settingsFacade.edit(AboutSettings);
         settingsFacade.edit(PictureSettings);                
-        
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Forma atnaujinta"));
     }
 
+    // Getters / setters -------------------------------------------------------
+    
     public boolean isPicture() {
         return picture;
     }

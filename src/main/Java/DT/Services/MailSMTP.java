@@ -18,31 +18,34 @@ import java.util.*;
 @Stateless
 public class MailSMTP implements IMail, Serializable{
 
+    // Fields ------------------------------------------------------------------
+    
     private static final String FROM = "psk.labanoras@gmail.com";
     private static final String SMTPSERV = "smtp.gmail.com";
 
-
+    // Methods -----------------------------------------------------------------
+    
     public int sendMail(String recipient, String subject, String message) {
         try {
             Properties props = System.getProperties();
-            // -- Attaching to default Session, or we could start a new one --
+            //Attaching to default Session, or we could start a new one
             props.put("mail.transport.protocol", "smtp" );
             props.put("mail.smtp.starttls.enable", "true" );
             props.put("mail.smtp.host", SMTPSERV);
             props.put("mail.smtp.auth", "true" );
             Authenticator auth = new SMTPAuthenticator();
             Session session = Session.getInstance(props, auth);
-            // -- Create a new message --
+            //Create a new message
             Message msg = new MimeMessage(session);
-            // -- Set the FROM and TO fields --
+            //Set the FROM and TO fields
             msg.setFrom(new InternetAddress(FROM));
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient, false));
             msg.setSubject(subject);
             msg.setText(message);
-            // -- Set some other header information --
+            //Set some other header information
             msg.setHeader("Labanoro Draugai mail", "Klubas Labanoro Draugai" );
             msg.setSentDate(new Date());
-            // -- Send the message --
+            //Send the message
             Transport.send(msg);
             return 0;
         }
@@ -56,8 +59,8 @@ public class MailSMTP implements IMail, Serializable{
         
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
-            String username =  "psk.labanoras";           // specify your email id here (sender's email id)
-            String password = "labanoras";                                      // specify your password here
+            String username =  "psk.labanoras";
+            String password = "labanoras";
             return new PasswordAuthentication(username, password);
         }
     }

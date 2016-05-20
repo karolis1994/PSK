@@ -11,8 +11,6 @@ import DT.Facades.SettingsFacade;
 import DT.Services.IPasswordHasher;
 import DT.Services.PasswordHasherPBKDF2;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -25,7 +23,6 @@ import javax.faces.context.FacesContext;
 import javax.validation.constraints.Past;
 import org.primefaces.model.UploadedFile;
 
-
 /**
  *
  * @author Karolis
@@ -33,6 +30,17 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean(name = "registrationBean")
 @ViewScoped
 public class RegistrationBean implements Serializable{
+    
+    // Fields ------------------------------------------------------------------
+    
+    private Principals principal;
+      
+    @EJB
+    private PrincipalsFacade registrationFacade;
+    @EJB
+    private SettingsFacade settingsFacade;
+    @EJB
+    private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
     
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
@@ -53,16 +61,9 @@ public class RegistrationBean implements Serializable{
     private UploadedFile picture;
     
     private boolean aboutField = true;
-    private boolean pictureField = true;
+    private boolean pictureField = true;      
     
-    private Principals principal;
-      
-    @EJB
-    private PrincipalsFacade registrationFacade;
-    @EJB
-    private SettingsFacade settingsFacade;
-    @EJB
-    private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
+    // Methods -----------------------------------------------------------------
     
     @PostConstruct
     public void init(){
@@ -70,6 +71,7 @@ public class RegistrationBean implements Serializable{
         pictureField = "true".equals(settingsFacade.getSettingByName("PictureField").getSettingvalue());
     }
     
+    //Method to register a new principal
     public String register() {
         if(registrationFacade.findByEmail(email).isEmpty()) {
             principal = new Principals();
@@ -85,8 +87,7 @@ public class RegistrationBean implements Serializable{
                 return "";
             }
             principal.setAddress(address);
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            principal.setBirthdate(df.format(birthdate));
+            principal.setBirthdate(birthdate);
             principal.setPhonenumber(phoneNumber);
             if(about != null) {
                 principal.setAbout(about);
@@ -108,6 +109,8 @@ public class RegistrationBean implements Serializable{
         return "REGISTRATION_UNSUCCESFUL";
     }
 
+    // Getters / setters -------------------------------------------------------
+    
     public String getEmail() {
         return email;
     }

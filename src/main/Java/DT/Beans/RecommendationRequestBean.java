@@ -22,8 +22,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -34,21 +34,13 @@ import javax.validation.constraints.Pattern;
 @ViewScoped
 public class RecommendationRequestBean implements Serializable{
     
-    private static final String SUBJECT = "Prašymas priimti į klubą";
+    // Fields ------------------------------------------------------------------
     
-    @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
-    private String inputEmail;
-    public String getInputEmail() {
-        return inputEmail;
-    }
-    public void setInputEmail(String inputEmail) {
-        this.inputEmail = inputEmail;
-    }
+    private static final String SUBJECT = "Prašymas priimti į klubą";
     
     private Principals loggedInPrincipal;
     private Principals inputPrincipal;
     private Settings maxRecommendations;
-    private int currentlySentRecommendations;
     
     @EJB
     private SettingsFacade settingsFacade;
@@ -59,31 +51,39 @@ public class RecommendationRequestBean implements Serializable{
     @EJB
     private final IMail mailSMTP = new MailSMTP();
     
+    @Inject
+    private UserSessionBean userSessionBean;
+    
+    @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
+    private String inputEmail;
+    private int currentlySentRecommendations;  
+    
+    // Methods -----------------------------------------------------------------
+    
     @PostConstruct
     public void init() {
         
-        //Gauname prisijungusio naudotojo objekta
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-        String loggedInEmail = (String) session.getAttribute("authUserEmail");
-        loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail).get(0);      
+        loggedInPrincipal = userSessionBean.getUser();     
               
         maxRecommendations = (Settings) settingsFacade.getSettingByName("MaxRecommendations");
         currentlySentRecommendations = recommendationsFacade.findBySender(loggedInPrincipal.getId()).size();
         
     }
     
+    
+    //Method to send mail
     public void SendEmails() throws Exception{
-        //Patikriname ar narys jau nėra patvirtintas
+        //Check if the logged in user is not already approved
         if(loggedInPrincipal.getIsapproved() == true) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Jums jau yra suteiktas patvirtinto nario statusas."));
             return;
         }
-        //Patikriname ar išsiūstų prašymų skaičius neviršija leistinos ribos
+        //Check if recommendations count is not above maximum
         if(currentlySentRecommendations >= Integer.parseInt(maxRecommendations.getSettingvalue())) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Daugiau prašymų siūsti nebegalima."));
             return;
         }
-        //Patikriname ar yra narys užsiregistravęs su įvestu email
+        //Check if there is a user registered with input email
         inputPrincipal = new Principals();
         inputPrincipal.setIsapproved(Boolean.FALSE);
         try {
@@ -92,17 +92,17 @@ public class RecommendationRequestBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Narys su įvestu email neegzistuoja."));
             return;
         }    
-        //Patikriname ar narys kuriam siunčiame yra patvirtintas
+        //Check if the user we're sending the email to is aleady a member
         if(!inputPrincipal.getIsapproved()){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Narys su įvestu email nėra patvirtintas narys."));
             return;
         }
         
-        //sugeneruojam aktyvacijos rakta, sukuriam reikiamus laukus
+        //Generating activation key
         String uuid = UUID.randomUUID().toString();
         Recommendations recommendation = new Recommendations();
         
-        //Gauname internetio adreso bazinį url, jį pridedam prie žinutės
+        //Getting the base URL and creating the message to be sent
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String url = request.getRequestURL().toString();
         String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
@@ -131,6 +131,15 @@ public class RecommendationRequestBean implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Email buvo išsiūstas."));
             }
         }
+    }
+    
+    // Getters / setters -------------------------------------------------------
+    
+    public String getInputEmail() {
+        return inputEmail;
+    }
+    public void setInputEmail(String inputEmail) {
+        this.inputEmail = inputEmail;
     }
     
 }

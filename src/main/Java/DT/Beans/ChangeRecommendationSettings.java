@@ -19,29 +19,19 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean(name="changeRecommendationSettings")
 public class ChangeRecommendationSettings {
-    
-    private String maxRecommendationsValue;
-    public String getMaxRecommendationsValue() {
-        return maxRecommendationsValue;
-    }
-    public void setMaxRecommendationsValue(String maxRecommendationsValue) {
-        this.maxRecommendationsValue = maxRecommendationsValue;
-    }
-
-    private String minRecommendationsValue;
-    public String getMinRecommendationsValue() {
-        return minRecommendationsValue;
-    }
-
-    public void setMinRecommendationsValue(String minRecommendationsValue) {
-        this.minRecommendationsValue = minRecommendationsValue;
-    }
      
+    // Fields ------------------------------------------------------------------
+    
     private Settings maxRecommendations;
     private Settings minRecommendations;
     
     @EJB
     private SettingsFacade settingsFacade;
+    
+    private String maxRecommendationsValue;
+    private String minRecommendationsValue;
+    
+    // Methods -----------------------------------------------------------------
     
     @PostConstruct
     public void init() {
@@ -52,10 +42,12 @@ public class ChangeRecommendationSettings {
         minRecommendationsValue = minRecommendations.getSettingvalue();
     }
     
+    //Method to change settings
     public void change() {
         int max;
         int min;
-        //Patikriname ar įvesta skaičiai
+        
+        //Check if input is valid
         try {
             max = Integer.parseInt(maxRecommendationsValue);
             min = Integer.parseInt(minRecommendationsValue);
@@ -63,22 +55,41 @@ public class ChangeRecommendationSettings {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Įvesta ne skaičiai."));
             return;
         }
-        //Patikriname ar įvesta teigiami skaičiai
+        //Check if input numbers positive
         if(max <= 0 || min <= 0) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Įvesti skaičiai negali būti mažesni už 0."));
             return;
         }
-        //Patikriname ar reikalaujamas minimalus skaičius patvirtinimų neviršija maksimaliai galimų išsiūsti žinučių
+        //Check if the minimal number is not above maximum
         if(max < min) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Įvestas minimumas negali būti didesnis už maksimumą."));
             return;
         }
         
+        //Setting fields and updating database
         maxRecommendations.setSettingvalue(""+max);
         minRecommendations.setSettingvalue(""+min);
         settingsFacade.edit(maxRecommendations);
         settingsFacade.edit(minRecommendations);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Nustatymai pakeisti."));
+    }
+    
+    // Getters / setters -------------------------------------------------------
+    
+    public String getMaxRecommendationsValue() {
+        return maxRecommendationsValue;
+    }
+    
+    public void setMaxRecommendationsValue(String maxRecommendationsValue) {
+        this.maxRecommendationsValue = maxRecommendationsValue;
+    }
+    
+    public String getMinRecommendationsValue() {
+        return minRecommendationsValue;
+    }
+
+    public void setMinRecommendationsValue(String minRecommendationsValue) {
+        this.minRecommendationsValue = minRecommendationsValue;
     }
     
 }

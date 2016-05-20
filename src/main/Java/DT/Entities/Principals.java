@@ -7,9 +7,7 @@ package DT.Entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,13 +15,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -49,17 +45,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Principals.findByIsapproved", query = "SELECT p FROM Principals p WHERE p.isapproved = :isapproved"),
     @NamedQuery(name = "Principals.findByIsdeleted", query = "SELECT p FROM Principals p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Principals.findByMembershipuntill", query = "SELECT p FROM Principals p WHERE p.membershipuntill = :membershipuntill"),
-    @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version"),
-    @NamedQuery(name = "Principals.findByFacebookID", query = "SELECT p FROM Principals p WHERE p.facebookid = :facebookid")})
+    @NamedQuery(name = "Principals.findByFacebookid", query = "SELECT p FROM Principals p WHERE p.facebookid = :facebookid"),
+    @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
-
-    @Size(max = 128)
-    @Column(name = "facebookid")
-    private String facebookid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
-    private List<Reservations> reservationsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
-    private List<Payments> paymentsList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -97,9 +85,9 @@ public class Principals implements Serializable {
     private String phonenumber;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
     @Column(name = "birthdate")
-    private String birthdate;
+    @Temporal(TemporalType.DATE)
+    private Date birthdate;
     @Size(max = 255)
     @Column(name = "about")
     private String about;
@@ -120,6 +108,9 @@ public class Principals implements Serializable {
     @Column(name = "membershipuntill")
     @Temporal(TemporalType.DATE)
     private Date membershipuntill;
+    @Size(max = 128)
+    @Column(name = "facebookid")
+    private String facebookid;
     @Basic(optional = false)
     @Column(name = "version")
     private int version;
@@ -131,7 +122,7 @@ public class Principals implements Serializable {
         this.id = id;
     }
 
-    public Principals(Integer id, String email, String firstname, String lastname, String address, String phonenumber, String birthdate, int version) {
+    public Principals(Integer id, String email, String firstname, String lastname, String address, String phonenumber, Date birthdate, int version) {
         this.id = id;
         this.email = email;
         this.firstname = firstname;
@@ -198,11 +189,11 @@ public class Principals implements Serializable {
         this.phonenumber = phonenumber;
     }
 
-    public String getBirthdate() {
+    public Date getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(String birthdate) {
+    public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -270,6 +261,14 @@ public class Principals implements Serializable {
         this.membershipuntill = membershipuntill;
     }
 
+    public String getFacebookid() {
+        return facebookid;
+    }
+
+    public void setFacebookid(String facebookid) {
+        this.facebookid = facebookid;
+    }
+
     public int getVersion() {
         return version;
     }
@@ -301,32 +300,6 @@ public class Principals implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Principals[ id=" + id + " ]";
-    }
-
-    @XmlTransient
-    public List<Reservations> getReservationsList() {
-        return reservationsList;
-    }
-
-    public void setReservationsList(List<Reservations> reservationsList) {
-        this.reservationsList = reservationsList;
-    }
-
-    @XmlTransient
-    public List<Payments> getPaymentsList() {
-        return paymentsList;
-    }
-
-    public void setPaymentsList(List<Payments> paymentsList) {
-        this.paymentsList = paymentsList;
-    }
-
-    public String getFacebookid() {
-        return facebookid;
-    }
-
-    public void setFacebookid(String facebookid) {
-        this.facebookid = facebookid;
     }
     
 }
