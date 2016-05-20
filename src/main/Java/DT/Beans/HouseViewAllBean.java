@@ -70,7 +70,7 @@ public class HouseViewAllBean {
         try {
             FacesContext.getCurrentInstance()
                     .getExternalContext()
-                    .redirect("house-preview.xhtml?id=" + selectedHouse.getId());
+                    .redirect("logged-in/house-preview.xhtml?id=" + selectedHouse.getId());
         } catch (IOException ex) {
             Logger.getLogger(HouseViewAllBean.class.getName()).log(Level.SEVERE, null, ex);
         }
