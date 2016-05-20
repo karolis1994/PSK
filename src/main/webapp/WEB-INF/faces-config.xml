@@ -5,7 +5,7 @@
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     
     <navigation-rule>  
-        <description>register new user</description>  
+        <description>Register a new user</description>  
         <from-view-id>/user-registration.xhtml</from-view-id>  
         <navigation-case>  
             <from-action>#{registrationBean.register}</from-action>  
@@ -21,6 +21,15 @@
             <from-action>#{registrationBean.register}</from-action>  
             <from-outcome>REGISTRATION_UNSUCCESFUL_RELOG</from-outcome>  
             <to-view-id>/logged-in/registration-unsuccesful-relog.xhtml</to-view-id>  
+        </navigation-case>      
+    </navigation-rule>
+    <navigation-rule>  
+        <description>Unregister</description>  
+        <from-view-id>/logged-in/user-profile-change.xhtml</from-view-id>  
+        <navigation-case>  
+            <from-action>#{userProfileChangeBean.unregister}</from-action>  
+            <from-outcome>LOGOUT</from-outcome>  
+            <to-view-id>/login.xhtml</to-view-id>  
         </navigation-case>      
     </navigation-rule>
     

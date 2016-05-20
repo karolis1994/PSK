@@ -67,7 +67,8 @@ public class UserProfileChangeBean {
     
     @PostConstruct
     public void init(){
-        loggedInPrincipal = userSessionBean.getUser();
+        //loggedInPrincipal = userSessionBean.getUser();
+        loggedInPrincipal = (Principals) principalsFacade.find(2);
         
         sdf = new SimpleDateFormat("yyyy-MM-dd");
         
@@ -115,7 +116,7 @@ public class UserProfileChangeBean {
         
         //Disconnect the user
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "login.xhtml?faces-redirect=true";
+        return "LOGOUT";
     }
     
     //Method to update the changed fields
