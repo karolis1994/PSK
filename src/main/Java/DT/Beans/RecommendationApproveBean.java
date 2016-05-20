@@ -5,11 +5,9 @@
  */
 package DT.Beans;
 
-import DT.Entities.Invitations;
 import DT.Entities.Principals;
 import DT.Entities.Recommendations;
 import DT.Entities.Settings;
-import DT.Facades.InvitationsFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.RecommendationsFacade;
 import DT.Facades.SettingsFacade;
@@ -20,7 +18,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
+import javax.inject.Inject;
 
 /**
  *
@@ -30,30 +28,13 @@ import javax.servlet.http.HttpSession;
 @RequestScoped
 public class RecommendationApproveBean {
     
-    @ManagedProperty(value="#{param.key}")
-    private String key;
-    public String getKey() {
-        return key;
-    }
-    public void setKey(String key) {
-        this.key = key;
-    }
-    
-    public boolean valid;
-    public boolean isValid() {
-        return valid;
-    }
-    public void setValid(boolean valid) {
-        this.valid = valid;
-    }
+    // Fields ------------------------------------------------------------------
     
     private Recommendations recommendation;
     private Principals principal;
     private Principals loggedInPrincipal;
     private Settings minRecommendations;
-    
-    private int currentlyAcceptedRecommendations;
-    
+      
     @EJB
     private PrincipalsFacade principalsFacade;
     @EJB
@@ -61,26 +42,28 @@ public class RecommendationApproveBean {
     @EJB
     private SettingsFacade settingsFacade;
     
+    @Inject
+    private UserSessionBean userSessionBean;
+    
+    @ManagedProperty(value="#{param.key}")
+    private String key;
+    public boolean valid;
+    private int currentlyAcceptedRecommendations; 
+     
+    // Methods -----------------------------------------------------------------
+    
     @PostConstruct
-    public void init() {
-        //Gauname prisijungusio naudotojo objekta
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-        String loggedInEmail = (String) session.getAttribute("authUserEmail");
-        if(loggedInEmail == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Norint patvirtinti šį prašyma jums reikia prisijungti."));
-            valid = false;
-            return;
-        }
-        loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail).get(0);
-
-        minRecommendations = (Settings) settingsFacade.getSettingByName("MinRecommendations");
-              
+    public void init() {       
+        loggedInPrincipal = userSessionBean.getUser(); 
+        
+        minRecommendations = (Settings) settingsFacade.getSettingByName("MinRecommendations");           
         if(key != null)
             valid = approve();
         else
             valid = false;
     }
     
+    //Method checking if the approval message is correct
     public boolean approve() {
         try {
             recommendation = (Recommendations) recommendationsFacade.findByURLCode(key).get(0);          
@@ -88,17 +71,16 @@ public class RecommendationApproveBean {
             return false;
         }
         
-        //Patikriname ar prisijungęs vartotojas yra tas, kuriam buvo siūstas prašymas
+        //Check if logged in user is the one to whom this email was sent
         if(recommendation.getRecieverid().equals(loggedInPrincipal)) {
-            //patvirtiname rekomendaciją
+            //approve recommendation
             recommendation.setIsactivated(Boolean.TRUE);
             recommendationsFacade.edit(recommendation);
             
-            //Patikriname ar kol kas patvirtintų pakvietimų skaičius tenkina reikiamą ribą
+            //Check if there are enough approvals
             currentlyAcceptedRecommendations = recommendationsFacade
                     .findByApprovedSender(recommendation.getSenderid().getId()).size();      
             int minRecommendationsCount = Integer.parseInt(minRecommendations.getSettingvalue());
-            System.out.println("test   "+currentlyAcceptedRecommendations+" " + minRecommendationsCount);
             if(currentlyAcceptedRecommendations < minRecommendationsCount) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                         FacesMessage.SEVERITY_INFO, "", "Prašymas patvirtintas"));
@@ -114,5 +96,25 @@ public class RecommendationApproveBean {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Šio prašymo jūs negalite patvirtinti, nes jis nebuvo siūstas jums."));
             return false;
         }
+    }
+    
+    // Getters / setters -------------------------------------------------------
+    
+    public boolean isValid() {
+        return valid;
+    }
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+    
+    public String getKey() {
+        return key;
+    }
+    public void setKey(String key) {
+        this.key = key;
+    }
+    
+    public String getEmptyString() { 
+        return ""; 
     }
 }
