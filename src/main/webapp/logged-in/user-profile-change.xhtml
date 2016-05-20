@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="/templates/general_template.xhtml">
+    
+    <ui:define name="general_content">
+        <div>
+            <h:form>
+                <h:outputText/>
+                <p:panel id="profileChangePage" header="Profilio nustatymai">
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                    <h:panelGrid columns="2" cellpadding="5">
+
+
+                        
+                        <h:outputLabel for="pointsProfileChange" value="Turimi taškai" />
+                        <h:outputText id="pointsProfileChange" value="#{userProfileChangeBean.points}" />
+
+                        <h:outputLabel for="memeberUntilProfileChange" value="Narys iki" />
+                        <h:outputText id="memeberUntilProfileChange" value="#{userProfileChangeBean.memberUntil}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="1" cellpadding="2">    
+                        <h:outputLabel for="firstnameProfileChange" value="Vardas *"/>
+                        <p:inputText id="firstnameProfileChange" value="#{userProfileChangeBean.firstname}" label="Vardas" required="true"/>
+                        <p:message for="firstnameProfileChange" />
+                        
+                        <h:outputLabel for="lastnameProfileChange" value="Pavardė *"/>
+                        <p:inputText id="lastnameProfileChange" value="#{userProfileChangeBean.lastname}" label="Pavardė" required="true"/>
+                        <p:message for="lastnameProfileChange" />
+                        
+                        <h:outputLabel for="birthdateProfileChange" value="Gimimo data [yyyy-mm-dd] *"/>
+                        <p:inputText id="birthdateProfileChange" value="#{userProfileChangeBean.birthdate}" label="Gimimo data" required="true">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </p:inputText>
+                        <p:message for="birthdateProfileChange" />
+
+                        <h:outputLabel for="emailProfileChange" value="Email *" />
+                        <p:inputText id="emailProfileChange" value="#{userProfileChangeBean.email}" label="Email" required="true"/>
+                        <p:message for="emailProfileChange" />
+
+                        <h:outputLabel for="addressProfileChange" value="Adresas *"/>
+                        <p:inputText id="addressProfileChange" value="#{userProfileChangeBean.address}" label="Adresas" required="true"/>
+                        <p:message for="addressProfileChange" />               
+
+                        <h:outputLabel for="phoneNumberProfileChange" value="Telefono numeris *" />
+                        <p:inputText id="phoneNumberProfileChange" value="#{userProfileChangeBean.phoneNumber}" label="Telefono numeris" required="true"/>
+                        <p:message for="phoneNumberProfileChange" />
+
+                        <h:outputLabel for="aboutProfileChange" value="Trumpas jūsų prisistatymas" rendered="#{userProfileChangeBean.aboutField}"/>
+                        <p:inputTextarea id="aboutProfileChange" value="#{userProfileChangeBean.about}" rows="5" cols="30" 
+                                         counter="remainingCharsProfileChange" maxlength="250" counterTemplate="{0} characters remaining." 
+                                         autoResize="false" rendered="#{userProfileChangeBean.aboutField}"/>
+                        <h:outputText id="remainingCharsProfileChange" rendered="#{userProfileChangeBean.aboutField}"/>    
+
+                    </h:panelGrid>
+
+                    <p:commandButton action="#{userProfileChangeBean.update}" value="Atnaujinti" ajax="false" validateClient="true"/>
+                    
+                    <p:commandButton action="#{userProfileChangeBean.unregister}" value="Išsiregistruoti">
+                        <p:confirm header="Ištrynimas" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <f:facet name="message">
+                            <h:outputText value="Ar tikrai norite ištrinti savo paskyrą?" />
+                            <br />
+                            <h:outputText value="Ištrynus paskyrą visos jūsų rezervacijos bus ištrintos, ir nario statusas atšauktas." />
+                            <br/>
+                            <h:outputText value="Pinigai nebus grąžinami."/>
+                        </f:facet>
+                        <p:commandButton value="Taip" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Ne" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+    
+</ui:composition>

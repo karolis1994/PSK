@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Principals(
   Lastname VARCHAR (255) NOT NULL,
   Address VARCHAR (255) NOT NULL,
   PhoneNumber VARCHAR (255) NOT NULL,
-  Birthdate VARCHAR (255) NOT NULL,
+  Birthdate DATE NOT NULL,
   About VARCHAR (255) NULL,
   PasswordHash VARCHAR(255) NULL,
   Salt VARCHAR(255) NULL,
