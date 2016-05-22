@@ -11,7 +11,10 @@ import DT.Entities.Reservations;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.ReservationFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,25 +35,57 @@ public class ReservationsHistoryBean implements Serializable {
     @Inject
     private ReservationFacade reservationFacade;
     
-    private Principals principal;
-    private List<Reservations> reservations;
-    private Reservations selectedReservation;
+    private Principals principal;   
+    private ReservationItem selectedItem;
+    private List<ReservationItem> reservationItems;
     
-    private List<Reservations> findReservations() {
-        reservations = reservationFacade.findByPrincipalNotCanceled(getPrincipal());
+    public class ReservationItem implements Serializable {
+        private Reservations houseReservation;
+        private List<Reservations> extraReservations;
+
+        public Reservations getHouseReservation() { return houseReservation; }
+        public void setHouseReservation(Reservations houseReservation) { this.houseReservation = houseReservation; }
+
+        public List<Reservations> getExtraReservations() { return extraReservations; }
+        public void setExtraReservations(List<Reservations> extraReservations) { this.extraReservations = extraReservations; }
         
-        return reservations;
+    }
+    
+    private List<ReservationItem> findReservations() {
+        List<Reservations> houseReservations = reservationFacade.findByPrincipalNotCanceledExtraIdNull(getPrincipal());
+        List<Reservations> extraReservations = reservationFacade.findByPrincipalNotCanceledExtraIdNotNull(getPrincipal());
+        
+        reservationItems = new ArrayList<>();
+        
+        for (Reservations hr : houseReservations) {
+            List<Reservations> reservedExtras = new ArrayList<>();
+            
+            for (Reservations er : extraReservations) {
+                if (hr.getPaymentid().equals(er.getPaymentid())) {
+                    reservedExtras.add(er);
+                }
+            }
+            
+            ReservationItem newItem = new ReservationItem();
+            newItem.setHouseReservation(hr);
+            newItem.setExtraReservations(reservedExtras);
+            reservationItems.add(newItem);
+        }
+        
+        return reservationItems;
     }
 
-    public String cancelReservation() {
-        selectedReservation.setIscanceled(true);
-        reservationFacade.edit(selectedReservation);
+    public String cancelReservation() {      
+//        selectedItem.getHouseReservation().setIscanceled(true);
+//        reservationFacade.edit(selectedItem.getHouseReservation());
+        int changed = reservationFacade.setCanceledByPaymendId(selectedItem.getHouseReservation().getPaymentid(), true);
+        System.out.println("Changed rows " + changed);
         
         return RESERVATIONS_HISTORY_PAGE;
     }
     
-    public void preselectReservation(Reservations reservation) {
-        selectedReservation = reservation;
+    public void preselectReservation(ReservationItem item) {
+        selectedItem = item;
     }
     
     public PrincipalsFacade getPrincipalsFacade() {
@@ -82,23 +117,25 @@ public class ReservationsHistoryBean implements Serializable {
         this.principal = principal;
     }
 
-    public List<Reservations> getReservations() {
-        if (reservations == null) {
+    public ReservationItem getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(ReservationItem selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public List<ReservationItem> getReservationItems() {
+        if (reservationItems == null) {
             findReservations();
         }
         
-        return reservations;
+        return reservationItems;
     }
 
-    public void setReservations(List<Reservations> reservations) {
-        this.reservations = reservations;
+    public void setReservationItems(List<ReservationItem> reservationItems) {
+        this.reservationItems = reservationItems;
     }
-
-    public Reservations getSelectedReservation() {
-        return selectedReservation;
-    }
-
-    public void setSelectedReservation(Reservations selectedReservation) {
-        this.selectedReservation = selectedReservation;
-    }
+    
+    
 }

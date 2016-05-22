@@ -58,7 +58,7 @@ public class ReservationBean implements Serializable{
     private List<ExtraItem> extraItems = new ArrayList<>();
     private List<ExtraItem> selectedExtraItems = new ArrayList<>();
     
-    public class ExtraItem {
+    public class ExtraItem implements Serializable {
         private Extras extra;
         private Date reservedFrom;
         private Date reservedFromTime;

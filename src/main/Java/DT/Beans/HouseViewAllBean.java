@@ -91,7 +91,7 @@ public class HouseViewAllBean {
     }
     
     public List<Houses> filterByDate() {       
-        List<Reservations> reservations = reservationFacade.findByDatesCoveredNotCanceled(dateFromFilter, dateToFilter);
+        List<Reservations> reservations = reservationFacade.findByDatesCoveredNotCanceledExtraIdNull(dateFromFilter, dateToFilter);
         
         Iterator<Houses> iter = filteredHouses.iterator();
         while (iter.hasNext()) {
