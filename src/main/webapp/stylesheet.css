@@ -46,14 +46,6 @@ and open the template in the editor.
     padding: 0.3em 0.3em 0em 0.3em;
 }
 
-#step-two {
-    display: none;
-}
-
-#review-form {
-    display: none;
-}
-
 .formGrid.ui-panelgrid>*>tr,
 .formGrid.ui-panelgrid .ui-panelgrid-cell {
     border: none;
@@ -91,4 +83,24 @@ and open the template in the editor.
 
 .orange:hover, .orange:active {
     background-color: #ffa366;
+}
+
+.ui_tpicker_minute_label{
+    display:none;
+}
+
+.ui_tpicker_minute{
+    display:none;
+}
+
+.extra-calendar {
+    white-space: nowrap;
+}
+
+.hasDatepicker {
+    display: inline-block;
+}
+
+.ui-datepicker-trigger {
+    display: inline-block;
 }
