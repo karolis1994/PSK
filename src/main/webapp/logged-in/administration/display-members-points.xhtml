@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="/templates/administration_template.xhtml"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="administration_content">
+        
+        <p:panel header="Nariai">
+            <p:panelGrid columns="2">
+                <h:form id="form">
+                     <p:dataTable id="principalsTable" var="principal" value="#{displayMembersBean.allPrincipals}" 
+                         style="margin-top: 5px;"
+                         selection="#{displayMembersBean.selectedPrincipal}"
+                         selectionMode="single"
+                         rowKey="#{principal.id}">
+                
+                        <p:ajax event="rowSelect" 
+                        listener="#{displayMembersBean.navigateToSelected}" />
+
+                        <p:column headerText="Vardas">
+                            <h:outputText value="#{principal.firstname}" />
+                        </p:column>
+                
+                        <p:column headerText="Pavardė">
+                            <h:outputText value="#{principal.lastname}" />
+                        </p:column>
+
+                        <p:column headerText="Email">
+                            <h:outputText value="#{principal.email}" />
+                        </p:column>
+
+                        <p:column headerText="Taškai">
+                            <h:outputText value="#{principal.points}" />
+                        </p:column>
+                
+                        
+                    </p:dataTable>  
+
+                </h:form>
+ 
+            </p:panelGrid>
+        </p:panel>
+        
+    </ui:define>
+    
+</ui:composition>

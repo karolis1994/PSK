@@ -7,7 +7,9 @@ package DT.Entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,6 +51,17 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Principals.findByFacebookid", query = "SELECT p FROM Principals p WHERE p.facebookid = :facebookid"),
     @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
+    private List<Reservations> reservationsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderid")
+    private List<Invitations> invitationsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
+    private List<Payments> paymentsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recieverid")
+    private List<Recommendations> recommendationsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderid")
+    private List<Recommendations> recommendationsList1;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -300,6 +314,46 @@ public class Principals implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Principals[ id=" + id + " ]";
+    }
+
+    public List<Reservations> getReservationsList() {
+        return reservationsList;
+    }
+
+    public void setReservationsList(List<Reservations> reservationsList) {
+        this.reservationsList = reservationsList;
+    }
+
+    public List<Invitations> getInvitationsList() {
+        return invitationsList;
+    }
+
+    public void setInvitationsList(List<Invitations> invitationsList) {
+        this.invitationsList = invitationsList;
+    }
+
+    public List<Payments> getPaymentsList() {
+        return paymentsList;
+    }
+
+    public void setPaymentsList(List<Payments> paymentsList) {
+        this.paymentsList = paymentsList;
+    }
+
+    public List<Recommendations> getRecommendationsList() {
+        return recommendationsList;
+    }
+
+    public void setRecommendationsList(List<Recommendations> recommendationsList) {
+        this.recommendationsList = recommendationsList;
+    }
+
+    public List<Recommendations> getRecommendationsList1() {
+        return recommendationsList1;
+    }
+
+    public void setRecommendationsList1(List<Recommendations> recommendationsList1) {
+        this.recommendationsList1 = recommendationsList1;
     }
     
 }
