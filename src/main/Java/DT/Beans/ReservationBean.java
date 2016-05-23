@@ -76,7 +76,7 @@ public class ReservationBean implements Serializable{
         parseDates();
         
         // WARNING: FOR TESTING ONLY
-        Principals princ = (Principals) principalFacade.findByEmail("a@a.a").get(0);
+        Principals princ = (Principals) principalFacade.findByEmail("a@a.a");
         princ.setPoints(princ.getPoints() - totalPrice);
         
         Reservations res = new Reservations();

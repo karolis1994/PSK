@@ -10,16 +10,29 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
 import DT.Services.IPasswordHasher;
 import DT.Services.PasswordHasherPBKDF2;
+import facebook4j.Facebook;
+import facebook4j.FacebookException;
+import facebook4j.RawAPIResponse;
+import facebook4j.User;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;  
-import javax.faces.bean.ManagedBean;    
+import javax.validation.constraints.Size;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.constraints.Past;
 import org.primefaces.model.UploadedFile;
 
@@ -27,90 +40,133 @@ import org.primefaces.model.UploadedFile;
  *
  * @author Karolis
  */
-@ManagedBean(name = "registrationBean")
-@ViewScoped
-public class RegistrationBean implements Serializable{
-    
+@Named("registrationBean")
+@RequestScoped
+public class RegistrationBean {
+
     // Fields ------------------------------------------------------------------
-    
+    @Inject
+    private UserSessionBean userSessionBean;
+
     private Principals principal;
-      
+
     @EJB
-    private PrincipalsFacade registrationFacade;
+    private PrincipalsFacade principalsFacade;
     @EJB
     private SettingsFacade settingsFacade;
     @EJB
     private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
-    
-    @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
+
+    @Pattern(regexp = "[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
-    @Size(min=0,max=20)
+    private String facebookID;
+    @Size(min = 0, max = 20)
     private String firstname;
-    @Size(min=0,max=25)
+    @Size(min = 0, max = 25)
     private String lastname;
-    @Size(min=5,max=20)
+    @Size(max = 20)
     private String password;
     private String repeatPassword;
     private String address;
     @Past
     private Date birthdate;
-    @Pattern(regexp="\\+370\\d{8}|8\\d{8}")
+    @Pattern(regexp = "\\+370\\d{8}|8\\d{8}")
     private String phoneNumber;
-    @Size(max=250)
+    @Size(max = 250)
     private String about;
     private UploadedFile picture;
-    
+
     private boolean aboutField = true;
-    private boolean pictureField = true;      
-    
+    private boolean pictureField = true;
+
+    private boolean facebookRegistration = false;
+
+    private String passwordInfo = "*";
     // Methods -----------------------------------------------------------------
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         aboutField = "true".equals(settingsFacade.getSettingByName("AboutField").getSettingvalue());
         pictureField = "true".equals(settingsFacade.getSettingByName("PictureField").getSettingvalue());
+        //userSessionBean = (UserSessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("userSessionBean");
+        if (userSessionBean != null && userSessionBean.getUserFB() != null) {
+            setFacebookRegistration(true);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Slaptažodis Facebook registracijai neprivalomas.", ""));
+            passwordInfo = "(Neprivaloma)";
+            loadFacebookData(userSessionBean.getUserFB());
+        }
     }
-    
+
     //Method to register a new principal
     public String register() {
-        if(registrationFacade.findByEmail(email).isEmpty()) {
+        if (principalsFacade.findByEmail(email) == null) {
+            if ((password.length() < 5 && !facebookRegistration)
+                    || (password.length() > 0 && password.length() < 5)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Slaptažodis turi būti 5-20 simbolių ilgio.", ""));
+                return "";
+            }
+
             principal = new Principals();
+            principal.setFacebookid(getFacebookID());
             principal.setEmail(email);
             principal.setFirstname(firstname);
             principal.setLastname(lastname);
-            byte[] salt = passwordHasher.createSalt();
-            principal.setSalt(salt.toString());
-            try {
-                principal.setPasswordhash(passwordHasher.createHash(password, salt));
-            } catch(Exception e) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klaida: ", "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui."));
-                return "";
+            if (password.length() > 5) {
+                byte[] salt = passwordHasher.createSalt();
+                principal.setSalt(new String(salt));
+                try {
+                    principal.setPasswordhash(passwordHasher.createHash(password, salt));
+                } catch (Exception e) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klaida: ", "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui."));
+                    return "";
+                }
             }
             principal.setAddress(address);
             principal.setBirthdate(birthdate);
             principal.setPhonenumber(phoneNumber);
-            if(about != null) {
+            if (about != null) {
                 principal.setAbout(about);
             }
             principal.setPoints(0);
             principal.setIsadmin(Boolean.FALSE);
             principal.setIsdeleted(Boolean.FALSE);
             principal.setIsapproved(Boolean.FALSE);
-            registrationFacade.create(principal);
+            principalsFacade.create(principal);
+            userSessionBean.setUser(principal);
             return "REGISTRATION_SUCCESFUL";
-        } else{
-            principal = (Principals) registrationFacade.findByEmail(email).get(0);
-            if(principal.getIsdeleted() != null) {
+        } else {
+            principal = (Principals) principalsFacade.findByEmail(email);
+            if (principal.getIsdeleted() != null) {
                 if (principal.getIsdeleted()) {
                     return "REGISTRATION_UNSUCCESFUL_RELOG";
                 }
-            }          
+            }
         }
         return "REGISTRATION_UNSUCCESFUL";
     }
 
+    //Method to register a new principal
+    public void loadFacebookData(User userFB) {
+        setEmail(userFB.getEmail());
+        setFirstname(userFB.getFirstName());
+        setLastname(userFB.getLastName());
+        setFacebookID(userFB.getId());
+        // principal.setAddress(locale.getDisplayCountry() + userFB. );
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/DD/YYYY");
+        try {
+            if (userFB.getBirthday() != null) {
+                setBirthdate(formatter.parse(userFB.getBirthday()));
+            }
+        } catch (ParseException e) {
+        }
+
+        //principal.setPhonenumber(userFB.);
+        if (userFB.getBio() != null) {
+            setAbout(userFB.getBio());
+        }
+    }
     // Getters / setters -------------------------------------------------------
-    
+
     public String getEmail() {
         return email;
     }
@@ -181,8 +237,8 @@ public class RegistrationBean implements Serializable{
 
     public void setAbout(String about) {
         this.about = about;
-    }    
-    
+    }
+
     public boolean isAboutField() {
         return aboutField;
     }
@@ -198,7 +254,28 @@ public class RegistrationBean implements Serializable{
     public void setPictureField(boolean pictureField) {
         this.pictureField = pictureField;
     }
-    
-    
-    
+
+    public boolean isFacebookRegistration() {
+        return facebookRegistration;
+    }
+
+    public void setFacebookRegistration(boolean facebookRegistration) {
+        this.facebookRegistration = facebookRegistration;
+    }
+
+    private String getFacebookID() {
+        return this.facebookID;
+    }
+
+    private void setFacebookID(String facebookID) {
+        this.facebookID = facebookID;
+    }
+
+    public String getPasswordInfo() {
+        return this.passwordInfo;
+    }
+
+    public void setPasswordInfo(String passwordInfo) {
+        this.passwordInfo = passwordInfo;
+    }
 }

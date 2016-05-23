@@ -20,9 +20,11 @@ public class PrincipalsFacade extends GenericFacade<Principals>{
         super(Principals.class);
     }
 
-    public List findByEmail(String email) {
-        return em.createNamedQuery("Principals.findByEmail")
-                .setParameter("email", email).getResultList();       
+    public Principals findByEmail(String email) {
+        List results = em.createNamedQuery("Principals.findByEmail")
+                .setParameter("email", email).getResultList();
+        return results.isEmpty() ?
+                null :(Principals) results.get(0) ;       
     }
 
     @Override
@@ -38,6 +40,10 @@ public class PrincipalsFacade extends GenericFacade<Principals>{
     public Principals findByFacebookID(String facebookID) {
         List<Principals> result = em.createNamedQuery("Principals.findByFacebookID")
                 .setParameter("facebookid", facebookID).getResultList();
+        
+        if(result.isEmpty())
+            return null;
+        
         return result.get(0);
     }
 }

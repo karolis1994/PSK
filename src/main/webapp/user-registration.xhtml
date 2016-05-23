@@ -16,11 +16,11 @@
                         <p:inputText id="emailRegistration" value="#{registrationBean.email}" label="Email" required="true"/>
                         <p:message for="emailRegistration" />
                         
-                        <h:outputLabel for="passwordRegistration" value="Slaptažodis *" />
-                        <p:password id="passwordRegistration" value="#{registrationBean.password}" match="passwordRepeatRegistration" label="Slaptažodis" required="true" />
+                        <h:outputLabel for="passwordRegistration" value="Slaptažodis #{registrationBean.passwordInfo}" />
+                        <p:password id="passwordRegistration" value="#{registrationBean.password}" match="passwordRepeatRegistration" label="Slaptažodis" required="#{!registrationBean.facebookRegistration}" />
 
-                        <h:outputLabel for="passwordRepeatRegistration" value="Pakartokite slaptažodį *" />
-                        <p:password id="passwordRepeatRegistration" value="#{registrationBean.repeatPassword}" label="Pakartokite slaptažodį" required="true" />   
+                        <h:outputLabel for="passwordRepeatRegistration" value="Pakartokite slaptažodį #{registrationBean.passwordInfo}" />
+                        <p:password id="passwordRepeatRegistration" value="#{registrationBean.repeatPassword}" label="Pakartokite slaptažodį" required="#{!registrationBean.facebookRegistration}" />   
                         
                         <h:outputLabel for="firstnameRegistration" value="Vardas *"/>
                         <p:inputText id="firstnameRegistration" value="#{registrationBean.firstname}" label="Vardas" required="true"/>

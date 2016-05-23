@@ -45,7 +45,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Principals.findByIsapproved", query = "SELECT p FROM Principals p WHERE p.isapproved = :isapproved"),
     @NamedQuery(name = "Principals.findByIsdeleted", query = "SELECT p FROM Principals p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Principals.findByMembershipuntill", query = "SELECT p FROM Principals p WHERE p.membershipuntill = :membershipuntill"),
-    @NamedQuery(name = "Principals.findByFacebookid", query = "SELECT p FROM Principals p WHERE p.facebookid = :facebookid"),
+    @NamedQuery(name = "Principals.findByFacebookID", query = "SELECT p FROM Principals p WHERE p.facebookid = :facebookid"),
     @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
 

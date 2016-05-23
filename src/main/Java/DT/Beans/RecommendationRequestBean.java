@@ -87,7 +87,7 @@ public class RecommendationRequestBean implements Serializable{
         inputPrincipal = new Principals();
         inputPrincipal.setIsapproved(Boolean.FALSE);
         try {
-            inputPrincipal = (Principals) principalsFacade.findByEmail(inputEmail).get(0);
+            inputPrincipal = (Principals) principalsFacade.findByEmail(inputEmail);
         } catch(IndexOutOfBoundsException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Narys su įvestu email neegzistuoja."));
             return;

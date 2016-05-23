@@ -7,6 +7,8 @@ package DT.Beans;
 
 import DT.Entities.Principals;
 import DT.Facades.PrincipalsFacade;
+import DT.Services.IPasswordHasher;
+import DT.Services.PasswordHasherPBKDF2;
 import facebook4j.Account;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
@@ -24,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -31,6 +34,7 @@ import javax.enterprise.context.Dependent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -43,7 +47,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author donatas
  */
-
 @Named("loginBean")
 @RequestScoped
 public class LoginBean {
@@ -53,17 +56,18 @@ public class LoginBean {
 
     @Pattern(regexp = "[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String email;
-    
+
     @EJB
     private PrincipalsFacade principalsFacade;
-    
-    @Size(min = 5)
-    private String password;
 
+    private String password;
     private String code;
-    
+
     @Inject
     private UserSessionBean userSessionBean;
+
+    @EJB
+    private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
 
     public String getCode() {
         return code;
@@ -94,13 +98,28 @@ public class LoginBean {
         code = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("code");
     }
 
-    public void login() throws IOException {
+    public void login() throws IOException, Exception {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        session.setAttribute("authUserEmail", "email");
-        
-        FacesContext.getCurrentInstance()
-                .getExternalContext()
-                .redirect("logged-in/index.xhtml");
+        Principals currentUser = principalsFacade.findByEmail(getEmail());
+
+        if (currentUser == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Neteisingas slaptažodis arba elektroninis paštas.", ""));
+            return;
+        }
+        if (currentUser.getPasswordhash() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Reikalingas prisijungimas per facebook.", ""));
+            return;
+        }
+
+        String passwordHashed = passwordHasher.createHash(getPassword(), currentUser.getSalt().getBytes());
+        if (currentUser.getPasswordhash().equals(passwordHashed)) {
+            userSessionBean.setUser(currentUser);
+            FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .redirect("logged-in/index.xhtml");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Neteisingas slaptažodis arba elektroninis paštas.", ""));
+        }
     }
 
     public String getFBReturnUrl() {
@@ -111,27 +130,31 @@ public class LoginBean {
         FBReturnUrl += "fb-login.xhtml";
         return FBReturnUrl;
     }
-    public String returnFromFb() throws FacebookException, UnsupportedEncodingException
-    {
+
+    public String returnFromFb() throws FacebookException, UnsupportedEncodingException, ParseException {
         Facebook facebook = new FacebookFactory().getInstance();
         facebook.setOAuthAppId(APP_ID, CLIENT_SECRET);
-        facebook.setOAuthPermissions("email");
+        facebook.setOAuthPermissions("email,public_profile,user_about_me,user_birthday");
         facebook.setOAuthCallbackURL(URLEncoder.encode(getFBReturnUrl(), "UTF-8"));
         AccessToken token = facebook.getOAuthAccessToken(code);
         facebook.setOAuthAccessToken(token);
-        User user = facebook.getUser(facebook.getId(), new Reading().fields("email"));
+        User user = facebook.getUser(facebook.getId(), new Reading().fields("email,bio,birthday,first_name,last_name"));
         String fbemail = user.getEmail();
-        
+
         // Setting current user to UserSessionBean
         String facebookUserID = user.getId();
         Principals currentUser = principalsFacade.findByFacebookID(facebookUserID);
+        if (currentUser == null) {
+            //registrationBean.register(user, facebook);
+            userSessionBean.setUserFB(user);
+            return "user-registration.xhtml";
+        }
+
         userSessionBean.setUser(currentUser);
-        
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        session.setAttribute("authUserEmail", fbemail);
+
         return "logged-in/index.xhtml";
     }
-    
+
 // IN case we drop fb4j api
 //    public String returnFromFb() throws MalformedURLException, IOException {
 //
@@ -180,5 +203,4 @@ public class LoginBean {
 //
 //        return "logged-in/index.xhtml";
 //    }
-
 }

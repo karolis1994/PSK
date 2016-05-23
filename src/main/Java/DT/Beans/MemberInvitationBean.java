@@ -49,7 +49,7 @@ public class MemberInvitationBean{
         //Gauname prisijungusio naudotojo objekta
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         String loggedInEmail = (String) session.getAttribute("authUserEmail");
-        loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail).get(0);
+        loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail);
     }
    
     public void SendInvitation() throws Exception{
