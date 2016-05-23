@@ -106,7 +106,7 @@ public class UserProfileChangeBean {
         }
         
         //Update database
-        principalsFacade.edit(loggedInPrincipal);
+        principalsFacade.remove(loggedInPrincipal);
         if(!reservations.isEmpty()) {
             for(Reservations r : reservations) {
                 reservationsFacade.edit(r);
