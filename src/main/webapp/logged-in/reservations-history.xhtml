@@ -9,40 +9,47 @@
         
         <p:panel header="Rezervacijų istorija">
             <h:form id="form">
-                <p:dataTable var="reservation" value="#{reservationsHistoryBean.reservations}">
+                <p:dataTable var="reservation" value="#{reservationsHistoryBean.reservationItems}">
                     
                     <p:column headerText="Vasarnamis">
-                        <h:link value="#{reservation.houseid.title}" outcome="logged-in/house-preview.xhtml">
+                        <h:link value="#{reservation.houseReservation.houseid.title}" outcome="logged-in/house-preview.xhtml">
                             <f:param name="id" value="1" />
                         </h:link>
                     </p:column>
 
                     <p:column headerText="Nuo">
-                        <h:outputText value="#{reservation.reservedfrom}">             
+                        <h:outputText value="#{reservation.houseReservation.reservedfrom}">             
                             <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
                         </h:outputText>
                     </p:column>
 
                     <p:column headerText="Iki">
-                        <h:outputText value="#{reservation.reservedto}">             
+                        <h:outputText value="#{reservation.houseReservation.reservedto}">             
                             <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
                         </h:outputText>
                     </p:column>
                     
                     <p:column headerText="Papildomos paslaugos">
                         <h:outputText value="-" 
-                                      rendered="#{reservation.reservationextrasList.isEmpty()}"/>
+                                      rendered="#{reservation.extraReservations.isEmpty()}"/>
                         <p:dataTable var="res" 
-                                     value="#{reservation.reservationextrasList}" 
-                                     rendered="#{!reservation.reservationextrasList.isEmpty()}">
+                                     value="#{reservation.extraReservations}" 
+                                     rendered="#{!reservation.extraReservations.isEmpty()}">
                             <p:column>
                                 <h:outputText value="#{res.extraid.title}"/>
                             </p:column>
+<!--                            <p:column>
+                                <h:outputText value="#{res.extraid.getPaidservicesList().get(0).getCost()}">
+                                    <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
+                                </h:outputText>
+                            </p:column>-->
                         </p:dataTable>
                     </p:column>
                     
-                    <p:column headerText="Kaina">
-                        <h:outputText value="X"/>
+                    <p:column headerText="Kaina (Taškais)">
+                        <h:outputText value="#{reservation.houseReservation.paymentid.ammount}">
+                            <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
+                        </h:outputText>
                     </p:column>
                     
                     <p:column >

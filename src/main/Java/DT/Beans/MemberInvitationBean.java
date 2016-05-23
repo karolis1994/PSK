@@ -18,6 +18,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;    
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Pattern;
@@ -29,12 +30,14 @@ import javax.validation.constraints.Pattern;
 @ManagedBean(name = "memberInvitationBean")
 @ViewScoped
 public class MemberInvitationBean{
-    private static final String SUBJECT = "Kvietimas užsiregistruoti į labanoro draugų sistemą";
+    private static final String SUBJECT = "Kvietimas";
    
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
     private String inputEmail;
     private Principals loggedInPrincipal;
-  //  private MemberInvitationBean memberInvitationBean = new MemberInvitationBean();
+    
+    @Inject
+    private UserSessionBean userSessionBean;
     
     @EJB
     private PrincipalsFacade principalsFacade;
@@ -43,16 +46,19 @@ public class MemberInvitationBean{
     @EJB
     private final IMail mailSMTP = new MailSMTP();
      
+    public MemberInvitationBean(){ 
+    
+    }
     @PostConstruct
-    public void init() {
-        
+    public void init() {  
         //Gauname prisijungusio naudotojo objekta
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        /*HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         String loggedInEmail = (String) session.getAttribute("authUserEmail");
-        loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail);
+        loggedInPrincipal = (Principals) principalsFacade.findByEmail(loggedInEmail).get(0);*/
+        loggedInPrincipal = userSessionBean.getUser();
     }
    
-    public void SendInvitation() throws Exception{
+    public void sendInvitation() throws Exception{
         //sugeneruojam aktyvacijos rakta, sukuriam reikiamus laukus
         String uuid = UUID.randomUUID().toString();
         Invitations invitation = new Invitations();
@@ -60,18 +66,18 @@ public class MemberInvitationBean{
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String url = request.getRequestURL().toString();
         String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
-        String message = "Sveiki, mūsų sistemos vartotojas " + loggedInPrincipal.getFirstname() + " " + loggedInPrincipal.getLastname() +
+        String message = "Sveiki, vartotojas " + loggedInPrincipal.getFirstname() + " " + loggedInPrincipal.getLastname() +
                          " jus kviečia prisijungti prie Labanoro draugų. Kad tai padarytumėte paspauskite nuorodą apačioje.\n" +
                           baseURL +"user-registration.xhtml?key=" 
-                         + uuid; //Reikalingas sugeneruotas linkas.             
+                         + uuid;            
         int error = -1;
         int i = 0;
 
+        
         try {
             invitation.setUrlcode(uuid);         
             invitation.setSenderid(loggedInPrincipal);  
             invitation.setIsactivated(Boolean.FALSE);
-          //  memberInvitationBean.setInputEmail(inputEmail);
             invitationsFacade.create(invitation); 
                     
             error = mailSMTP.sendMail(inputEmail , SUBJECT, message);
@@ -82,14 +88,10 @@ public class MemberInvitationBean{
             if(error == -1) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: ", "Failed to send email."));
             } else if(error == 0) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Emails have been sent."));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Laiskas isiustas."));
             }
         }
     }
-    public String getInputEmail() {
-        return inputEmail;
-    }
-    public void setInputEmail(String inputEmail) {
-        this.inputEmail = inputEmail;
-    }
+    public String getInputEmail() { return inputEmail; }
+    public void setInputEmail(String inputEmail) { this.inputEmail = inputEmail;}
 }

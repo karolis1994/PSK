@@ -7,8 +7,8 @@ package DT.Services;
 
 import java.io.Serializable;
 import javax.ejb.Stateless;
-import javax.mail.*;
-import javax.mail.internet.*;
+//import javax.mail.*;
+//import javax.mail.internet.*;
 import java.util.*;
 
 /**
@@ -26,43 +26,43 @@ public class MailSMTP implements IMail, Serializable{
     // Methods -----------------------------------------------------------------
     
     public int sendMail(String recipient, String subject, String message) {
-        try {
-            Properties props = System.getProperties();
-            //Attaching to default Session, or we could start a new one
-            props.put("mail.transport.protocol", "smtp" );
-            props.put("mail.smtp.starttls.enable", "true" );
-            props.put("mail.smtp.host", SMTPSERV);
-            props.put("mail.smtp.auth", "true" );
-            Authenticator auth = new SMTPAuthenticator();
-            Session session = Session.getInstance(props, auth);
-            //Create a new message
-            Message msg = new MimeMessage(session);
-            //Set the FROM and TO fields
-            msg.setFrom(new InternetAddress(FROM));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient, false));
-            msg.setSubject(subject);
-            msg.setText(message);
-            //Set some other header information
-            msg.setHeader("Labanoro Draugai mail", "Klubas Labanoro Draugai" );
-            msg.setSentDate(new Date());
-            //Send the message
-            Transport.send(msg);
-            return 0;
-        }
-        catch (Exception ex)
-        {
+//        try {
+//            Properties props = System.getProperties();
+//            //Attaching to default Session, or we could start a new one
+//            props.put("mail.transport.protocol", "smtp" );
+//            props.put("mail.smtp.starttls.enable", "true" );
+//            props.put("mail.smtp.host", SMTPSERV);
+//            props.put("mail.smtp.auth", "true" );
+//            Authenticator auth = new SMTPAuthenticator();
+//            Session session = Session.getInstance(props, auth);
+//            //Create a new message
+//            Message msg = new MimeMessage(session);
+//            //Set the FROM and TO fields
+//            msg.setFrom(new InternetAddress(FROM));
+//            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient, false));
+//            msg.setSubject(subject);
+//            msg.setText(message);
+//            //Set some other header information
+//            msg.setHeader("Labanoro Draugai mail", "Klubas Labanoro Draugai" );
+//            msg.setSentDate(new Date());
+//            //Send the message
+//            Transport.send(msg);
+//            return 0;
+//        }
+//        catch (Exception ex)
+//        {
             return -1;
-        }
+//        }
     }
-    
-    private class SMTPAuthenticator extends javax.mail.Authenticator {
-        
-        @Override
-        public PasswordAuthentication getPasswordAuthentication() {
-            String username =  "psk.labanoras";
-            String password = "labanoras";
-            return new PasswordAuthentication(username, password);
-        }
-    }
-    
+//    
+//    private class SMTPAuthenticator extends javax.mail.Authenticator {
+//        
+//        @Override
+//        public PasswordAuthentication getPasswordAuthentication() {
+//            String username =  "psk.labanoras";
+//            String password = "labanoras";
+//            return new PasswordAuthentication(username, password);
+//        }
+//    }
+//    
 }

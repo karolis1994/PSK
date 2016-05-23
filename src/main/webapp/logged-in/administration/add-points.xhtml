@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="/templates/administration_template.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+        <ui:define name="administration_content">
+            
+            <c:set var="principal" value="#{addPoints.findPrincipalByUrlId()}" scope="session" />
+            
+            <h:form>
+                <p:panel header="Taškų pridėjimas" style="border: none;">
+                    
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                     
+                    <p:panelGrid columns="2" styleClass="formGrid">
+                        <h:outputLabel for="points" value="Taškai" />
+                        <p:inputText id="points" value="#{addPoints.points}" label="Taškai" required="true"/>
+
+                    </p:panelGrid>
+
+                    <p:commandButton actionListener="#{addPoints.updatePrincipal()}" value="Pridėti" ajax="true" validateClient="true">
+                        <f:param name="id" value="#{param.id}" />
+                    </p:commandButton> 
+                </p:panel>
+            </h:form>
+            
+        </ui:define>
+
+</ui:composition>

@@ -13,9 +13,9 @@
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />   
                      <p:panelGrid columns="2" styleClass="formGrid">
                         <h:outputLabel for="inputEmail" value="El. paštas:" />
-                        <p:inputText id="inputEmail" value="#{memberInvitationBean.inputEmail}" label="inputEmail" required="true"/>
+                        <p:inputText id="inputEmail" value="#{memberInvitationBean.inputEmail}" label="inputEmail"/>
                      </p:panelGrid>
-                    <p:commandButton actionListener="#{memberInvitationBean.SendInvitation}" value="Pakviesti" ajax="false" validateClient="true"/>
+                    <p:commandButton actionListener="#{memberInvitationBean.sendInvitation()}" value="Pakviesti" ajax="false" validateClient="true"/>
                 </p:panel>
             </h:form>   
         </ui:define>
