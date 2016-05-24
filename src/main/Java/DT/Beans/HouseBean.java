@@ -10,12 +10,9 @@ import DT.Entities.Paidservices;
 import DT.Facades.HouseFacade;
 import java.io.Serializable;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -23,10 +20,12 @@ import javax.validation.constraints.Size;
  *
  * @author Henrikas
  */
-@ManagedBean(name = "houseBean")
+@Named(value = "houseBean")
 @RequestScoped
 public class HouseBean implements Serializable{
 
+    private final static String NOT_APPROVED = "Jūsų narystė nepatvirtinta";
+    
     @Size(min=1,max=255)
     private String title;
     public String getTitle() { return title; }
@@ -47,24 +46,25 @@ public class HouseBean implements Serializable{
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
     
-    @EJB
+    @Inject
     private HouseFacade houseFacade;
     private List<Houses> houses;
     private Houses house; 
     private List<Paidservices> paidServices;
     private double cost;
     
-    @ManagedProperty(value="#{param.id}")
-    private String paramId;
-    public String getParamId() { return paramId; }
-    public void setParamId(String paramId) { this.paramId = paramId; }
-
-    @PostConstruct
+    @Inject UserSessionBean user;
+    private String canReserveMessage;
+    public String getCanReserveMessage() { return canReserveMessage; }
+    public void setCanReserveMessage(String canReserveMessage) { this.canReserveMessage = canReserveMessage; }
+    
+    // param
+    private int houseID;
+    public int getHouseID() { return houseID; }
+    public void setHouseID(int houseID) { this.houseID = houseID; }
+    
     public void loadData() {
-        if (paramId == null || paramId.isEmpty())
-            return;
-        
-        house = findHouseById(Integer.parseInt(paramId));
+        house = findHouseById(houseID);
         
         if (house == null)
             return;
@@ -77,7 +77,7 @@ public class HouseBean implements Serializable{
     
     public Houses getHouse() {
         if (house == null) {
-            house = new Houses();
+            loadData();
         }
  
         return house;
@@ -109,14 +109,12 @@ public class HouseBean implements Serializable{
     }
     
     public Houses findHouseByUrlId() {
-        if (paramId != null && !paramId.isEmpty())
-            return findHouseById(Integer.parseInt(paramId));
-        return null;
+        return findHouseById(houseID);
     }
     
     public List<Paidservices> getPaidServices() {
         if (paidServices == null) {
-            paidServices = house.getPaidservicesList();
+            paidServices = getHouse().getPaidservicesList();
         }
         
         return paidServices;
@@ -159,6 +157,19 @@ public class HouseBean implements Serializable{
         
         houseFacade.edit(houseToUpdate);
         
-        return "house-preview.xhtml?id=" + paramId;
+        return "house-preview.xhtml?id=" + houseID;
+    }
+    
+    public String navigateToReservation() {
+        return "house-reservation.xhtml?faces-redirect=true&houseID=" + houseID;
+    }
+    
+    public boolean canReserve() {
+        if (user.getUser().getIsapproved() == false) {
+            canReserveMessage = NOT_APPROVED;
+            return false;
+        }
+        
+        return true;
     }
 }

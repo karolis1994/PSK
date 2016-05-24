@@ -20,11 +20,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpSession;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -36,9 +34,9 @@ import org.primefaces.event.SelectEvent;
 public class ReservationBean implements Serializable{
     private final String PAGE_AFTER_RESERVING = "reservations-history";
     
-    @Inject private PrincipalsFacade principalFacade;
     @Inject private HouseFacade houseFacade;
     @Inject private PaymentsFacade paymentFacade;
+    @Inject private UserSessionBean user; 
     
     private Reservations reservation;
     private Date reservedFrom;
@@ -74,7 +72,6 @@ public class ReservationBean implements Serializable{
         public void setReservedFromTime(Date reservedFromTime) { this.reservedFromTime = reservedFromTime; }
 
         public int getNumberOfHours() { return numberOfHours; }
-
         public void setNumberOfHours(int numberOfHours) { this.numberOfHours = numberOfHours; }
     }
     
@@ -82,13 +79,17 @@ public class ReservationBean implements Serializable{
         house = houseFacade.find(houseID);
     }
     
-    public String saveReservation() {    
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        String email = (String) session.getAttribute("authUserEmail");
+    public String saveReservation() {           
+        Principals princ = user.getUser();
         
-        Principals princ = (Principals) principalFacade.findByEmail("a@a.a");
+        if (!princ.getIsapproved())
+            return "";
+        
+        if (princ.getPoints() < totalPrice)
+            return "";
+            
         princ.setPoints(princ.getPoints() - totalPrice);
-        
+
         Payments payment = new Payments();
         payment.setPrincipalid(princ);
         payment.setPaidserviceid(getRentService());
@@ -97,7 +98,7 @@ public class ReservationBean implements Serializable{
         payment.setAmmount(totalPrice);
         payment.setIspaid(true);
         payment.setPaidWithPoints(true);
-        
+
         Reservations res = new Reservations();
         res.setHouseid(house);
         res.setReservedfrom(reservedFrom);
@@ -105,18 +106,18 @@ public class ReservationBean implements Serializable{
         res.setIscanceled(false);
         res.setPrincipalid(princ);
         res.setPaymentid(payment);
-        
+
         List<Reservations> allReservations = new ArrayList<>();
         for (ExtraItem ei : selectedExtraItems) {
             Date resFromDate = new Date(
                      ei.getReservedFrom().getYear(), ei.getReservedFrom().getMonth(), ei.getReservedFrom().getDay(), 
                      ei.getReservedFromTime().getHours(), ei.getReservedFromTime().getMinutes(), ei.getReservedFromTime().getSeconds());
-            
+
             Calendar cal = Calendar.getInstance();
             cal.setTime(resFromDate);
             cal.add(Calendar.HOUR_OF_DAY, ei.numberOfHours);
             Date resToDate = cal.getTime();
-            
+
             Reservations extraRes = new Reservations();
             extraRes.setHouseid(house);
             extraRes.setExtraid(ei.getExtra());
@@ -127,11 +128,9 @@ public class ReservationBean implements Serializable{
             extraRes.setPaymentid(payment);
             allReservations.add(extraRes);
         }
-        
+
         allReservations.add(res);
         payment.setReservationsList(allReservations);
-        
-        //reservationFacade.create(res);
         paymentFacade.create(payment);
         
         return PAGE_AFTER_RESERVING;
@@ -262,6 +261,7 @@ public class ReservationBean implements Serializable{
             for (Paidservices ps : house.getPaidservicesList()) {
                 if (ps.getHouseid() != null) {
                     housePrice = ps.getCostInPoints();
+                    break;
                 }
             }
         }
@@ -396,6 +396,4 @@ public class ReservationBean implements Serializable{
     public void setSelectedExtraItems(List<ExtraItem> selectedExtraItems) {
         this.selectedExtraItems = selectedExtraItems;
     }
-    
-    
 }
