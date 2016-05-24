@@ -41,8 +41,8 @@ public class ReservationBean implements Serializable{
     
     @Inject private ReservationFacade reservationsFacade;
     @Inject private HouseFacade houseFacade;
-    @Inject private PaymentsFacade paymentFacade;
-    @Inject private UserSessionBean user; 
+    @Inject private PaymentsFacade paymentsFacade;
+    @Inject private UserSessionBean userSessionBean; 
     
     private Reservations reservation;
     private Date reservedFrom;
@@ -63,7 +63,7 @@ public class ReservationBean implements Serializable{
     private List<ExtraItem> extraItems = new ArrayList<>();
     private List<ExtraItem> selectedExtraItems = new ArrayList<>();
     
-    public class ExtraItem implements Serializable {
+    public static class ExtraItem implements Serializable {
         private Extras extra;
         private Date reservedFrom;
         private Date reservedFromTime;
@@ -87,7 +87,7 @@ public class ReservationBean implements Serializable{
     }
     
     public String saveReservation() {           
-        Principals princ = user.getUser();
+        Principals princ = userSessionBean.getUser();
         
         if (!princ.getIsapproved())
             return "";
@@ -145,7 +145,7 @@ public class ReservationBean implements Serializable{
 
         allReservations.add(res);
         payment.setReservationsList(allReservations);
-        paymentFacade.create(payment);
+        paymentsFacade.create(payment);
         
         return PAGE_AFTER_RESERVING;
     }
@@ -155,7 +155,7 @@ public class ReservationBean implements Serializable{
         return reservations;
     }
     
-    public int calculateTotalPrice() {
+    private int calculateTotalPrice() {
         totalPrice = getHousePrice() * numberOfWeeks;
         for(ExtraItem ei : extraItems) {
             if (ei.getReservedFrom() != null) {
@@ -245,6 +245,7 @@ public class ReservationBean implements Serializable{
     public void editClicked() {
         stepOneVisible = true;
         stepTwoVisible = true;
+        stepThreeVisible = true;
         stepFourVisible = false;
     } 
     
