@@ -104,3 +104,7 @@ and open the template in the editor.
 .ui-datepicker-trigger {
     display: inline-block;
 }
+
+.alignTop {
+    vertical-align: top;
+}
