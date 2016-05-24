@@ -26,9 +26,10 @@
                             value="#{reservationBean.selectedDate}" showOtherMonths="true">
                     <p:ajax event="dateSelect" listener="#{reservationBean.selectDate}" update="@form"/>
                 </p:calendar>
+                <p:messages for="calendar" showDetail="true"/>
             </p:panel>
 
-            <!-- OTHER OPTIONS (STEP TWO) -->
+            <!-- RESERVATION LENGTH (STEP TWO) -->
             <p:panel header="Rezervacijos trukmė" rendered="#{reservationBean.stepTwoVisible}">
                 <div class="hint">Pasirinkite kiek savaičių norite rezervuoti</div>
                 <p:spinner id="weekSpinner" binding="#{spinner}"
@@ -53,7 +54,9 @@
                     </h:outputText>
                 </div>
             </p:panel>
-            <p:panel header="Papildomos paslaugos" rendered="#{reservationBean.stepTwoVisible}">
+            
+            <!-- RESERVATION EXTRAS (STEP THREE) -->
+            <p:panel header="Papildomos paslaugos" rendered="#{reservationBean.stepThreeVisible}">
                 <br/>
                 <div class="hint">
                     Norėdami užsakyti papildomą paslaugą nustatykite jos pražios data, laiką bei trukmę.
@@ -83,6 +86,7 @@
                                     readonlyInput="true" showOn="both"
                                     pattern="yyyy MMMM dd" locale="lt"
                                     styleClass="extra-calendar" size="15"
+                                    showOtherMonths="true"
                                     mindate="#{reservationBean.reservedFrom}"
                                     maxdate="#{reservationBean.reservedTo}">   
                             <p:ajax event="dateSelect" listener="#{reservationBean.extraSelectDate(extraItem.extra)}" update="@form"/>
@@ -115,7 +119,7 @@
             </p:panel>
 
             <!-- TOTAL PRICE -->
-            <p:panel rendered="#{reservationBean.stepTwoVisible}">
+            <p:panel rendered="#{reservationBean.stepThreeVisible}">
                 <h3>Visa kaina:</h3>
                 <h:outputText id="total-price" value="#{reservationBean.totalPrice}">
                     <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
@@ -127,15 +131,14 @@
                 
             </p:panel>
 
-            <!-- RESERVATION REVIEW (STEP THREE) -->
-            <p:panel rendered="#{reservationBean.stepThreeVisible}">
+            <!-- RESERVATION REVIEW (STEP FOUR) -->
+            <p:panel rendered="#{reservationBean.stepFourVisible}">
                 <p:commandButton ajax="false"
                                  action="#{reservationBean.editClicked()}" 
                                  value="Redaguoti rezervaciją"/>
 
                 <h3>Rezervacija vasarnamiui <h:outputText value="#{reservationBean.house.title}"/></h3>
                 Vasarnamio nuoma: <h:outputText value="#{reservationBean.totalHousePrice} Taškai(-ų) (#{reservationBean.housePrice} taškai per savaitę)"/>
-                <br/>
                 <br/>
 
                 <h4><h:outputLabel value="Papildomos paslaugos" rendered="#{!reservationBean.selectedExtraItems.isEmpty()}"></h:outputLabel></h4>
@@ -177,6 +180,8 @@
                     </h:column>
                 </h:dataTable>
 
+                <p:messages for="review" showDetail="true"/>
+                
                 <h3>Viso:</h3>
                 <h:outputText id="review-total-price" value="#{reservationBean.totalPrice}">
                     <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>

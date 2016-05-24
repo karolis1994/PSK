@@ -13,13 +13,15 @@ import DT.Entities.Principals;
 import DT.Entities.Reservations;
 import DT.Facades.HouseFacade;
 import DT.Facades.PaymentsFacade;
-import DT.Facades.PrincipalsFacade;
+import DT.Facades.ReservationFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,7 +35,11 @@ import org.primefaces.event.SelectEvent;
 @ViewScoped
 public class ReservationBean implements Serializable{
     private final String PAGE_AFTER_RESERVING = "reservations-history";
+    private final String MESSAGE_PERIOD_TAKEN = "Pasirinktu laikotarpiu vasarnamis yra užimtas. Pasirinkite kitą laikotarpį";
+    private final String MESSAGE_COMPONENT_CALENDAR = "calendar";
+    private final String MESSAGE_COMPONENT_REVIEW = "review";
     
+    @Inject private ReservationFacade reservationsFacade;
     @Inject private HouseFacade houseFacade;
     @Inject private PaymentsFacade paymentFacade;
     @Inject private UserSessionBean user; 
@@ -53,6 +59,7 @@ public class ReservationBean implements Serializable{
     private boolean stepOneVisible = true;
     private boolean stepTwoVisible = false;
     private boolean stepThreeVisible = false;
+    private boolean stepFourVisible = false;
     private List<ExtraItem> extraItems = new ArrayList<>();
     private List<ExtraItem> selectedExtraItems = new ArrayList<>();
     
@@ -87,6 +94,13 @@ public class ReservationBean implements Serializable{
         
         if (princ.getPoints() < totalPrice)
             return "";
+        
+        
+        if (!findReserved().isEmpty()) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_REVIEW, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MESSAGE_PERIOD_TAKEN));
+            return "";
+        }
             
         princ.setPoints(princ.getPoints() - totalPrice);
 
@@ -136,6 +150,11 @@ public class ReservationBean implements Serializable{
         return PAGE_AFTER_RESERVING;
     }
     
+    public List<Reservations> findReserved() {
+        List<Reservations> reservations = reservationsFacade.findByDatesCoveringNotCanceledExtraIdNull(reservedFrom, reservedTo);
+        return reservations;
+    }
+    
     public int calculateTotalPrice() {
         totalPrice = getHousePrice() * numberOfWeeks;
         for(ExtraItem ei : extraItems) {
@@ -147,7 +166,7 @@ public class ReservationBean implements Serializable{
         return totalPrice;
     }
     
-    public void selectDate(SelectEvent evt) {
+    public void selectDate(SelectEvent evt) {        
         Calendar fromCal = Calendar.getInstance();
         fromCal.setTime(selectedDate);
         fromCal.setTimeZone(TimeZone.getTimeZone("Europe/Vilnius"));
@@ -164,7 +183,15 @@ public class ReservationBean implements Serializable{
         reservedFrom = fromCal.getTime();
         reservedTo = toCal.getTime();
 
-        stepTwoVisible = true;
+        if (!findReserved().isEmpty()) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_CALENDAR, new FacesMessage(FacesMessage.SEVERITY_WARN, null, MESSAGE_PERIOD_TAKEN));
+            stepThreeVisible = false;
+        } 
+        else {
+            stepTwoVisible = true;
+            stepThreeVisible = true;
+        }
     }
     
     public void extraSelectDate(Extras extra) {
@@ -211,13 +238,14 @@ public class ReservationBean implements Serializable{
     public void continueClicked() {
         stepOneVisible = false;
         stepTwoVisible = false;
-        stepThreeVisible = true;
+        stepThreeVisible = false;
+        stepFourVisible = true;
     }
     
     public void editClicked() {
         stepOneVisible = true;
         stepTwoVisible = true;
-        stepThreeVisible = false;
+        stepFourVisible = false;
     } 
     
     public void reset() {
@@ -254,6 +282,15 @@ public class ReservationBean implements Serializable{
         toCal.setTime(reservedFrom);
         toCal.add(Calendar.DAY_OF_MONTH, 6 + (this.numberOfWeeks - 1)*7);
         reservedTo = toCal.getTime();
+        
+        if (!findReserved().isEmpty()) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_CALENDAR, new FacesMessage(FacesMessage.SEVERITY_WARN, null, MESSAGE_PERIOD_TAKEN));
+            stepThreeVisible = false;
+        } 
+        else {
+            stepThreeVisible = true;
+        }
     }
     
     public int getHousePrice() {
@@ -346,6 +383,14 @@ public class ReservationBean implements Serializable{
 
     public void setStepThreeVisible(boolean stepThreeVisible) {
         this.stepThreeVisible = stepThreeVisible;
+    }
+    
+    public boolean isStepFourVisible() {
+        return stepFourVisible;
+    }
+
+    public void setStepFourVisible(boolean stepFourVisible) {
+        this.stepFourVisible = stepFourVisible;
     }
 
     public Date getReservedFrom() {
