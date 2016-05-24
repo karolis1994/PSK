@@ -5,16 +5,13 @@
  */
 package DT.Beans;
 
-import DT.Entities.Extras;
 import DT.Entities.Principals;
 import DT.Entities.Reservations;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.ReservationFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,13 +26,11 @@ public class ReservationsHistoryBean implements Serializable {
     
     private final static String RESERVATIONS_HISTORY_PAGE = "reservations-history.xhtml";
     
-    @Inject 
-    private PrincipalsFacade principalsFacade;
+    @Inject private PrincipalsFacade principalsFacade;
+    @Inject private ReservationFacade reservationFacade;
+    @Inject private UserSessionBean userSessionBean;
     
-    @Inject
-    private ReservationFacade reservationFacade;
-    
-    private Principals principal;   
+    private Principals principal;
     private ReservationItem selectedItem;
     private List<ReservationItem> reservationItems;
     
@@ -47,8 +42,7 @@ public class ReservationsHistoryBean implements Serializable {
         public void setHouseReservation(Reservations houseReservation) { this.houseReservation = houseReservation; }
 
         public List<Reservations> getExtraReservations() { return extraReservations; }
-        public void setExtraReservations(List<Reservations> extraReservations) { this.extraReservations = extraReservations; }
-        
+        public void setExtraReservations(List<Reservations> extraReservations) { this.extraReservations = extraReservations; }   
     }
     
     private List<ReservationItem> findReservations() {
@@ -103,8 +97,7 @@ public class ReservationsHistoryBean implements Serializable {
 
     public Principals getPrincipal() {
         if (principal == null) {
-            // WARNING: for testing only
-            principal = principalsFacade.find(1);
+            principal = userSessionBean.getUser();
         }
         
         return principal;

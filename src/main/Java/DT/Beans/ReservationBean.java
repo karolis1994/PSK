@@ -34,7 +34,7 @@ import org.primefaces.event.SelectEvent;
 @Named(value = "reservationBean")
 @ViewScoped
 public class ReservationBean implements Serializable{
-    private final String PAGE_AFTER_RESERVING = "reservations-history";
+    private final String PAGE_AFTER_RESERVING = "reservations-history?faces-redirect=true";
     private final String MESSAGE_PERIOD_TAKEN = "Pasirinktu laikotarpiu vasarnamis yra užimtas. Pasirinkite kitą laikotarpį";
     private final String MESSAGE_COMPONENT_CALENDAR = "calendar";
     private final String MESSAGE_COMPONENT_REVIEW = "review";
