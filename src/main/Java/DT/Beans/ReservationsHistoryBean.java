@@ -76,10 +76,7 @@ public class ReservationsHistoryBean implements Serializable {
     }
 
     public String cancelReservation() {      
-//        selectedItem.getHouseReservation().setIscanceled(true);
-//        reservationFacade.edit(selectedItem.getHouseReservation());
-        int changed = reservationFacade.setCanceledByPaymendId(selectedItem.getHouseReservation().getPaymentid(), true);
-        System.out.println("Changed rows " + changed);
+        reservationFacade.setCanceledByPaymendId(selectedItem.getHouseReservation().getPaymentid(), true);
         
         return RESERVATIONS_HISTORY_PAGE;
     }
