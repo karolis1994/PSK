@@ -54,8 +54,11 @@
                     
                     <p:column >
                         <p:commandLink value="Panaikinti" 
-                                       onclick="PF('dialog').show();"
+                                       onclick="PF('dialog').show();" rendered="#{reservationsHistoryBean.canBeCanceled(reservation)}"
                                        actionListener="#{reservationsHistoryBean.preselectReservation(reservation)}"/>
+                        
+                        <h:link value="Užsakyti paslaugas" rendered="#{reservationsHistoryBean.canOrderExtras(reservation)}"  
+                                outcome="#{reservationsHistoryBean.navigateToExtrasReservation(reservation)}"/>
                     </p:column>
                 </p:dataTable> 
             </h:form>

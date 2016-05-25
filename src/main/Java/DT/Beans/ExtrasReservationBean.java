@@ -38,6 +38,7 @@ public class ExtrasReservationBean implements Serializable {
 
     private boolean stepOneVisible = true;
     private boolean stepTwoVisible = false;
+    private Date minExtraDate;
     
     private Reservations reservation;
     
@@ -47,7 +48,7 @@ public class ExtrasReservationBean implements Serializable {
     private List<ExtraItem> selectedExtraItems = new ArrayList<>();
     
     public void init() {
-        reservation = reservationFacade.find(ID);
+        reservation = getReservation();
         extraItems = getExtraItems();
     }
     
@@ -109,10 +110,10 @@ public class ExtrasReservationBean implements Serializable {
         
         if (selectedItem != null) {
             if (selectedItem.getReservedFrom() == null) 
-                selectedItem.setReservedFrom(reservation.getReservedfrom());
+                selectedItem.setReservedFrom(getMinExtraDate());
             
             if (selectedItem.getReservedFromTime() == null)
-                selectedItem.setReservedFromTime(reservation.getReservedfrom());
+                selectedItem.setReservedFromTime(getMinExtraDate());
             
             if (selectedItem.getNumberOfHours() == 0) 
                 selectedItem.setNumberOfHours(1);
@@ -133,7 +134,6 @@ public class ExtrasReservationBean implements Serializable {
                 if (selectedExtraItems.contains(ei)) {
                     selectedExtraItems.remove(ei);
                 }
-                
                 break;
             }
         }
@@ -182,6 +182,20 @@ public class ExtrasReservationBean implements Serializable {
 
     public void setStepTwoVisible(boolean stepTwoVisible) {
         this.stepTwoVisible = stepTwoVisible;
+    }
+
+    public Date getMinExtraDate() {
+        if (minExtraDate == null) {
+            minExtraDate = new Date();
+            if (reservation.getReservedfrom().after(minExtraDate))
+                minExtraDate = reservation.getReservedfrom();
+        }
+        
+        return minExtraDate;
+    }
+
+    public void setMinExtraDate(Date minExtraDate) {
+        this.minExtraDate = minExtraDate;
     }
     
     public Reservations getReservation() {

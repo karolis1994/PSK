@@ -6,6 +6,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="general_content">
+        <script src="datepicker.js"/>
         
         <p:panel header="Vasarnamiai">
             <p:panelGrid columns="2" columnClasses="alignTop,alignTop">
@@ -46,12 +47,18 @@
                                          style="float: right;"/>
                         <br/>
                         Nuo:
-                        <p:calendar readonlyInput="true" pattern="dd/M/yy" 
-                                    value="#{houseViewAllBean.dateFromFilter}"></p:calendar>
+                        <p:calendar readonlyInput="true" pattern="dd/M/yy" locale="lt"  
+                                    value="#{houseViewAllBean.dateFromFilter}"  
+                                    mindate="0" maxdate="#{houseViewAllBean.dateToFilter}">
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
                         Iki:
                         <br/>
-                        <p:calendar readonlyInput="true" pattern="dd/M/yy"
-                                    value="#{houseViewAllBean.dateToFilter}"></p:calendar>
+                        <p:calendar readonlyInput="true" pattern="dd/M/yy" locale="lt"
+                                    value="#{houseViewAllBean.dateToFilter}"
+                                    mindate="#{houseViewAllBean.dateFromFilter}">
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
                         <p:commandButton value="Pritaikyti filtrą" ajax="false"
                                          action="#{houseViewAllBean.filter()}"/>
                     </p:panel>

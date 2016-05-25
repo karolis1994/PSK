@@ -11,6 +11,7 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.ReservationFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ import javax.inject.Named;
  *
  * @author Henrikas
  */
-@Named(value = "reservationsHistoryBean")
+@Named
 @ViewScoped
 public class ReservationsHistoryBean implements Serializable {
     
@@ -70,9 +71,25 @@ public class ReservationsHistoryBean implements Serializable {
     }
 
     public String cancelReservation() {      
-        reservationFacade.setCanceledByPaymendId(selectedItem.getHouseReservation().getPaymentid(), true);
+        reservationFacade.cancelReservation(selectedItem.getHouseReservation().getPaymentid(), getPrincipal());
+        //userSessionBean.setUser(getPrincipal());
         
         return RESERVATIONS_HISTORY_PAGE;
+    }
+    
+    public boolean canBeCanceled(ReservationItem item) {
+        return item.houseReservation.getReservedfrom().after(new Date());
+    }
+    
+    public boolean canOrderExtras(ReservationItem item) {
+        Date now = new Date();
+        return (item.houseReservation.getReservedfrom().before(now) && 
+                item.houseReservation.getReservedto().after(now) && !
+                item.houseReservation.getHouseid().getExtrasList().isEmpty());
+    }
+    
+    public String navigateToExtrasReservation(ReservationItem item) {
+        return "extras-reservation.xhtml?faces-redirect=true&id=" + item.getHouseReservation().getId();
     }
     
     public void preselectReservation(ReservationItem item) {

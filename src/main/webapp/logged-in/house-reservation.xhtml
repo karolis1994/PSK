@@ -16,6 +16,7 @@
         
         <ui:define name="general_content">
             <script src="weekpicker_p.js"/>
+            <script src="datepicker.js"/>
 
             <h:form id="form">    
             <!-- RESERVATION START (STEP ONE) -->
@@ -87,7 +88,7 @@
                                     pattern="yyyy MMMM dd" locale="lt"
                                     styleClass="extra-calendar" size="15"
                                     showOtherMonths="true"
-                                    mindate="#{reservationBean.reservedFrom}"
+                                    mindate="#{reservationBean.minExtraDate}"
                                     maxdate="#{reservationBean.reservedTo}">   
                             <p:ajax event="dateSelect" listener="#{reservationBean.extraSelectDate(extraItem.extra)}" update="@form"/>
                         </p:calendar>

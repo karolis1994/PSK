@@ -11,6 +11,7 @@ import DT.Entities.Reservations;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.Query;
 
 /**
@@ -19,6 +20,8 @@ import javax.persistence.Query;
  */
 @Stateless
 public class ReservationFacade extends GenericFacade<Reservations> {
+    
+    @Inject PrincipalsFacade principalsFacade;
     
     public ReservationFacade() {
         super(Reservations.class);
@@ -82,5 +85,15 @@ public class ReservationFacade extends GenericFacade<Reservations> {
         query.setParameter("state", state);
         query.setParameter("paymentid", paymenntid);
         return query.executeUpdate();
+    }
+    
+    public void cancelReservation(Payments payment, Principals principal) {
+        if (payment.getPaidWithPoints()) {
+            int principalPoints = principal.getPoints() - (int) payment.getAmmount();
+            principal.setPoints(principalPoints);
+            principalsFacade.edit(principal);
+        }    
+        
+        setCanceledByPaymendId(payment, true);
     }
 }

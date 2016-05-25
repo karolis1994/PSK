@@ -36,18 +36,21 @@ import org.primefaces.event.SelectEvent;
 public class ReservationBean implements Serializable{
     private final String PAGE_AFTER_RESERVING = "reservations-history?faces-redirect=true";
     private final String MESSAGE_PERIOD_TAKEN = "Pasirinktu laikotarpiu vasarnamis yra užimtas. Pasirinkite kitą laikotarpį";
+    private final String MESSAGE_NOT_APPROVED = "Jūs negalite rezervuoti šio vasarnamio. Priežastis: Jūsų narystė nepatvirtinta";
+    private final String MESSAGE_INSUFFICIENT_POINTS = "Jūs turite nepakankamai taškų";
     private final String MESSAGE_COMPONENT_CALENDAR = "calendar";
     private final String MESSAGE_COMPONENT_REVIEW = "review";
     
     @Inject private ReservationFacade reservationsFacade;
     @Inject private HouseFacade houseFacade;
     @Inject private PaymentsFacade paymentsFacade;
-    @Inject private UserSessionBean userSessionBean; 
+    @Inject private UserSessionBean userSessionBean;
     
     private Reservations reservation;
     private Date reservedFrom;
     private Date reservedTo;
     private Date selectedDate;
+    private Date minExtraDate = new Date();
     private List<Extras> extrasList;
     private Houses house;
     private int houseID;
@@ -89,11 +92,17 @@ public class ReservationBean implements Serializable{
     public String saveReservation() {           
         Principals princ = userSessionBean.getUser();
         
-        if (!princ.getIsapproved())
+        if (!princ.getIsapproved()) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_REVIEW, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MESSAGE_NOT_APPROVED));
             return "";
+        }
         
-        if (princ.getPoints() < totalPrice)
+        if (princ.getPoints() < totalPrice) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_REVIEW, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MESSAGE_INSUFFICIENT_POINTS));
             return "";
+        }
         
         
         if (!findReserved().isEmpty()) {
@@ -145,7 +154,8 @@ public class ReservationBean implements Serializable{
 
         allReservations.add(res);
         payment.setReservationsList(allReservations);
-        paymentsFacade.create(payment);
+        paymentsFacade.PayWithPoints(payment, princ);
+        userSessionBean.setUser(princ);
         
         return PAGE_AFTER_RESERVING;
     }
@@ -183,6 +193,10 @@ public class ReservationBean implements Serializable{
         reservedFrom = fromCal.getTime();
         reservedTo = toCal.getTime();
 
+        minExtraDate = new Date();
+        if (reservedFrom.after(minExtraDate))
+            minExtraDate = reservedFrom;
+        
         if (!findReserved().isEmpty()) {
             FacesContext.getCurrentInstance()
                     .addMessage(MESSAGE_COMPONENT_CALENDAR, new FacesMessage(FacesMessage.SEVERITY_WARN, null, MESSAGE_PERIOD_TAKEN));
@@ -205,10 +219,10 @@ public class ReservationBean implements Serializable{
         
         if (selectedItem != null) {
             if (selectedItem.getReservedFrom() == null) 
-                selectedItem.setReservedFrom(reservedFrom);
+                selectedItem.setReservedFrom(getMinExtraDate());
             
             if (selectedItem.getReservedFromTime() == null)
-                selectedItem.setReservedFromTime(reservedFrom);
+                selectedItem.setReservedFromTime(getMinExtraDate());
             
             if (selectedItem.getNumberOfHours() == 0) 
                 selectedItem.setNumberOfHours(1);
@@ -416,8 +430,16 @@ public class ReservationBean implements Serializable{
 
     public void setSelectedDate(Date selectedDate) {
         this.selectedDate = selectedDate;
+    }   
+
+    public Date getMinExtraDate() {
+        return minExtraDate;
     }
 
+    public void setMinExtraDate(Date minExtraDate) {
+        this.minExtraDate = minExtraDate;
+    }
+    
     public List<ExtraItem> getExtraItems() {
         if (extrasList == null) {
             List<Extras> extras = getExtrasList();

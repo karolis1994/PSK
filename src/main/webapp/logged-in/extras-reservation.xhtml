@@ -12,14 +12,14 @@
     </ui:define>
 
     <ui:define name="general_content">
-        <script src="weekpicker_p.js"/>
+        <script src="datepicker.js"/>
 
         <h:form id="form">    
         <!-- EXTAS RESERVATION (STEP ONE) -->
         <p:panel header="Papildomos paslaugos" rendered="#{extrasReservationBean.stepOneVisible}">
             <br/>
             <div class="hint">
-                Norėdami užsakyti papildomą paslaugą nustatykite jos pražios data, laiką bei trukmę.
+                Norėdami užsakyti papildomą paslaugą nustatykite jos pradžios datą, laiką bei trukmę.
             </div>
 
             <h:dataTable styleClass="styled-table" 
@@ -30,7 +30,7 @@
                     #{extraItem.extra.title}
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Aparašymas</f:facet>
+                    <f:facet name="header">Aprašymas</f:facet>
                     #{extraItem.extra.description}
                 </h:column>
                 <h:column>
@@ -47,7 +47,7 @@
                                 pattern="yyyy MMMM dd" locale="lt"
                                 styleClass="extra-calendar" size="15"
                                 showOtherMonths="true"
-                                mindate="#{extrasReservationBean.reservation.reservedfrom}"
+                                mindate="#{extrasReservationBean.minExtraDate}"
                                 maxdate="#{extrasReservationBean.reservation.reservedto}">   
                         <p:ajax event="dateSelect" listener="#{extrasReservationBean.extraSelectDate(extraItem.extra)}" update="@form"/>
                     </p:calendar>
@@ -59,7 +59,7 @@
                                 pattern="HH:mm" locale="lt" size="15"
                                 timeOnly="true">
                         <p:ajax event="dateSelect" listener="#{extrasReservationBean.extraSelectDate(extraItem.extra)}" 
-                                update="@this extra-calendar total-price"/>
+                                update="@form"/>
                     </p:calendar>
                 </h:column>
                 <h:column>
@@ -79,7 +79,7 @@
         </p:panel>
 
         <!-- TOTAL PRICE -->
-        <p:panel rendered="#{extrasReservationBean.stepOneVisible}">
+        <p:panel id="price" rendered="#{extrasReservationBean.stepOneVisible}">
             <h3>Visa kaina:</h3>
             <h:outputText id="total-price" value="#{extrasReservationBean.totalPrice}">
                 <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
@@ -87,7 +87,9 @@
 
             <br/>
 
-            <p:commandButton value="Tęsti" action="#{extrasReservationBean.continueClicked()}" update="@form"/>
+            <p:commandButton value="Tęsti" disabled="#{extrasReservationBean.totalPrice == 0}"
+                             action="#{extrasReservationBean.continueClicked()}" 
+                             update="@form"/>
 
         </p:panel>
 

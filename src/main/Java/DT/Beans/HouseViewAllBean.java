@@ -5,28 +5,27 @@ import DT.Entities.Reservations;
 import DT.Facades.HouseFacade;
 import DT.Facades.ReservationFacade;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 import org.primefaces.event.SelectEvent;
 
 /**
  * @author Laurynas
  */
 
-@ManagedBean
-@RequestScoped
-public class HouseViewAllBean {
+@Named
+@ViewScoped
+public class HouseViewAllBean implements Serializable {
     
     // Fields-------------------------------------------------------------------
     
@@ -77,7 +76,7 @@ public class HouseViewAllBean {
     }
     
     public List<Houses> filter() {
-        filteredHouses = allHouses;
+        filteredHouses = new ArrayList<>(allHouses);
         
         if (capacityFilter != 0) {
             filterByCapacity();

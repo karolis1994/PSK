@@ -5,10 +5,10 @@
  */
 package DT.Facades;
 
-import DT.Entities.Houses;
 import DT.Entities.Paidservices;
 import DT.Entities.Payments;
 import DT.Entities.Principals;
+import DT.Entities.Reservations;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -102,6 +102,11 @@ public class PaymentsFacade extends GenericFacade<Payments> {
         payment.setPrincipalid(principal);
         payment.setVersion(1);
         
+        create(payment);
+    }
+    
+    public void PayWithPoints(Payments payment, Principals principal) {
+        principalsFacade.edit(principal);
         create(payment);
     }
 }
