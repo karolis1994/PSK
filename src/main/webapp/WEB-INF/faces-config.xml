@@ -32,5 +32,13 @@
             <to-view-id>/login.xhtml</to-view-id>  
         </navigation-case>      
     </navigation-rule>
+    <navigation-rule>  
+        <description>Added points</description>  
+        <from-view-id>/logged-in/administration/add-points.xhtml</from-view-id>  
+        <navigation-case>  
+            <from-action>#{addPoints.updatePrincipal()}</from-action>  
+            <to-view-id>/logged-in/administration/display-members-points.xhtml</to-view-id>  
+        </navigation-case>      
+    </navigation-rule>
     
 </faces-config>
