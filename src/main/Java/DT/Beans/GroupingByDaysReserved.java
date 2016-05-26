@@ -39,7 +39,7 @@ public class GroupingByDaysReserved implements Grouping, Serializable {
         setDates();
         
         List<Reservations> reservations = 
-                reservationFacade.findByDatesCoveringNotCanceledExtraIdNull(from.getTime(), to.getTime());
+                reservationFacade.findByDatesCoveringNotCanceledHouseOnly(from.getTime(), to.getTime());
         
         for (Principals p : principals) {
             int numOfDaysReserved = countNumberDaysReservedInPreviousYear(p, reservations);

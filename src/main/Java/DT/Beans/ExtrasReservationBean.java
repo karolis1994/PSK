@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,6 +32,11 @@ import javax.inject.Named;
 @ViewScoped
 public class ExtrasReservationBean implements Serializable {
     private final String PAGE_AFTER_RESERVING = "reservations-history?faces-redirect=true";
+    private final String MESSAGE_PERIOD_TAKEN = "Pasirinktu laikotarpiu vasarnamis yra užimtas. Pasirinkite kitą laikotarpį";
+    private final String MESSAGE_NOT_APPROVED = "Jūs negalite rezervuoti šio vasarnamio. Priežastis: Jūsų narystė nepatvirtinta";
+    private final String MESSAGE_INSUFFICIENT_POINTS = "Jūs turite nepakankamai taškų";
+    private final String MESSAGE_COMPONENT_CALENDAR = "calendar";
+    private final String MESSAGE_COMPONENT_REVIEW = "review";
     
     @Inject private UserSessionBean userSessionBean;
     @Inject private PaymentsFacade paymentsFacade;
@@ -55,21 +63,35 @@ public class ExtrasReservationBean implements Serializable {
     public String saveReservation() {           
         Principals princ = userSessionBean.getUser();
         
-        if (!princ.getIsapproved())
+        if (!princ.getIsapproved()) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_REVIEW, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MESSAGE_NOT_APPROVED));
             return "";
+        }
         
-        if (princ.getPoints() < totalPrice)
+        if (princ.getPoints() < totalPrice) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_REVIEW, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MESSAGE_INSUFFICIENT_POINTS));
             return "";
+        }
             
         princ.setPoints(princ.getPoints() - totalPrice);
 
         Payments payment = new Payments();
         payment.setPrincipalid(princ);
+        payment.setPaidserviceid(reservation.getPaymentid().getPaidserviceid());
         payment.setCreatedat(Calendar.getInstance().getTime());
         payment.setPayedat(Calendar.getInstance().getTime());
         payment.setAmmount(totalPrice);
         payment.setIspaid(true);
         payment.setPaidWithPoints(true);
+
+        Reservations res = new Reservations();
+        res.setReservedfrom(reservation.getReservedfrom());
+        res.setReservedto(reservation.getReservedto());
+        res.setIscanceled(false);
+        res.setPrincipalid(princ);
+        res.setPaymentid(payment);
 
         List<Reservations> allReservations = new ArrayList<>();
         for (ExtraItem ei : selectedExtraItems) {
@@ -83,7 +105,6 @@ public class ExtrasReservationBean implements Serializable {
             Date resToDate = cal.getTime();
 
             Reservations extraRes = new Reservations();
-            extraRes.setHouseid(reservation.getHouseid());
             extraRes.setExtraid(ei.getExtra());
             extraRes.setReservedfrom(resFromDate);
             extraRes.setReservedto(resToDate);
@@ -93,8 +114,10 @@ public class ExtrasReservationBean implements Serializable {
             allReservations.add(extraRes);
         }
 
+        allReservations.add(res);
         payment.setReservationsList(allReservations);
-        paymentsFacade.create(payment);
+        paymentsFacade.PayWithPoints(payment, princ);
+        userSessionBean.setUser(princ);
         
         return PAGE_AFTER_RESERVING;
     }
@@ -186,7 +209,17 @@ public class ExtrasReservationBean implements Serializable {
 
     public Date getMinExtraDate() {
         if (minExtraDate == null) {
-            minExtraDate = new Date();
+           
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.setTimeZone(TimeZone.getTimeZone("Europe/Vilnius"));
+            cal.setFirstDayOfWeek(Calendar.MONDAY);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            
+            minExtraDate = cal.getTime();
+            
             if (reservation.getReservedfrom().after(minExtraDate))
                 minExtraDate = reservation.getReservedfrom();
         }

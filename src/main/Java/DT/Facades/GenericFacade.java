@@ -5,7 +5,6 @@
  */
 package DT.Facades;
 
-import DT.Entities.Houses;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;

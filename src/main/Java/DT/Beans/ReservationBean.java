@@ -138,7 +138,7 @@ public class ReservationBean implements Serializable{
 
             Calendar cal = Calendar.getInstance();
             cal.setTime(resFromDate);
-            cal.add(Calendar.HOUR_OF_DAY, ei.numberOfHours);
+            cal.add(Calendar.HOUR_OF_DAY, ei.getNumberOfHours());
             Date resToDate = cal.getTime();
 
             Reservations extraRes = new Reservations();
@@ -161,7 +161,7 @@ public class ReservationBean implements Serializable{
     }
     
     public List<Reservations> findReserved() {
-        List<Reservations> reservations = reservationsFacade.findByDatesCoveringNotCanceledExtraIdNull(reservedFrom, reservedTo);
+        List<Reservations> reservations = reservationsFacade.findByDatesCoveringNotCanceledHouseOnly(reservedFrom, reservedTo);
         return reservations;
     }
     

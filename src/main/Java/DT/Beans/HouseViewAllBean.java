@@ -90,7 +90,7 @@ public class HouseViewAllBean implements Serializable {
     }
     
     public List<Houses> filterByDate() {       
-        List<Reservations> reservations = reservationFacade.findByDatesCoveringNotCanceledExtraIdNull(dateFromFilter, dateToFilter);
+        List<Reservations> reservations = reservationFacade.findByDatesCoveringNotCanceledHouseOnly(dateFromFilter, dateToFilter);
         
         Iterator<Houses> iter = filteredHouses.iterator();
         while (iter.hasNext()) {
