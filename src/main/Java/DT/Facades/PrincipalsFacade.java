@@ -38,7 +38,7 @@ public class PrincipalsFacade extends GenericFacade<Principals>{
     }
     
     public Principals findByFacebookID(String facebookID) {
-        List<Principals> result = em.createNamedQuerSy("Principals.findByFacebookid")
+        List<Principals> result = em.createNamedQuery("Principals.findByFacebookid")
                 .setParameter("facebookid", facebookID).getResultList();
         
         if(result.isEmpty())
