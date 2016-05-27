@@ -99,6 +99,8 @@ public class PayPalCompleteBean implements Serializable {
             
             if (payment.getPaidserviceid().getId() == 2) {
                 completeBuyingPoints(payment);
+            } else if (payment.getPaidserviceid().getId() == 1) {
+                completeMembershipPayment(payment);
             }
         }
     }
@@ -116,5 +118,16 @@ public class PayPalCompleteBean implements Serializable {
         FacesContext.getCurrentInstance()
                     .getExternalContext()
                     .redirect("buy-points.xhtml");
+    }
+    
+    public void completeMembershipPayment(Payments payment) throws IOException {
+        
+        Principals payer = payment.getPrincipalid();
+        
+        principalsFacade.extendMembership(payer);
+        
+        FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .redirect("yearly-members-fee.xhtml");
     }
 }

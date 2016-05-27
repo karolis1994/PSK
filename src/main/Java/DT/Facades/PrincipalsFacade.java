@@ -6,6 +6,8 @@
 package DT.Facades;
 
 import DT.Entities.Principals;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 
@@ -45,5 +47,27 @@ public class PrincipalsFacade extends GenericFacade<Principals>{
             return null;
         
         return result.get(0);
+    }
+    
+    public void extendMembership(Principals principal) {
+        // Extend membership
+        Date membershipUntill = principal.getMembershipuntill();
+        
+        if (membershipUntill == null || membershipUntill.before(new Date())) 
+        {
+            Calendar todayPlusOneYear = Calendar.getInstance();
+            todayPlusOneYear.add(Calendar.YEAR, 1);
+            membershipUntill = todayPlusOneYear.getTime();
+        }
+        else
+        {
+            Calendar newMembershipUntill = Calendar.getInstance();
+            newMembershipUntill.setTime(membershipUntill);
+            newMembershipUntill.add(Calendar.YEAR, 1);
+            membershipUntill = newMembershipUntill.getTime();
+        }
+        
+        principal.setMembershipuntill(membershipUntill);
+        edit(principal);
     }
 }
