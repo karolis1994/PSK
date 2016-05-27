@@ -33,6 +33,9 @@ public class MembershipPaymentBean implements Serializable {
     @Inject
     UserSessionBean userSessionBean;
     
+    @Inject
+    Paidservices membership;
+    
     @EJB
     PrincipalsFacade principalsFacade;
     
@@ -44,6 +47,7 @@ public class MembershipPaymentBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        membership = paidServicesFacade.find(1); // TODO proper way to retreive membership fee.
     }
     
     public String getMembershipValidUntill() {
@@ -63,19 +67,11 @@ public class MembershipPaymentBean implements Serializable {
         return "Jūsų narystė galioji iki: " + df.format(membershipUntill) + ".";
     }
     
-    public String getNextPaymentDate() throws MalformedURLException, IOException {
-        
-//        PayPal pp = new PayPal(profile, PayPal.Environment.LIVE)
-        
-        
-        
-        return "";
-    }
+    public Paidservices getMembership() { return membership; }
     
     public String payMembersFeeWithPoints() {
         
         Principals payer = userSessionBean.getUser();
-        Paidservices membership = paidServicesFacade.find(1); // TODO proper way to retreive membership fee.
         
         try {
             paymentsFacade.PayWithPoints(payer, membership);
