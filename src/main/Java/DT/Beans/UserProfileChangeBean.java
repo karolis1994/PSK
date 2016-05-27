@@ -14,34 +14,37 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 
 /**
  *
  * @author Karolis
  */
-@ManagedBean(name="userProfileChangeBean")
-@ViewScoped
-public class UserProfileChangeBean {
+@Named("userProfileChangeBean")
+@RequestScoped
+public class UserProfileChangeBean{
     
     // Fields ------------------------------------------------------------------
+    private final static String DATE_FORMAT = "yyyy-MM-dd";
+    private final static String PROFILE_UPDATED = "Jūsų profilis atnaujintas.";
+    private final static String MEMBERSHIP_EXPIRED = "Pasibaigusi narystė";
+    private final static String NOT_A_MEMBER = "Ne narys";
+    
     private Principals loggedInPrincipal;
     private List<Reservations> reservations;
     
-    @EJB
+    @Inject
     private SettingsFacade settingsFacade;
-    @EJB
+    @Inject
     private PrincipalsFacade principalsFacade;
-    @EJB
+    @Inject
     private ReservationFacade reservationsFacade;
-    
     @Inject
     private UserSessionBean userSessionBean;
     
@@ -67,18 +70,25 @@ public class UserProfileChangeBean {
     
     @PostConstruct
     public void init(){
+        //Load settings
+        aboutField = "true".equals(settingsFacade.getSettingByName("AboutField").getSettingvalue());
+        pictureField = "true".equals(settingsFacade.getSettingByName("PictureField").getSettingvalue());
+
         loggedInPrincipal = userSessionBean.getUser();
         
-        sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf = new SimpleDateFormat(DATE_FORMAT);
         
         firstname = loggedInPrincipal.getFirstname();
         lastname = loggedInPrincipal.getLastname();
-        birthdate = loggedInPrincipal.getBirthdate();  
-        if(loggedInPrincipal.getMembershipuntill() == null) {
-            memberUntil = "Ne narys";
-        } else {
+        birthdate = loggedInPrincipal.getBirthdate();
+        
+        if(loggedInPrincipal.getMembershipuntill() != null && new Date().after(loggedInPrincipal.getMembershipuntill()))
+            memberUntil = MEMBERSHIP_EXPIRED;
+        else if(loggedInPrincipal.getMembershipuntill() == null)
+            memberUntil = NOT_A_MEMBER;  
+        else
             memberUntil = sdf.format(loggedInPrincipal.getMembershipuntill());
-        }
+            
         email = loggedInPrincipal.getEmail();
         phoneNumber = loggedInPrincipal.getPhonenumber();
         address = loggedInPrincipal.getAddress();
@@ -87,8 +97,6 @@ public class UserProfileChangeBean {
             about = "";
         }
         points = loggedInPrincipal.getPoints().toString();
-        aboutField = "true".equals(settingsFacade.getSettingByName("AboutField").getSettingvalue());
-        pictureField = "true".equals(settingsFacade.getSettingByName("PictureField").getSettingvalue());
     }
     
     //Method to unregister user
@@ -133,7 +141,7 @@ public class UserProfileChangeBean {
         principalsFacade.edit(loggedInPrincipal);
         userSessionBean.setUser(loggedInPrincipal);
         
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Jūsų profilis atnaujintas."));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", PROFILE_UPDATED));
     }
 
     // Getters / setters -------------------------------------------------------

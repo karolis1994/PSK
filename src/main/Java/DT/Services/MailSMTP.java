@@ -29,6 +29,8 @@ public class MailSMTP implements IMail, Serializable{
     
     private static final String FROM = "psk.labanoras@gmail.com";
     private static final String SMTPSERV = "smtp.gmail.com";
+    private static final String HEADER1 = "Labanoro Draugai mail";
+    private static final String HEADER2 = "Klubas Labanoro Draugai";
 
     // Methods -----------------------------------------------------------------
     
@@ -50,7 +52,7 @@ public class MailSMTP implements IMail, Serializable{
             msg.setSubject(subject);
             msg.setText(message);
             //Set some other header information
-            msg.setHeader("Labanoro Draugai mail", "Klubas Labanoro Draugai" );
+            msg.setHeader(HEADER1, HEADER2);
             msg.setSentDate(new Date());
             //Send the message
             Transport.send(msg);
@@ -63,11 +65,13 @@ public class MailSMTP implements IMail, Serializable{
     }
     
     private class SMTPAuthenticator extends javax.mail.Authenticator {
+        private final static String USER = "psk.labanoras";
+        private final static String PASSWORD = "labanoras";
         
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
-            String username =  "psk.labanoras";
-            String password = "labanoras";
+            String username =  USER;
+            String password = PASSWORD;
             return new PasswordAuthentication(username, password);
         }
     }

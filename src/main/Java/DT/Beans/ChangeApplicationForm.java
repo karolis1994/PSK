@@ -9,7 +9,6 @@ import DT.Entities.Settings;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,11 +17,11 @@ import javax.inject.Named;
  *
  * @author Karolis
  */
-@Named("changeApplicationForm")
-@ViewScoped
+@Named("changeApplicationFormBean")
 public class ChangeApplicationForm {
        
     // Fields ------------------------------------------------------------------
+    private final static String FORM_UPDATED = "Forma atnaujinta.";
     
     private Settings PictureSettings;
     private Settings AboutSettings;
@@ -53,7 +52,7 @@ public class ChangeApplicationForm {
         PictureSettings.setSettingvalue(String.valueOf(picture));                      
         settingsFacade.edit(AboutSettings);
         settingsFacade.edit(PictureSettings);                
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Forma atnaujinta"));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", FORM_UPDATED));
     }
 
     // Getters / setters -------------------------------------------------------

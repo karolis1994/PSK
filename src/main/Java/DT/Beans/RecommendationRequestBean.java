@@ -19,8 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,7 +36,15 @@ public class RecommendationRequestBean implements Serializable{
     
     // Fields ------------------------------------------------------------------
     
-    private static final String SUBJECT = "Prašymas priimti į klubą";
+    private final static String SUBJECT = "Prašymas priimti į klubą";
+    private final static String ERROR = "Klaida: ";
+    private final static String ALREADY_APPROVED = "Jums jau yra suteiktas patvirtinto nario statusas.";
+    private final static String NO_MORE_REQUESTS = "Daugiau prašymų siųsti nebegalima.";
+    private final static String NO_SUCH_MEMBER = "Narys su įvestu el. paštu neegzistuoja.";
+    private final static String RECEIVER_IS_NOT_APPROVED = "Narys su įvestu el. paštu nėra patvirtintas narys.";
+    private final static String EMAIL_ALREADY_SENT = "El. laiškas jau buvo išsiųstas šiam žmogui.";
+    private final static String FAILED_TO_SEND_EMAIL = "Nepavyko išsiųsti el. laiško.";
+    private final static String EMAIL_SENT = "El. laiškas buvo išsiųstas.";
     
     private Principals loggedInPrincipal;
     private Principals inputPrincipal;
@@ -75,12 +82,12 @@ public class RecommendationRequestBean implements Serializable{
     public void SendEmails() throws Exception{
         //Check if the logged in user is not already approved
         if(loggedInPrincipal.getIsapproved() == true) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Jums jau yra suteiktas patvirtinto nario statusas."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", ALREADY_APPROVED));
             return;
         }
         //Check if recommendations count is not above maximum
         if(currentlySentRecommendations >= Integer.parseInt(maxRecommendations.getSettingvalue())) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Daugiau prašymų siūsti nebegalima."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", NO_MORE_REQUESTS));
             return;
         }
         //Check if there is a user registered with input email
@@ -88,13 +95,13 @@ public class RecommendationRequestBean implements Serializable{
         inputPrincipal.setIsapproved(Boolean.FALSE);
         try {
             inputPrincipal = (Principals) principalsFacade.findByEmail(inputEmail);
-        } catch(IndexOutOfBoundsException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Narys su įvestu email neegzistuoja."));
+        } catch(Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", NO_SUCH_MEMBER));
             return;
         }    
         //Check if the user we're sending the email to is aleady a member
         if(!inputPrincipal.getIsapproved()){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Narys su įvestu email nėra patvirtintas narys."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", RECEIVER_IS_NOT_APPROVED));
             return;
         }
         
@@ -106,7 +113,7 @@ public class RecommendationRequestBean implements Serializable{
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String url = request.getRequestURL().toString();
         String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
-        String message = "Naudotojas vardu " + loggedInPrincipal.getFirstname() + " " + loggedInPrincipal.getLastname() + // Reikalingas prisijungusio vartotojo objektas
+        String message = "Naudotojas vardu " + loggedInPrincipal.getFirstname() + " " + loggedInPrincipal.getLastname() +
                     " prašo jūsų patvirtinimo. Paspauskite nuorodą apačioje jį patvirtinti.\n" +
                     baseURL + "logged-in/recommendation-approve.xhtml?key=" +
                     uuid;          
@@ -120,15 +127,15 @@ public class RecommendationRequestBean implements Serializable{
             recommendationsFacade.create(recommendation);                          
             error = mailSMTP.sendMail(inputPrincipal.getEmail(), SUBJECT, message);
         } catch(EJBException e2) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Email jau buvo išsiūstas šiam žmogui."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", EMAIL_ALREADY_SENT));
         } catch(Exception e) {
             error = -1;
         } 
         finally {
             if(error == -1) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: ", "Nepavyko išsiūsti email."));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, FAILED_TO_SEND_EMAIL));
             } else if(error == 0) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Email buvo išsiūstas."));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", EMAIL_SENT));
             }
         }
     }

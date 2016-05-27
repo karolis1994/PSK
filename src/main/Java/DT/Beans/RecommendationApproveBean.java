@@ -13,8 +13,6 @@ import DT.Facades.RecommendationsFacade;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,10 +22,11 @@ import javax.inject.Named;
  * @author Karolis
  */
 @Named("recommendationApproveBean")
-@RequestScoped
 public class RecommendationApproveBean {
     
     // Fields ------------------------------------------------------------------
+    private final static String REQUEST_APPROVED = "Prašymas patvirtintas";
+    private final static String REQUEST_NOT_SENT_TO_YOU = "Šio prašymo jūs negalite patvirtinti, nes jis nebuvo siųstas jums.";
     
     private Recommendations recommendation;
     private Principals principal;
@@ -43,9 +42,8 @@ public class RecommendationApproveBean {
     @Inject
     private UserSessionBean userSessionBean;
     
-    @ManagedProperty(value="#{param.key}")
     private String key;
-    public boolean valid;
+    public boolean isRecommendationValid;
     private int currentlyAcceptedRecommendations; 
      
     // Methods -----------------------------------------------------------------
@@ -56,9 +54,11 @@ public class RecommendationApproveBean {
         
         minRecommendations = (Settings) settingsFacade.getSettingByName("MinRecommendations");           
         if(key != null)
-            valid = approve();
+            isRecommendationValid = approve();
         else
-            valid = false;
+            isRecommendationValid = false;
+        
+        key = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
     }
     
     //Method checking if the approval message is correct
@@ -81,7 +81,7 @@ public class RecommendationApproveBean {
             int minRecommendationsCount = Integer.parseInt(minRecommendations.getSettingvalue());
             if(currentlyAcceptedRecommendations < minRecommendationsCount) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                        FacesMessage.SEVERITY_INFO, "", "Prašymas patvirtintas"));
+                        FacesMessage.SEVERITY_INFO, "", REQUEST_APPROVED));
                 return true;
             } else {      
                 principal = recommendation.getSenderid();
@@ -91,18 +91,18 @@ public class RecommendationApproveBean {
             }
         }
         else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Šio prašymo jūs negalite patvirtinti, nes jis nebuvo siūstas jums."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", REQUEST_NOT_SENT_TO_YOU));
             return false;
         }
     }
     
     // Getters / setters -------------------------------------------------------
     
-    public boolean isValid() {
-        return valid;
+    public boolean isIsRecommendationValid() {
+        return isRecommendationValid;
     }
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    public void setIsRecommendationValid(boolean isRecommendationValid) {
+        this.isRecommendationValid = isRecommendationValid;
     }
     
     public String getKey() {

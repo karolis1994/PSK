@@ -35,8 +35,14 @@ import org.primefaces.model.UploadedFile;
 public class RegistrationBean {
 
     // Fields ------------------------------------------------------------------
-    @Inject
-    private UserSessionBean userSessionBean;
+    private final static String NO_PASSWORD_NECESSARY = "Slaptažodis Facebook registracijai neprivalomas.";
+    private final static String NOT_NECESSARY = "(Neprivaloma)";
+    private final static String PASSWORD_LENGTH = "Slaptažodis turi būti 5-20 simbolių ilgio.";
+    private final static String ERROR = "Klaida: ";
+    private final static String PROGRAM_ERROR = "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui.";
+    private final static String FB_DATE_FORMAT = "MM/DD/YYYY";
+    private final static String HAVE_TO_REACTIVATE = "Naudotojas su tokiu el. paštu yra panaikinęs savo paskyrą.\nNorint ją atstatyti jums reikia prisijungti su savo senu slaptažodžiu.";
+    private final static String EMAIL_ALREADY_USED = "Naudotojas su tokiu el. paštu jau egzistuoja.";
 
     private Principals principal;
 
@@ -44,6 +50,8 @@ public class RegistrationBean {
     private PrincipalsFacade principalsFacade;
     @Inject
     private SettingsFacade settingsFacade;
+    @Inject
+    private UserSessionBean userSessionBean;
     @EJB
     private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
 
@@ -81,8 +89,8 @@ public class RegistrationBean {
         //userSessionBean = (UserSessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("userSessionBean");
         if (userSessionBean != null && userSessionBean.getUserFB() != null) {
             setFacebookRegistration(true);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Slaptažodis Facebook registracijai neprivalomas.", ""));
-            passwordInfo = "(Neprivaloma)";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", NO_PASSWORD_NECESSARY));
+            passwordInfo = NOT_NECESSARY;
             loadFacebookData(userSessionBean.getUserFB());
         }
     }
@@ -92,7 +100,7 @@ public class RegistrationBean {
         if (principalsFacade.findByEmail(email) == null) {
             if ((password.length() < 5 && !facebookRegistration)
                     || (password.length() > 0 && password.length() < 5)) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Slaptažodis turi būti 5-20 simbolių ilgio.", ""));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", PASSWORD_LENGTH));
                 return "";
             }
 
@@ -107,7 +115,7 @@ public class RegistrationBean {
                 try {
                     principal.setPasswordhash(passwordHasher.createHash(password, salt));
                 } catch (Exception e) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klaida: ", "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui."));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, ERROR, PROGRAM_ERROR));
                     return "";
                 }
             }
@@ -128,12 +136,12 @@ public class RegistrationBean {
             principal = (Principals) principalsFacade.findByEmail(email);
             if (principal.getIsdeleted() != null) {
                 if (principal.getIsdeleted()) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Naudotojas su tokiu el. paštu yra panaikinęs savo paskyrą. Norint ją atstatyti jums reikia prisijungti su savo senu slaptažodžiu."));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", HAVE_TO_REACTIVATE));
                     return null;
                 }
             }
         }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Naudotojas su tokiu el. paštu jau egzistuoja."));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", EMAIL_ALREADY_USED));
         return null;
     }
 
@@ -144,7 +152,7 @@ public class RegistrationBean {
         setLastname(userFB.getLastName());
         setFacebookID(userFB.getId());
         // principal.setAddress(locale.getDisplayCountry() + userFB. );
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/DD/YYYY");
+        SimpleDateFormat formatter = new SimpleDateFormat(FB_DATE_FORMAT);
         try {
             if (userFB.getBirthday() != null) {
                 setBirthdate(formatter.parse(userFB.getBirthday()));

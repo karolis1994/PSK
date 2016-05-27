@@ -9,7 +9,6 @@ import DT.Entities.Settings;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,11 +17,14 @@ import javax.inject.Named;
  *
  * @author Karolis
  */
-@Named("changeRecommendationSettings")
-@ViewScoped
+@Named("changeRecommendationSettingsBean")
 public class ChangeRecommendationSettings {
      
     // Fields ------------------------------------------------------------------
+    private final static String INPUT_NOT_NUMBER = "Įvesta ne skaičiai.";
+    private final static String INPUT_NUMBER_TOO_LOW = "Įvesti skaičiai negali būti mažesni už 0.";
+    private final static String MINIMUM_TOO_HIGH = "Įvestas minimumas negali būti didesnis už maksimumą.";
+    private final static String SETTINGS_CHANGED = "Nustatymai pakeisti.";
     
     private Settings maxRecommendations;
     private Settings minRecommendations;
@@ -54,17 +56,17 @@ public class ChangeRecommendationSettings {
             max = Integer.parseInt(maxRecommendationsValue);
             min = Integer.parseInt(minRecommendationsValue);
         } catch(NumberFormatException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Įvesta ne skaičiai."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", INPUT_NOT_NUMBER));
             return;
         }
         //Check if input numbers positive
         if(max <= 0 || min <= 0) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Įvesti skaičiai negali būti mažesni už 0."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", INPUT_NUMBER_TOO_LOW));
             return;
         }
         //Check if the minimal number is not above maximum
         if(max < min) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Įvestas minimumas negali būti didesnis už maksimumą."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", MINIMUM_TOO_HIGH));
             return;
         }
         
@@ -73,7 +75,7 @@ public class ChangeRecommendationSettings {
         minRecommendations.setSettingvalue(""+min);
         settingsFacade.edit(maxRecommendations);
         settingsFacade.edit(minRecommendations);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Nustatymai pakeisti."));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", SETTINGS_CHANGED));
     }
     
     // Getters / setters -------------------------------------------------------

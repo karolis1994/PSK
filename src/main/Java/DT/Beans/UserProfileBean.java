@@ -9,10 +9,10 @@ import DT.Entities.Principals;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,6 +26,13 @@ import javax.inject.Named;
 public class UserProfileBean {  
         
     // Fields ------------------------------------------------------------------
+    private final static String DATE_FORMAT = "yyyy-MM-dd";
+    private final static String ERROR = "Klaida: ";
+    private final static String WRONG_ID_FORMAT = "ID formatas netinkamas.";
+    private final static String NO_USER_WITH_SUCH_ID = "Naudotojas su tokiu ID neegzistuoja.";
+    private final static String CLUB_MEMBER = "Klubo narys";
+    private final static String CLUB_CANDIDATE = "Klubo kandidatas";
+    private final static String CLUB_CANDIDATE_NO_MEMBERSHIP = "Klubo kandidatas (neapmokėta narystė)";
 
     private Principals shownPrincipal;
     @Inject
@@ -33,7 +40,6 @@ public class UserProfileBean {
     @Inject
     private SettingsFacade settingsFacade;
     
-    @ManagedProperty(value="#{param.userID}")
     private String userID;
     private String firstname;
     private String lastname;
@@ -42,7 +48,8 @@ public class UserProfileBean {
     private String email;
     private String phoneNumber;
     private String address;
-    private String about;    
+    private String about;
+    private String memberStatus;
     
     private boolean aboutField;
     private boolean pictureField;
@@ -53,31 +60,38 @@ public class UserProfileBean {
     public void init(){
         //Loading settings
         aboutField = "true".equals(settingsFacade.getSettingByName("AboutField").getSettingvalue());
-        //pictureField = "true".equals(settingsFacade.getSettingByName("PictureField").getSettingvalue());
+        pictureField = "true".equals(settingsFacade.getSettingByName("PictureField").getSettingvalue());
         
-        //Choosing the user by the managedproperty key, if no such member throwing an error message
+        userID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userID");
+        
+        //Choosing the user by userID, if no such member throwing an error message
         int principalID;
         try {
             principalID = Integer.parseInt(userID);
             shownPrincipal = principalsFacade.find(principalID);
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Klaida: ", "ID formatas netinkamas."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, WRONG_ID_FORMAT));
             return;
         }
         if(shownPrincipal == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Klaida: ", "Naudotojas su tokiu ID neegzistuoja."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, NO_USER_WITH_SUCH_ID));
             return;
         }
         
         //Setting to be shown fields
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");      
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);      
         firstname = shownPrincipal.getFirstname();
         lastname = shownPrincipal.getLastname();
         birthdate = sdf.format(shownPrincipal.getBirthdate());
-        if(shownPrincipal.getMembershipuntill() == null) {
-            memberUntil = "Ne narys";
-        } else {
+        
+        if(shownPrincipal.getMembershipuntill() != null && new Date().after(shownPrincipal.getMembershipuntill())) {
             memberUntil = sdf.format(shownPrincipal.getMembershipuntill());
+            memberStatus = CLUB_MEMBER;
+        } else {
+            if(!shownPrincipal.getIsapproved())
+                memberStatus = CLUB_CANDIDATE;
+            else
+                memberStatus = CLUB_CANDIDATE_NO_MEMBERSHIP;
         }
         email = shownPrincipal.getEmail();
         phoneNumber = shownPrincipal.getPhonenumber();
@@ -141,5 +155,11 @@ public class UserProfileBean {
     public String getEmptyString() { 
         return ""; 
     }
+
+    public String getMemberStatus() {
+        return memberStatus;
+    }
+    
+    
     
 }

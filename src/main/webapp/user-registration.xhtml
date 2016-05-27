@@ -1,18 +1,31 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      template="/templates/general_template.xhtml"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-    
-    <ui:define name="general_content">
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+        <h:head>
+            
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>Labanoro draugai</title>
+        
+        <link href="../stylesheet.css" rel="stylesheet" type="text/css"/>
+        <base href="#{request.requestURL.substring(0, request.requestURL.length() - request.requestURI.length())}#{request.contextPath}/" />
+        </h:head>
+    <body>
         <div>
             <h:form>
                 <p:panel header="Registracija">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
 
                     <h:panelGrid columns="1" cellpadding="2">
-                        <h:outputLabel for="emailRegistration" value="Email *" />
+                        <h:outputLabel for="emailRegistration" value="El. paštas *" />
                         <p:inputText id="emailRegistration" value="#{registrationBean.email}" label="Email" required="true"/>
                         <p:message for="emailRegistration" />
                         
@@ -50,10 +63,11 @@
                                             
                     </h:panelGrid>
 
-                    <p:commandButton action="#{registrationBean.register}" value="Registruotis" ajax="false" validateClient="true"/>
+                    <p:commandButton action="#{registrationBean.register}" value="Registruotis" ajax="false" validateClient="true"/><p></p>
+                    <p:commandButton action="login.xhtml" value="Grįžti" ajax="false" validateClient="true" immediate="true"/>
                 </p:panel>
             </h:form>
         </div>
-    </ui:define>
-</ui:composition>
+    </body>
+</html>
 
