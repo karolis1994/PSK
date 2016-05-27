@@ -93,6 +93,10 @@ public class PayPalCompleteBean implements Serializable {
         Map<String, String> response = PayPalHelper.doExpressCheckoutPayment(payment, payerID);
         
         if ("success".equals(response.get("ACK").toLowerCase())) {
+            
+            payment.setIspaid(true);
+            paymentsFacade.edit(payment);
+            
             if (payment.getPaidserviceid().getId() == 2) {
                 completeBuyingPoints(payment);
             }
