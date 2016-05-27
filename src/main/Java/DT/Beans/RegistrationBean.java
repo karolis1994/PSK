@@ -10,26 +10,16 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
 import DT.Services.IPasswordHasher;
 import DT.Services.PasswordHasherPBKDF2;
-import facebook4j.Facebook;
-import facebook4j.FacebookException;
-import facebook4j.RawAPIResponse;
 import facebook4j.User;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,9 +40,9 @@ public class RegistrationBean {
 
     private Principals principal;
 
-    @EJB
+    @Inject
     private PrincipalsFacade principalsFacade;
-    @EJB
+    @Inject
     private SettingsFacade settingsFacade;
     @EJB
     private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
@@ -103,7 +93,7 @@ public class RegistrationBean {
             if ((password.length() < 5 && !facebookRegistration)
                     || (password.length() > 0 && password.length() < 5)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Slaptažodis turi būti 5-20 simbolių ilgio.", ""));
-                return "";
+                return null;
             }
 
             principal = new Principals();
@@ -118,7 +108,7 @@ public class RegistrationBean {
                     principal.setPasswordhash(passwordHasher.createHash(password, salt));
                 } catch (Exception e) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klaida: ", "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui."));
-                    return "";
+                    return null;
                 }
             }
             principal.setAddress(address);
@@ -138,11 +128,16 @@ public class RegistrationBean {
             principal = (Principals) principalsFacade.findByEmail(email);
             if (principal.getIsdeleted() != null) {
                 if (principal.getIsdeleted()) {
-                    return "REGISTRATION_UNSUCCESFUL_RELOG";
+                    //rodyt errorus vietoj atskiru langu
+                    //idet paveikslelius prie registracijos
+                    //Sarasas/filtras perziureti atostogaujancius narius
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Naudotojas su tokiu email jau egzistuoja, bet yra deaktyvuotas. Prisijunkite su senu slaptazodziu jeigu norite aktyvuoti."));
+                    return null;
                 }
             }
         }
-        return "REGISTRATION_UNSUCCESFUL";
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Naudotojas su tokiu email jau egzistuoja."));
+        return null;
     }
 
     //Method to register a new principal
@@ -165,6 +160,7 @@ public class RegistrationBean {
             setAbout(userFB.getBio());
         }
     }
+    
     // Getters / setters -------------------------------------------------------
 
     public String getEmail() {
@@ -278,4 +274,14 @@ public class RegistrationBean {
     public void setPasswordInfo(String passwordInfo) {
         this.passwordInfo = passwordInfo;
     }
+
+    public UploadedFile getPicture() {
+        return picture;
+    }
+
+    public void setPicture(UploadedFile picture) {
+        this.picture = picture;
+    }
+    
+    
 }

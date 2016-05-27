@@ -14,12 +14,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
@@ -27,7 +26,7 @@ import javax.validation.constraints.Pattern;
  *
  * @author Karolis
  */
-@ManagedBean(name="userProfileChangeBean")
+@Named("userProfileChangeBean")
 @ViewScoped
 public class UserProfileChangeBean {
     
@@ -35,11 +34,11 @@ public class UserProfileChangeBean {
     private Principals loggedInPrincipal;
     private List<Reservations> reservations;
     
-    @EJB
+    @Inject
     private SettingsFacade settingsFacade;
-    @EJB
+    @Inject
     private PrincipalsFacade principalsFacade;
-    @EJB
+    @Inject
     private ReservationFacade reservationsFacade;
     
     @Inject
@@ -106,7 +105,7 @@ public class UserProfileChangeBean {
         }
         
         //Update database
-        principalsFacade.remove(loggedInPrincipal);
+        principalsFacade.edit(loggedInPrincipal);
         if(!reservations.isEmpty()) {
             for(Reservations r : reservations) {
                 reservationsFacade.edit(r);
