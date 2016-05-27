@@ -93,7 +93,7 @@ public class RegistrationBean {
             if ((password.length() < 5 && !facebookRegistration)
                     || (password.length() > 0 && password.length() < 5)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Slaptažodis turi būti 5-20 simbolių ilgio.", ""));
-                return "";
+                return null;
             }
 
             principal = new Principals();
@@ -108,7 +108,7 @@ public class RegistrationBean {
                     principal.setPasswordhash(passwordHasher.createHash(password, salt));
                 } catch (Exception e) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klaida: ", "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui."));
-                    return "";
+                    return null;
                 }
             }
             principal.setAddress(address);
@@ -128,12 +128,15 @@ public class RegistrationBean {
             principal = (Principals) principalsFacade.findByEmail(email);
             if (principal.getIsdeleted() != null) {
                 if (principal.getIsdeleted()) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Naudotojas su tokiu el. paštu yra panaikinęs savo paskyrą. Norint ją atstatyti jums reikia prisijungti su savo senu slaptažodžiu."));
+                    //rodyt errorus vietoj atskiru langu
+                    //idet paveikslelius prie registracijos
+                    //Sarasas/filtras perziureti atostogaujancius narius
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Naudotojas su tokiu email jau egzistuoja, bet yra deaktyvuotas. Prisijunkite su senu slaptazodziu jeigu norite aktyvuoti."));
                     return null;
                 }
             }
         }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Naudotojas su tokiu el. paštu jau egzistuoja."));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Naudotojas su tokiu email jau egzistuoja."));
         return null;
     }
 
@@ -157,6 +160,7 @@ public class RegistrationBean {
             setAbout(userFB.getBio());
         }
     }
+    
     // Getters / setters -------------------------------------------------------
 
     public String getEmail() {
@@ -270,4 +274,14 @@ public class RegistrationBean {
     public void setPasswordInfo(String passwordInfo) {
         this.passwordInfo = passwordInfo;
     }
+
+    public UploadedFile getPicture() {
+        return picture;
+    }
+
+    public void setPicture(UploadedFile picture) {
+        this.picture = picture;
+    }
+    
+    
 }

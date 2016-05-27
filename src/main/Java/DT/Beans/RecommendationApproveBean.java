@@ -12,18 +12,19 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.RecommendationsFacade;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  *
  * @author Karolis
  */
-@Named("recommendationApproveBean")
+@ManagedBean(name="recommendationApproveBean")
 @RequestScoped
 public class RecommendationApproveBean {
     
@@ -34,12 +35,13 @@ public class RecommendationApproveBean {
     private Principals loggedInPrincipal;
     private Settings minRecommendations;
       
-    @Inject
+    @EJB
     private PrincipalsFacade principalsFacade;
-    @Inject
+    @EJB
     private RecommendationsFacade recommendationsFacade;
-    @Inject
+    @EJB
     private SettingsFacade settingsFacade;
+    
     @Inject
     private UserSessionBean userSessionBean;
     

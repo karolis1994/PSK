@@ -8,18 +8,16 @@ package DT.Beans;
 import DT.Entities.Settings;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  *
  * @author Karolis
  */
-@Named("changeApplicationForm")
-@ViewScoped
+@ManagedBean(name="changeApplicationForm")
 public class ChangeApplicationForm {
        
     // Fields ------------------------------------------------------------------
@@ -27,7 +25,7 @@ public class ChangeApplicationForm {
     private Settings PictureSettings;
     private Settings AboutSettings;
     
-    @Inject
+    @EJB
     SettingsFacade settingsFacade;
     
     private boolean picture;    

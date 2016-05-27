@@ -23,7 +23,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Pattern;
 
@@ -31,7 +30,7 @@ import javax.validation.constraints.Pattern;
  *
  * @author Karolis
  */
-@Named("recommendationRequestBean")
+@ManagedBean(name="recommendationRequestBean")
 @ViewScoped
 public class RecommendationRequestBean implements Serializable{
     
@@ -43,14 +42,15 @@ public class RecommendationRequestBean implements Serializable{
     private Principals inputPrincipal;
     private Settings maxRecommendations;
     
-    @Inject
+    @EJB
     private SettingsFacade settingsFacade;
-    @Inject
+    @EJB
     private PrincipalsFacade principalsFacade;
-    @Inject
+    @EJB
     private RecommendationsFacade recommendationsFacade;
     @EJB
     private final IMail mailSMTP = new MailSMTP();
+    
     @Inject
     private UserSessionBean userSessionBean;
     
