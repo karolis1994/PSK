@@ -12,10 +12,10 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.RecommendationsFacade;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
@@ -33,13 +33,12 @@ public class RecommendationApproveBean {
     private Principals loggedInPrincipal;
     private Settings minRecommendations;
       
-    @EJB
+    @Inject
     private PrincipalsFacade principalsFacade;
-    @EJB
+    @Inject
     private RecommendationsFacade recommendationsFacade;
-    @EJB
+    @Inject
     private SettingsFacade settingsFacade;
-    
     @Inject
     private UserSessionBean userSessionBean;
     
