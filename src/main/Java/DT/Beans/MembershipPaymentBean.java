@@ -107,7 +107,8 @@ public class MembershipPaymentBean implements Serializable {
         Paidservices membership = paidServicesFacade.find(1);
         double price = membership.getCost();
         DecimalFormat df = new DecimalFormat("#.00"); 
-        Map<String, String> response = PayPalHelper.getCheckOutToken(df.format(price), membership.getTitle());
+        String formattedPrice = df.format(price).replace(',', '.');
+        Map<String, String> response = PayPalHelper.getCheckOutToken(formattedPrice, membership.getTitle());
         
         if ("success".equals(response.get("ACK").toLowerCase()))
         {

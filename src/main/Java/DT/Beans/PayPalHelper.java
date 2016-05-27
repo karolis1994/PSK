@@ -47,8 +47,7 @@ public class PayPalHelper {
 
         setEC.setNoShipping(true);
         setEC.setRequireConfirmedShipping(false);
-        setEC.setPaymentAction(PaymentAction.SALE);
-        
+//        setEC.setPaymentAction(PaymentAction.SALE);
         
         /* send request and set response */
         pp.setResponse(setEC);
@@ -88,7 +87,8 @@ public class PayPalHelper {
         
         PaymentItem item = new PaymentItem();
         DecimalFormat df = new DecimalFormat("#.00"); 
-        item.setAmount(df.format(payment.getAmmount()));
+        String formattedString = df.format(payment.getAmmount()).replace(',', '.');
+        item.setAmount(formattedString);
         
         PaymentItem[] items = {item};
         

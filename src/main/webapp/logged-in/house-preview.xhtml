@@ -48,24 +48,20 @@
                 <p>#{myHouse.capacity}</p>
 
                 <h4>Papildomos paslaugos:</h4>
-                <h:dataTable var="extra" value="#{myHouse.extrasList}" 
-                             styleClass="styled-table">
-                    <h:column>    				
-                        <f:facet name="header">Pavadinimas</f:facet>    				
+                <p:dataTable var="extra" value="#{myHouse.extrasList}" tableStyle="width:auto">
+                    <p:column headerText="Pavadinimas">    				 				
                         #{extra.title}
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Aprašymas</f:facet>
+                    </p:column>
+                    <p:column headerText="Aprašymas">
                         #{extra.description}
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Kaina (Taškais)</f:facet>
+                    </p:column>
+                    <p:column headerText="Kaina (Taškais)">
                         <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
                             <f:convertNumber type="number" groupingUsed="true" 
                                              maxFractionDigits="0" pattern="#0"/>
                         </h:outputText>
-                    </h:column>
-                </h:dataTable>
+                    </p:column>
+                </p:dataTable>
                 
                 <h4>Nuomos kaina savaitei:</h4> 
                 <h:outputText value="#{houseBean.cost}">
@@ -76,7 +72,8 @@
                 <br/>
                 
                 <p:commandButton value="Rezervuoti" action="#{houseBean.navigateToReservation()}" 
-                                 ajax="false" rendered="#{houseBean.canReserve()}"/>
+                                 ajax="false" rendered="#{houseBean.canReserve()}"
+                                 styleClass="butt"/>
                 <br/>
                 <h:outputText value="Jūs negalite rezervuoti šio vasarnamio. Priežastis: #{houseBean.canReserveMessage}"
                               rendered="#{!houseBean.canReserve()}"/>
