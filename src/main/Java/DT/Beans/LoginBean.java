@@ -110,9 +110,8 @@ public class LoginBean {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Reikalingas prisijungimas per facebook.", ""));
             return;
         }
-
-        String passwordHashed = passwordHasher.createHash(getPassword(), currentUser.getSalt().getBytes());
-        if (currentUser.getPasswordhash().equals(passwordHashed)) {
+        
+        if (passwordHasher.verifyPassword(getPassword(), currentUser.getPasswordhash())) {
             userSessionBean.setUser(currentUser);
             FacesContext.getCurrentInstance()
                     .getExternalContext()
