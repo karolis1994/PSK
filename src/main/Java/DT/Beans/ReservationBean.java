@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.OptimisticLockException;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -38,6 +39,7 @@ public class ReservationBean implements Serializable{
     private final String MESSAGE_PERIOD_TAKEN = "Pasirinktu laikotarpiu vasarnamis yra užimtas. Pasirinkite kitą laikotarpį";
     private final String MESSAGE_NOT_APPROVED = "Jūs negalite rezervuoti šio vasarnamio. Priežastis: Jūsų narystė nepatvirtinta";
     private final String MESSAGE_INSUFFICIENT_POINTS = "Jūs turite nepakankamai taškų";
+    private final String MESSAGE_OPTILOCK = "Įvyko klaida. Bandykite dar kartą";
     private final String MESSAGE_COMPONENT_CALENDAR = "calendar";
     private final String MESSAGE_COMPONENT_REVIEW = "review";
     
@@ -138,7 +140,7 @@ public class ReservationBean implements Serializable{
 
             Calendar cal = Calendar.getInstance();
             cal.setTime(resFromDate);
-            cal.add(Calendar.HOUR_OF_DAY, ei.numberOfHours);
+            cal.add(Calendar.HOUR_OF_DAY, ei.getNumberOfHours());
             Date resToDate = cal.getTime();
 
             Reservations extraRes = new Reservations();
@@ -154,14 +156,20 @@ public class ReservationBean implements Serializable{
 
         allReservations.add(res);
         payment.setReservationsList(allReservations);
-        paymentsFacade.PayWithPoints(payment, princ);
-        userSessionBean.setUser(princ);
+        try {
+            paymentsFacade.PayWithPoints(payment, princ);
+            userSessionBean.setUser(princ);
+        } catch(OptimisticLockException ex) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_REVIEW, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MESSAGE_OPTILOCK));
+            return "";
+        }
         
         return PAGE_AFTER_RESERVING;
     }
     
     public List<Reservations> findReserved() {
-        List<Reservations> reservations = reservationsFacade.findByDatesCoveringNotCanceledExtraIdNull(reservedFrom, reservedTo);
+        List<Reservations> reservations = reservationsFacade.findByDatesCoveringNotCanceledHouseOnly(reservedFrom, reservedTo);
         return reservations;
     }
     

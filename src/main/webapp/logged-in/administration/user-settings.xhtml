@@ -14,11 +14,6 @@
                     <p:inputText id="maxUserAmmount" value="#{userSettingsBean.maxUserAmmount}" required="true" >
                         <f:validateLongRange minimum="1" />
                     </p:inputText>
-
-                    <h:outputLabel for="membershipCost" value="Metinis nario mokestis" />
-                    <p:inputText id="membershipCost" value="#{userSettingsBean.membershipCost}" required="true" >
-                        <f:validateLongRange minimum="1" />
-                    </p:inputText>
                 </h:panelGrid>
                 <p:commandButton action="#{userSettingsBean.save}" value="Išsaugoti" ajax="false"/>
             </p:panel>

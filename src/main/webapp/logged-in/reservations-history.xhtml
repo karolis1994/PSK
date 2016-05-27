@@ -8,62 +8,79 @@
     <ui:define name="general_content">
         
         <p:panel header="Rezervacijų istorija">
-            <h:form id="form">
-                <p:dataTable var="reservation" value="#{reservationsHistoryBean.reservationItems}">
-                    
-                    <p:column headerText="Vasarnamis">
-                        <h:link value="#{reservation.houseReservation.houseid.title}" outcome="logged-in/house-preview.xhtml">
-                            <f:param name="id" value="1" />
-                        </h:link>
-                    </p:column>
+        <h:form id="form">
+            <p:dataTable var="reservation" value="#{reservationsHistoryBean.reservationItems}">
 
-                    <p:column headerText="Nuo">
-                        <h:outputText value="#{reservation.houseReservation.reservedfrom}">             
-                            <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
-                        </h:outputText>
-                    </p:column>
+                <p:column headerText="Vasarnamis">
+                    <h:link value="#{reservation.houseReservation.houseid.title}" 
+                            outcome="house-preview.xhtml" rendered="#{reservation.houseReservation.houseid != null}">
+                        <f:param name="id" value="#{reservation.houseReservation.houseid.id}"/>
+                    </h:link>
+                </p:column>
 
-                    <p:column headerText="Iki">
-                        <h:outputText value="#{reservation.houseReservation.reservedto}">             
-                            <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
-                        </h:outputText>
-                    </p:column>
-                    
-                    <p:column headerText="Papildomos paslaugos">
-                        <h:outputText value="-" 
-                                      rendered="#{reservation.extraReservations.isEmpty()}"/>
-                        <p:dataTable var="res" 
-                                     value="#{reservation.extraReservations}" 
-                                     rendered="#{!reservation.extraReservations.isEmpty()}">
-                            <p:column>
-                                <h:outputText value="#{res.extraid.title}"/>
-                            </p:column>
-<!--                            <p:column>
-                                <h:outputText value="#{res.extraid.getPaidservicesList().get(0).getCost()}">
-                                    <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
-                                </h:outputText>
-                            </p:column>-->
-                        </p:dataTable>
-                    </p:column>
-                    
-                    <p:column headerText="Kaina (Taškais)">
-                        <h:outputText value="#{reservation.houseReservation.paymentid.ammount}">
-                            <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
-                        </h:outputText>
-                    </p:column>
-                    
-                    <p:column >
-                        <p:commandLink value="Panaikinti" 
-                                       onclick="PF('dialog').show();" rendered="#{reservationsHistoryBean.canBeCanceled(reservation)}"
-                                       actionListener="#{reservationsHistoryBean.preselectReservation(reservation)}"/>
-                        
-                        <h:link value="Užsakyti paslaugas" rendered="#{reservationsHistoryBean.canOrderExtras(reservation)}"  
-                                outcome="#{reservationsHistoryBean.navigateToExtrasReservation(reservation)}"/>
-                    </p:column>
-                </p:dataTable> 
-            </h:form>
-            
-             
+                <p:column headerText="Nuo">
+                    <h:outputText value="#{reservation.houseReservation.reservedfrom}">             
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Iki">
+                    <h:outputText value="#{reservation.houseReservation.reservedto}">             
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Papildomos paslaugos">
+                    <h:outputText value="-" rendered="#{reservation.extraReservations.isEmpty()}"/>
+                    <p:dataTable var="res"
+                                 value="#{reservation.extraReservations}" 
+                                 rendered="#{!reservation.extraReservations.isEmpty()}"
+                                 selection="#{reservationsHistoryBean.selectedExtraReservation}"
+                                 selectionMode="single"
+                                 rowKey="#{res.getId()}">
+                        <p:ajax event="rowSelect"
+                                oncomplete="PF('extra-info').show();" update="@form"/>
+                        <p:column>
+                            <h:outputText value="#{res.extraid.title}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:column>
+                
+                <p:column headerText="Suma (Taškais)">
+                    <h:outputText value="#{reservation.houseReservation.paymentid.ammount}">
+                        <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column>
+                    <p:commandLink value="Panaikinti" 
+                                   onclick="PF('dialog').show();" rendered="false"
+                                   actionListener="#{reservationsHistoryBean.preselectReservation(reservation)}"/>
+
+                    <h:link value="Užsakyti paslaugas" rendered="#{reservationsHistoryBean.canOrderExtras(reservation)}"  
+                            outcome="#{reservationsHistoryBean.navigateToExtrasReservation(reservation)}"/>
+                </p:column>
+            </p:dataTable> 
+
+            <p:dialog header="" widgetVar="extra-info" modal="true" resizable="false"
+                      width="500">
+                <p:ajax event="close" update="@form" listener="#{reservationsHistoryBean.unselectExtraReservation()}"/>
+                <h3><h:outputText value="#{reservationsHistoryBean.selectedExtraReservation.extraid.title}"/></h3>
+                <h4>Data ir laikas</h4>
+                <h:outputText value="#{reservationsHistoryBean.selectedExtraReservation.reservedfrom}">
+                    <f:convertDateTime pattern="yyyy MMMM dd  HH:mm" timeZone="Europe/Vilnius" locale="lt"/>
+                </h:outputText>
+                <h4>Trukmė</h4>
+                <h:outputText value="#{reservationsHistoryBean.calculateNumberOfHours()} val."/>
+                <br/>
+                <h:panelGrid columns="1" cellpadding="10" style="margin-left: auto; margin-right: auto;">
+                    <p:commandButton value="Uždaryti" 
+                                     onclick="PF('extra-info').hide();" 
+                                     action="#{reservationsHistoryBean.unselectExtraReservation()}" 
+                                     update="@form"/> 
+                </h:panelGrid>
+            </p:dialog> 
+        </h:form>
         </p:panel>
         
         <p:dialog header="" widgetVar="dialog"
@@ -79,6 +96,8 @@
                 </h:panelGrid>
             </h:form>
         </p:dialog> 
+        
+       
         
     </ui:define>
     

@@ -45,24 +45,12 @@ public class UserSettingsBean {
         maxUserAmmount = value;
     }
 
-    private Float membershipCost;
-
-    public Float getMembershipCost() {
-        return membershipCost;
-    }
-
-    public void setMembershipCost(Float value) {
-
-        membershipCost = value;
-    }
-
     @PostConstruct
     public void init() {
         Settings setting = settingsFacade.getSettingByName("MaxUserAmmount");
         maxUserAmmount = Integer.parseInt(setting.getSettingvalue());
 
         setting = settingsFacade.getSettingByName("MembershipCost");
-        membershipCost = Float.parseFloat(setting.getSettingvalue());
 
     }
 
@@ -81,10 +69,6 @@ public class UserSettingsBean {
 
         Settings setting = settingsFacade.getSettingByName("MaxUserAmmount");
         setting.setSettingvalue(maxUserAmmount.toString());
-        settingsFacade.edit(setting);
-
-        setting = settingsFacade.getSettingByName("MembershipCost");
-        setting.setSettingvalue(membershipCost.toString());
         settingsFacade.edit(setting);
 
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Išsaugota."));

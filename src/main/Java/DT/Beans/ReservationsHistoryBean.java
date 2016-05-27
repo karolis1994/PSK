@@ -32,12 +32,13 @@ public class ReservationsHistoryBean implements Serializable {
     @Inject private UserSessionBean userSessionBean;
     
     private Principals principal;
+    private Reservations selectedExtraReservation;
     private ReservationItem selectedItem;
     private List<ReservationItem> reservationItems;
     
     public class ReservationItem implements Serializable {
         private Reservations houseReservation;
-        private List<Reservations> extraReservations;
+        private List<Reservations> extraReservations = new ArrayList<>();
 
         public Reservations getHouseReservation() { return houseReservation; }
         public void setHouseReservation(Reservations houseReservation) { this.houseReservation = houseReservation; }
@@ -47,8 +48,8 @@ public class ReservationsHistoryBean implements Serializable {
     }
     
     private List<ReservationItem> findReservations() {
-        List<Reservations> houseReservations = reservationFacade.findByPrincipalNotCanceledExtraIdNull(getPrincipal());
-        List<Reservations> extraReservations = reservationFacade.findByPrincipalNotCanceledExtraIdNotNull(getPrincipal());
+        List<Reservations> houseReservations = reservationFacade.findByPrincipalNotCanceledHouseAndHolidayOnly(getPrincipal());
+        List<Reservations> extraReservations = reservationFacade.findByPrincipalNotCanceledExtraOnly(getPrincipal());
         
         reservationItems = new ArrayList<>();
         
@@ -83,6 +84,9 @@ public class ReservationsHistoryBean implements Serializable {
     
     public boolean canOrderExtras(ReservationItem item) {
         Date now = new Date();
+        if (item.houseReservation.getHouseid() == null)
+            return false;
+        
         return (item.houseReservation.getReservedfrom().before(now) && 
                 item.houseReservation.getReservedto().after(now) && !
                 item.houseReservation.getHouseid().getExtrasList().isEmpty());
@@ -96,20 +100,15 @@ public class ReservationsHistoryBean implements Serializable {
         selectedItem = item;
     }
     
-    public PrincipalsFacade getPrincipalsFacade() {
-        return principalsFacade;
+    public void unselectExtraReservation() {
+        selectedExtraReservation = null;
     }
-
-    public void setPrincipalsFacade(PrincipalsFacade principalsFacade) {
-        this.principalsFacade = principalsFacade;
-    }
-
-    public ReservationFacade getReservationFacade() {
-        return reservationFacade;
-    }
-
-    public void setReservationFacade(ReservationFacade reservationFacade) {
-        this.reservationFacade = reservationFacade;
+    
+    public int calculateNumberOfHours() {
+        if (selectedExtraReservation == null)
+            return 0;
+        long diff = selectedExtraReservation.getReservedto().getTime() - selectedExtraReservation.getReservedfrom().getTime();
+        return (int) diff / (60 * 60 * 1000);
     }
 
     public Principals getPrincipal() {
@@ -122,6 +121,14 @@ public class ReservationsHistoryBean implements Serializable {
 
     public void setPrincipal(Principals principal) {
         this.principal = principal;
+    }
+
+    public Reservations getSelectedExtraReservation() {
+        return selectedExtraReservation;
+    }
+
+    public void setSelectedExtraReservation(Reservations selectedExtraReservation) {
+        this.selectedExtraReservation = selectedExtraReservation;
     }
 
     public ReservationItem getSelectedItem() {

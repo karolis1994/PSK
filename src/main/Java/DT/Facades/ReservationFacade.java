@@ -27,6 +27,11 @@ public class ReservationFacade extends GenericFacade<Reservations> {
         super(Reservations.class);
     }
     
+    /**
+     * finds reservations made by given principal
+     * @param principal
+     * @return 
+     */
     public List<Reservations> findByPrincipal(Principals principal) {
         Query query = em.createQuery(""
                 + "SELECT o "
@@ -36,6 +41,11 @@ public class ReservationFacade extends GenericFacade<Reservations> {
         return query.getResultList();
     }
     
+    /**
+     * finds non-canceled reservations made by given principal
+     * @param principal
+     * @return 
+     */
     public List<Reservations> findByPrincipalNotCanceled(Principals principal) {
         Query query = em.createQuery(""
                 + "SELECT o "
@@ -45,7 +55,12 @@ public class ReservationFacade extends GenericFacade<Reservations> {
         return query.getResultList();
     }
     
-    public List<Reservations> findByPrincipalNotCanceledExtraIdNull(Principals principal) {
+    /**
+     * finds reservations during holidays and house reservations made by given principal
+     * @param principal
+     * @return 
+     */
+    public List<Reservations> findByPrincipalNotCanceledHouseAndHolidayOnly(Principals principal) {
         Query query = em.createQuery(""
                 + "SELECT o "
                 + "FROM " + entityClass.getSimpleName() + " o "
@@ -55,7 +70,12 @@ public class ReservationFacade extends GenericFacade<Reservations> {
         return query.getResultList();
     }
     
-    public List<Reservations> findByPrincipalNotCanceledExtraIdNotNull(Principals principal) {
+    /**
+     * finds non-canceled extras reservations made by given principal   
+     * @param principal
+     * @return 
+     */
+    public List<Reservations> findByPrincipalNotCanceledExtraOnly(Principals principal) {
         Query query = em.createQuery(""
                 + "SELECT o "
                 + "FROM " + entityClass.getSimpleName() + " o "
@@ -65,13 +85,20 @@ public class ReservationFacade extends GenericFacade<Reservations> {
         return query.getResultList();
     }
     
-    public List<Reservations> findByDatesCoveringNotCanceledExtraIdNull(Date from, Date to) {
+    /**
+     * finds non-canceled reservations that intersect with given time period 
+     * @param from 
+     * @param to
+     * @return 
+     */
+    public List<Reservations> findByDatesCoveringNotCanceledHouseOnly(Date from, Date to) {
         Query query = em.createQuery(""
                 + "SELECT o "
                 + "FROM " + entityClass.getSimpleName() + " o "
                 + "WHERE ((o.reservedfrom >= :from AND o.reservedfrom <= :to) OR (o.reservedto >= :from AND o.reservedto <= :to)) "
                 + "AND o.iscanceled=false "
-                + "AND o.extraid IS NULL");
+                + "AND o.extraid IS NULL "
+                + "AND o.houseid IS NOT NULL");
         query.setParameter("from", from);
         query.setParameter("to", to);
         return query.getResultList();

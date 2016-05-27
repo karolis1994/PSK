@@ -11,9 +11,6 @@ INSERT INTO paidservices (cost, costinpoints, otherserviceid)
 
 --User Settings
 INSERT INTO Settings (settingname, settingvalue)
-VALUES ('MembershipCost','10');
-
-INSERT INTO Settings (settingname, settingvalue)
 VALUES ('MaxUserAmmount','100');
 
 --Recommendation Settings

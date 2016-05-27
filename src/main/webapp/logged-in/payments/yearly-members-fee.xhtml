@@ -13,12 +13,13 @@
                 <p>
                     Norėdami pratęsti narystę sumokėkite metinį nario mokestį.
                 </p>
-                <p:commandButton value="Sumokėti nario mokestį klubo taškais" 
+                <p:commandButton value="Sumokėti nario mokestį klubo taškais (#{membershipPaymentBean.membership.costInPoints} TŠK)" 
                                  actionListener="#{membershipPaymentBean.payMembersFeeWithPoints}" 
+                                 style="width:250px; margin: 0px 10px 10px 0px;"
                                  ajax="false"/>
-                
-                <p:commandButton value="Sumokėti nario mokestį PayPal sistemoje" 
+                <p:commandButton value="Sumokėti nario mokestį PayPal sistemoje (#{membershipPaymentBean.membership.cost} EUR)" 
                                  action="#{membershipPaymentBean.payMembersFeeWithPayPal}" 
+                                 style="width:300px; margin: 0px 10px 10px 0px;"
                                  ajax="false"/>
             </p:panel>
         </h:form>
