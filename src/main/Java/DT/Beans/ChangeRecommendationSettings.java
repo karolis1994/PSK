@@ -8,6 +8,7 @@ package DT.Beans;
 import DT.Entities.Settings;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
  * @author Karolis
  */
 @Named("changeRecommendationSettingsBean")
+@RequestScoped
 public class ChangeRecommendationSettings {
      
     // Fields ------------------------------------------------------------------
