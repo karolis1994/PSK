@@ -8,10 +8,10 @@ package DT.Beans;
 import DT.Entities.Settings;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  *

@@ -19,10 +19,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
-import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Pattern;
 
@@ -31,7 +30,6 @@ import javax.validation.constraints.Pattern;
  * @author Karolis
  */
 @Named("recommendationRequestBean")
-@ViewScoped
 public class RecommendationRequestBean implements Serializable{
     
     // Fields ------------------------------------------------------------------
@@ -58,6 +56,7 @@ public class RecommendationRequestBean implements Serializable{
     private RecommendationsFacade recommendationsFacade;
     @EJB
     private final IMail mailSMTP = new MailSMTP();
+    
     @Inject
     private UserSessionBean userSessionBean;
     

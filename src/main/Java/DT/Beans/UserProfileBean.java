@@ -11,7 +11,6 @@ import DT.Facades.SettingsFacade;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -22,7 +21,6 @@ import javax.inject.Named;
  * @author Karolis
  */
 @Named("userProfileBean")
-@RequestScoped
 public class UserProfileBean {  
         
     // Fields ------------------------------------------------------------------

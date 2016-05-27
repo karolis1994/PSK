@@ -165,6 +165,7 @@ public class RegistrationBean {
             setAbout(userFB.getBio());
         }
     }
+    
     // Getters / setters -------------------------------------------------------
 
     public String getEmail() {
@@ -278,4 +279,14 @@ public class RegistrationBean {
     public void setPasswordInfo(String passwordInfo) {
         this.passwordInfo = passwordInfo;
     }
+
+    public UploadedFile getPicture() {
+        return picture;
+    }
+
+    public void setPicture(UploadedFile picture) {
+        this.picture = picture;
+    }
+    
+    
 }
