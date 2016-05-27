@@ -92,12 +92,12 @@ public class RecommendationRequestBean implements Serializable{
         //Check if there is a user registered with input email
         inputPrincipal = new Principals();
         inputPrincipal.setIsapproved(Boolean.FALSE);
-        try {
-            inputPrincipal = (Principals) principalsFacade.findByEmail(inputEmail);
-        } catch(Exception e) {
+        inputPrincipal = (Principals) principalsFacade.findByEmail(inputEmail);
+        if(inputPrincipal == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", NO_SUCH_MEMBER));
             return;
-        }    
+        }
+        
         //Check if the user we're sending the email to is aleady a member
         if(!inputPrincipal.getIsapproved()){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", RECEIVER_IS_NOT_APPROVED));
