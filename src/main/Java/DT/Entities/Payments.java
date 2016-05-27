@@ -43,6 +43,9 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Payments.findByIspaid", query = "SELECT p FROM Payments p WHERE p.ispaid = :ispaid")})
 public class Payments implements Serializable {
 
+    @Column(name = "boughtitems")
+    private Integer boughtitems;
+
     @Size(max = 128)
     @Column(name = "paymentno")
     private String paymentno;
@@ -209,6 +212,14 @@ public class Payments implements Serializable {
 
     public void setPaymentno(String paymentno) {
         this.paymentno = paymentno;
+    }
+
+    public Integer getBoughtitems() {
+        return boughtitems;
+    }
+
+    public void setBoughtitems(Integer boughtitems) {
+        this.boughtitems = boughtitems;
     }
 
 }

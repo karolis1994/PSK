@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS Payments(
   Ammount FLOAT NOT NULL,
   IsPaid BOOLEAN,
   PaidWithPoints BOOLEAN,
+  BoughtItems INT NULL,
   Version SERIAL
 );
 CREATE TABLE IF NOT EXISTS Reservations(

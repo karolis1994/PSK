@@ -69,35 +69,14 @@ public class MembershipPaymentBean implements Serializable {
     
     public Paidservices getMembership() { return membership; }
     
-    public String payMembersFeeWithPoints() {
+    public String payMembersFeeWithPoints() throws Exception {
         
         Principals payer = userSessionBean.getUser();
         
-        try {
-            paymentsFacade.PayWithPoints(payer, membership);
-        } catch (Exception e) {
-            
-        }
-        
-        // Extend membership
-        Date membershipUntill = payer.getMembershipuntill();
-        
-        if (membershipUntill == null || membershipUntill.before(new Date())) 
-        {
-            Calendar todayPlusOneYear = Calendar.getInstance();
-            todayPlusOneYear.add(Calendar.YEAR, 1);
-            membershipUntill = todayPlusOneYear.getTime();
-        }
-        else
-        {
-            Calendar newMembershipUntill = Calendar.getInstance();
-            newMembershipUntill.setTime(membershipUntill);
-            newMembershipUntill.add(Calendar.YEAR, 1);
-            membershipUntill = newMembershipUntill.getTime();
-        }
-        
-        payer.setMembershipuntill(membershipUntill);
-        principalsFacade.edit(payer);
+
+        paymentsFacade.PayWithPoints(payer, membership);
+
+        principalsFacade.extendMembership(payer);
         
         return "logged-in/index.xhtml";
     }

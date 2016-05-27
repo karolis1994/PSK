@@ -9,6 +9,13 @@ INSERT INTO otherservices (title, description)
 INSERT INTO paidservices (cost, costinpoints, otherserviceid)
     VALUES (10, 10, (SELECT ID FROM otherservices WHERE title = 'Metinis nario mokestis' LIMIT 1));
 
+-- Buy points
+INSERT INTO otherservices (title, description)
+    VALUES ('Taškų pirkimas', '');
+
+INSERT INTO paidservices (cost, costinpoints, otherserviceid)
+    VALUES (1, 1, (SELECT ID FROM otherservices WHERE title = 'Taškų pirkimas' LIMIT 1));
+
 --User Settings
 INSERT INTO Settings (settingname, settingvalue)
 VALUES ('MaxUserAmmount','100');

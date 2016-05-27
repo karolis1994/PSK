@@ -30,7 +30,13 @@ public class PaymentsFacade extends GenericFacade<Payments> {
     
     public void createPayPalPayment(Principals principal, Paidservices paidService, String paymentNo) {
         
+        createPayPalPayment(principal, paidService, paymentNo, 1);
+    }
+    
+    public void createPayPalPayment(Principals principal, Paidservices paidService, String paymentNo, int amount) {
+        
         double price = paidService.getCost();
+        price *= amount;
         
         // Create payment object
         Payments payment = new Payments();
@@ -43,6 +49,7 @@ public class PaymentsFacade extends GenericFacade<Payments> {
         payment.setPrincipalid(principal);
         payment.setVersion(1);
         payment.setPaymentno(paymentNo);
+        payment.setBoughtitems(amount);
         
         create(payment);
     }

@@ -1,11 +1,12 @@
 package DT.Beans;
 
 import DT.Entities.Principals;
+import DT.Facades.PrincipalsFacade;
 import facebook4j.User;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedBean;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
@@ -17,8 +18,14 @@ public class UserSessionBean implements Serializable {
 
     Principals user;
     User userFB;
+    
+    @Inject
+    PrincipalsFacade principalsFacade;
 
     public Principals getUser() {
+        if (user != null) {
+            user = principalsFacade.find(user.getId());
+        }
         return user;
     }
 
