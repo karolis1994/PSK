@@ -8,16 +8,18 @@ package DT.Beans;
 import DT.Entities.Settings;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author Karolis
  */
-@ManagedBean(name="changeRecommendationSettings")
+@Named("changeRecommendationSettings")
+@ViewScoped
 public class ChangeRecommendationSettings {
      
     // Fields ------------------------------------------------------------------
@@ -25,7 +27,7 @@ public class ChangeRecommendationSettings {
     private Settings maxRecommendations;
     private Settings minRecommendations;
     
-    @EJB
+    @Inject
     private SettingsFacade settingsFacade;
     
     private String maxRecommendationsValue;

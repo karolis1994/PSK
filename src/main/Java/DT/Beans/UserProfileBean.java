@@ -10,28 +10,27 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
 import java.text.SimpleDateFormat;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author Karolis
  */
-@ManagedBean(name="userProfileBean")
+@Named("userProfileBean")
 @RequestScoped
 public class UserProfileBean {  
         
     // Fields ------------------------------------------------------------------
 
     private Principals shownPrincipal;
-    @EJB
+    @Inject
     private PrincipalsFacade principalsFacade;
-    @EJB 
+    @Inject
     private SettingsFacade settingsFacade;
     
     @ManagedProperty(value="#{param.userID}")
