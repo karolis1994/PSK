@@ -7,10 +7,10 @@
 
     <ui:define name="administration_content">
         
-        <p:panel header="Nariai">
+        <p:panel header="Nariai" style="border: none;">
             <p:panelGrid columns="2">
                 <h:form id="form">
-                     <p:dataTable id="principalsTable" var="principal" value="#{displayMembersBean.allPrincipals}" 
+                     <p:dataTable id="principalsTable" var="principal" value="#{displayMembersBean.allPrincipals}"
                          style="margin-top: 5px;"
                          selection="#{displayMembersBean.selectedPrincipal}"
                          selectionMode="single"
