@@ -22,7 +22,6 @@
             <!-- RESERVATION START (STEP ONE) -->
             <p:panel header="Rezervacijos pradžia" rendered="#{reservationBean.stepOneVisible}">
                 <div class="hint">Kalendoriuje žemiau pasirinkite rezervacijos pradžios savaitę</div>
-                <!--<div class="week-picker"></div>-->
                 <p:calendar mode="inline" locale="lt" mindate="0" beforeShowDay="beforeDayRenderInline"
                             value="#{reservationBean.selectedDate}" showOtherMonths="true">
                     <p:ajax event="dateSelect" listener="#{reservationBean.selectDate}" update="@form"/>
@@ -63,25 +62,20 @@
                     Norėdami užsakyti papildomą paslaugą nustatykite jos pražios data, laiką bei trukmę.
                 </div>
                 
-                <h:dataTable styleClass="styled-table" 
-                             value="#{reservationBean.extraItems}" var="extraItem" 
-                             rowClasses="tableOddRow, tableEvenRow">
-                    <h:column>    				
-                        <f:facet name="header">Pavadinimas</f:facet>    				
+                <p:dataTable tableStyle="width:auto"
+                             value="#{reservationBean.extraItems}" var="extraItem">
+                    <p:column headerText="Pavadinimas">    				 				
                         #{extraItem.extra.title}
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Aparašymas</f:facet>
+                    </p:column>
+                    <p:column headerText="Aparašymas">
                         #{extraItem.extra.description}
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Kaina (taškai/val.)</f:facet>
+                    </p:column>
+                    <p:column headerText="Kaina (taškai/val.)">
                         <h:outputText id="total-price" value="#{extraItem.extra.getPaidservicesList().get(0).getCost()}">             
                             <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
                         </h:outputText>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Data</f:facet>
+                    </p:column>
+                    <p:column headerText="Data">
                         <p:calendar id ="extra-calendar"
                                     value="#{extraItem.reservedFrom}"
                                     readonlyInput="true" showOn="both"
@@ -92,9 +86,8 @@
                                     maxdate="#{reservationBean.reservedTo}">   
                             <p:ajax event="dateSelect" listener="#{reservationBean.extraSelectDate(extraItem.extra)}" update="@form"/>
                         </p:calendar>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Laikas</f:facet>
+                    </p:column>
+                    <p:column headerText="Laikas">
                         <p:calendar value="#{extraItem.reservedFromTime}"
                                     readonlyInput="false"
                                     pattern="HH:mm" locale="lt" size="15"
@@ -102,21 +95,19 @@
                             <p:ajax event="dateSelect" listener="#{reservationBean.extraSelectDate(extraItem.extra)}" 
                                     update="@this extra-calendar total-price"/>
                         </p:calendar>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Trukmė (val.)</f:facet>
+                    </p:column>
+                    <p:column headerText="Trukmė (val.)">
                         <p:spinner value="#{extraItem.numberOfHours}" min="1" max="168" size="5">
                             <p:ajax listener="#{reservationBean.extraSelectDate(extraItem.extra)}" update="@form"/>
                         </p:spinner>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header"></f:facet>
+                    </p:column>
+                    <p:column headerText="">
                         <p:tooltip id="toolTipFade" for="clear-extra" value="Panaikinti pasirinkimą"/>
                         <p:commandButton id="clear-extra" value="X" 
                                          action="#{reservationBean.clearExtraSelection(extraItem.extra)}"
                                          update="@form"/>
-                    </h:column>
-                </h:dataTable>
+                    </p:column>
+                </p:dataTable>
             </p:panel>
 
             <!-- TOTAL PRICE -->
@@ -128,13 +119,14 @@
 
                 <br/>
 
-                <p:commandButton value="Tęsti" action="#{reservationBean.continueClicked()}" update="@form"/>
+                <p:commandButton value="Tęsti" styleClass="butt"
+                                 action="#{reservationBean.continueClicked()}" update="@form"/>
                 
             </p:panel>
 
             <!-- RESERVATION REVIEW (STEP FOUR) -->
             <p:panel rendered="#{reservationBean.stepFourVisible}">
-                <p:commandButton ajax="false"
+                <p:commandButton ajax="false" styleClass="butt"
                                  action="#{reservationBean.editClicked()}" 
                                  value="Redaguoti rezervaciją"/>
 
@@ -143,43 +135,38 @@
                 <br/>
 
                 <h4><h:outputLabel value="Papildomos paslaugos" rendered="#{!reservationBean.selectedExtraItems.isEmpty()}"></h:outputLabel></h4>
-                <h:dataTable styleClass="styled-table" 
+                <p:dataTable tableStyle="width:auto"
                              value="#{reservationBean.selectedExtraItems}" 
                              var="extraItem" 
                              rendered="#{!reservationBean.selectedExtraItems.isEmpty()}">
-                    <h:column>    				  				
-                        <f:facet name="header">Pavadinimas</f:facet>    
+                    <p:column headerText="Pavadinimas">    				  				  
                         #{extraItem.extra.title}
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Data</f:facet>  
+                    </p:column>
+                    <p:column headerText="Data">
                         <h:outputText value="#{extraItem.reservedFrom}">
                         <f:convertDateTime type="date" pattern="yyyy MMMM dd" 
                                            locale="lt" timeZone="Europe/Vilnius"/>
                         </h:outputText>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Laikas</f:facet>  
+                    </p:column>
+                    <p:column headerText="Laikas">
                         <h:outputText value="#{extraItem.reservedFromTime}">
                         <f:convertDateTime type="date" pattern="HH:mm" 
                                            locale="lt" timeZone="Europe/Vilnius"/>
                         </h:outputText>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Trukmė (val.)</f:facet>  
+                    </p:column>
+                    <p:column headerText="Trukmė (val.)"> 
                         <h:outputText value="#{extraItem.numberOfHours}">
                         </h:outputText>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Kaina</f:facet>  
+                    </p:column>
+                    <p:column headerText="Kaina">
                         <h:outputText value="#{extraItem.extra.getPaidservicesList().get(0).getCost() * extraItem.numberOfHours}">             
                             <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
                         </h:outputText> Taškai(-ų) (
                         <h:outputText value="#{extraItem.extra.getPaidservicesList().get(0).getCost()}">
                             <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" pattern="#0"/>
                         </h:outputText> taškų per valandą)
-                    </h:column>
-                </h:dataTable>
+                    </p:column>
+                </p:dataTable>
 
                 <p:messages for="review" showDetail="true"/>
                 
@@ -189,7 +176,7 @@
                 </h:outputText> Taškai(-ų)
                 <br/>
 
-                <p:commandButton ajax="false"
+                <p:commandButton ajax="false" styleClass="butt"
                                  action="#{reservationBean.saveReservation()}" 
                                  value="Sumokėti ir rezervuoti"/>
             </p:panel>
