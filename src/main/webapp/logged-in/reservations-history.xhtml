@@ -52,7 +52,7 @@
                     </h:outputText>
                 </p:column>
 
-                <p:column >
+                <p:column>
                     <p:commandLink value="Panaikinti" 
                                    onclick="PF('dialog').show();" rendered="false"
                                    actionListener="#{reservationsHistoryBean.preselectReservation(reservation)}"/>
@@ -64,6 +64,7 @@
 
             <p:dialog header="" widgetVar="extra-info" modal="true" resizable="false"
                       width="500">
+                <p:ajax event="close" update="@form" listener="#{reservationsHistoryBean.unselectExtraReservation()}"/>
                 <h3><h:outputText value="#{reservationsHistoryBean.selectedExtraReservation.extraid.title}"/></h3>
                 <h4>Data ir laikas</h4>
                 <h:outputText value="#{reservationsHistoryBean.selectedExtraReservation.reservedfrom}">

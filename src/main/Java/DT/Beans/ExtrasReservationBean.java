@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.OptimisticLockException;
 
 /**
  *
@@ -32,10 +33,9 @@ import javax.inject.Named;
 @ViewScoped
 public class ExtrasReservationBean implements Serializable {
     private final String PAGE_AFTER_RESERVING = "reservations-history?faces-redirect=true";
-    private final String MESSAGE_PERIOD_TAKEN = "Pasirinktu laikotarpiu vasarnamis yra užimtas. Pasirinkite kitą laikotarpį";
     private final String MESSAGE_NOT_APPROVED = "Jūs negalite rezervuoti šio vasarnamio. Priežastis: Jūsų narystė nepatvirtinta";
     private final String MESSAGE_INSUFFICIENT_POINTS = "Jūs turite nepakankamai taškų";
-    private final String MESSAGE_COMPONENT_CALENDAR = "calendar";
+    private final String MESSAGE_OPTILOCK = "Įvyko klaida. Bandykite dar kartą";
     private final String MESSAGE_COMPONENT_REVIEW = "review";
     
     @Inject private UserSessionBean userSessionBean;
@@ -116,8 +116,14 @@ public class ExtrasReservationBean implements Serializable {
 
         allReservations.add(res);
         payment.setReservationsList(allReservations);
-        paymentsFacade.PayWithPoints(payment, princ);
-        userSessionBean.setUser(princ);
+        try {
+            paymentsFacade.PayWithPoints(payment, princ);
+            userSessionBean.setUser(princ);
+        } catch(OptimisticLockException ex) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_REVIEW, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MESSAGE_OPTILOCK));
+            return "";
+        }
         
         return PAGE_AFTER_RESERVING;
     }
