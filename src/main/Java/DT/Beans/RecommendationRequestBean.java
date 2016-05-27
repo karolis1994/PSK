@@ -18,6 +18,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.faces.context.FacesContext;
@@ -30,6 +31,7 @@ import javax.validation.constraints.Pattern;
  * @author Karolis
  */
 @Named("recommendationRequestBean")
+@RequestScoped
 public class RecommendationRequestBean implements Serializable{
     
     // Fields ------------------------------------------------------------------
@@ -92,7 +94,7 @@ public class RecommendationRequestBean implements Serializable{
         //Check if there is a user registered with input email
         inputPrincipal = new Principals();
         inputPrincipal.setIsapproved(Boolean.FALSE);
-        inputPrincipal = (Principals) principalsFacade.findByEmail(inputEmail);
+        inputPrincipal = principalsFacade.findByEmail(inputEmail);
         if(inputPrincipal == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", NO_SUCH_MEMBER));
             return;

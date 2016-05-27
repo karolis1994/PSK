@@ -12,6 +12,7 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.RecommendationsFacade;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -53,13 +54,13 @@ public class RecommendationApproveBean {
     public void init() {       
         loggedInPrincipal = userSessionBean.getUser(); 
         
-        minRecommendations = (Settings) settingsFacade.getSettingByName("MinRecommendations");           
+        minRecommendations = (Settings) settingsFacade.getSettingByName("MinRecommendations");    
+        key = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
         if(key != null)
             isRecommendationValid = approve();
         else
             isRecommendationValid = false;
-        
-        key = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
+        System.out.println("klaidaklaida6");
     }
     
     //Method checking if the approval message is correct
@@ -70,13 +71,13 @@ public class RecommendationApproveBean {
                     FacesMessage.SEVERITY_ERROR, "", INVALID_KEY));
             return false;
         }
-        
+        System.out.println("klaida1");
         //Check if logged in user is the one to whom this email was sent
         if(recommendation.getRecieverid().equals(loggedInPrincipal)) {
             //approve recommendation
             recommendation.setIsactivated(Boolean.TRUE);
             recommendationsFacade.edit(recommendation);
-            
+            System.out.println("klaida2");
             //Check if there are enough approvals
             currentlyAcceptedRecommendations = recommendationsFacade
                     .findByApprovedSender(recommendation.getSenderid().getId()).size();      
@@ -84,15 +85,18 @@ public class RecommendationApproveBean {
             if(currentlyAcceptedRecommendations < minRecommendationsCount) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                         FacesMessage.SEVERITY_INFO, "", REQUEST_APPROVED));
+                System.out.println("klaida3");
                 return true;
             } else {      
                 principal = recommendation.getSenderid();
                 principal.setIsapproved(true);
                 principalsFacade.edit(principal);
+                System.out.println("klaida4");
                 return true;
             }
         }
         else {
+            System.out.println("klaida5");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                     FacesMessage.SEVERITY_WARN, "", REQUEST_NOT_SENT_TO_YOU));
             return false;

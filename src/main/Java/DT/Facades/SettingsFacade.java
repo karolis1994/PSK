@@ -8,8 +8,6 @@ package DT.Facades;
 import DT.Entities.Settings;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 
 /**
  *

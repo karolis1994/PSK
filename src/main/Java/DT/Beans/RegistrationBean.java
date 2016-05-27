@@ -109,7 +109,7 @@ public class RegistrationBean {
             principal.setEmail(email);
             principal.setFirstname(firstname);
             principal.setLastname(lastname);
-            if (password.length() > 5) {
+            if (password.length() >= 5) {
                 byte[] salt = passwordHasher.createSalt();
                 principal.setSalt(new String(salt));
                 try {
