@@ -5,7 +5,6 @@
  */
 package DT.Facades;
 
-import DT.Entities.Invitations;
 import DT.Entities.Recommendations;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -26,9 +25,11 @@ public class RecommendationsFacade extends GenericFacade<Recommendations>{
                 .getResultList();
     }
     
-    public List findByURLCode(String urlCode) {
-        return em.createNamedQuery("Recommendations.findByUrlcode").setParameter("urlcode", urlCode)
+    public Recommendations findByURLCode(String urlCode) {
+        List result = em.createNamedQuery("Recommendations.findByUrlcode").setParameter("urlcode", urlCode)
                 .getResultList();
+        return result.isEmpty() ? 
+                null : (Recommendations) result.get(0) ; 
     }
     
     public List findByApprovedSender(int receiverId) {

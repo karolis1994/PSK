@@ -25,8 +25,9 @@ import javax.inject.Named;
 public class RecommendationApproveBean {
     
     // Fields ------------------------------------------------------------------
-    private final static String REQUEST_APPROVED = "Prašymas patvirtintas";
+    private final static String REQUEST_APPROVED = "Prašymas patvirtintas.";
     private final static String REQUEST_NOT_SENT_TO_YOU = "Šio prašymo jūs negalite patvirtinti, nes jis nebuvo siųstas jums.";
+    private final static String INVALID_KEY = "Toks raktas neegzistuoja.";
     
     private Recommendations recommendation;
     private Principals principal;
@@ -63,9 +64,10 @@ public class RecommendationApproveBean {
     
     //Method checking if the approval message is correct
     public boolean approve() {
-        try {
-            recommendation = (Recommendations) recommendationsFacade.findByURLCode(key).get(0);          
-        } catch(Exception e) {
+        recommendation = recommendationsFacade.findByURLCode(key);          
+        if(recommendation == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                    FacesMessage.SEVERITY_ERROR, "", INVALID_KEY));
             return false;
         }
         
@@ -91,7 +93,8 @@ public class RecommendationApproveBean {
             }
         }
         else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", REQUEST_NOT_SENT_TO_YOU));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                    FacesMessage.SEVERITY_WARN, "", REQUEST_NOT_SENT_TO_YOU));
             return false;
         }
     }
