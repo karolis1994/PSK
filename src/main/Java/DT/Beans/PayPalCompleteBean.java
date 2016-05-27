@@ -1,7 +1,10 @@
 package DT.Beans;
 
 import DT.Entities.Payments;
+import DT.Entities.Principals;
 import DT.Facades.PaymentsFacade;
+import DT.Facades.PrincipalsFacade;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -9,6 +12,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
@@ -21,6 +25,9 @@ public class PayPalCompleteBean implements Serializable {
     
     @EJB
     PaymentsFacade paymentsFacade;
+    
+    @Inject
+    PrincipalsFacade principalsFacade;
     
     private String paymentNo;
     public String getPaymentNo() { return paymentNo; }
@@ -81,9 +88,29 @@ public class PayPalCompleteBean implements Serializable {
         }
     }
     
-    public void confirmPayment() {
+    public void confirmPayment() throws IOException {
         payment = paymentsFacade.findByPaymentNo(paymentNo);
         Map<String, String> response = PayPalHelper.doExpressCheckoutPayment(payment, payerID);
-        return;
+        
+        if ("success".equals(response.get("ACK").toLowerCase())) {
+            if (payment.getPaidserviceid().getId() == 2) {
+                completeBuyingPoints(payment);
+            }
+        }
+    }
+    
+    public void completeBuyingPoints(Payments payment) throws IOException {
+        
+        int points = payment.getBoughtitems();
+        Principals payer = payment.getPrincipalid();
+        
+        int currentPoints = payer.getPoints();
+        payer.setPoints(points + currentPoints);
+        
+        principalsFacade.edit(payer);
+        
+        FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .redirect("buy-points.xhtml");
     }
 }
