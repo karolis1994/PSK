@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="/templates/general_template.xhtml"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="general_content">
+        
+        <p:panel header="Naudotojai">
+            <p:panelGrid columns="2" columnClasses="alignTop,alignTop" style="padding: 0; margin: 0;">
+            <h:form id="form">
+                <p:dataTable id="housestable" var="principal" value="#{usersViewAllBean.filteredPrincipals}" 
+                         style="margin-top: 5px;"
+                         selection="#{usersViewAllBean.selectedPrincipal}"
+                         selectionMode="single"
+                         rowKey="#{principal.id}">
+                
+                <p:ajax event="rowSelect" 
+                        listener="#{usersViewAllBean.navigateToSelected}" />
+                
+                <p:column headerText="Vardas">
+                    <h:outputText value="#{principal.firstname}" />
+                </p:column>
+
+                <p:column headerText="Pavardė">
+                    <h:outputText value="#{principal.lastname}" />
+                </p:column>
+                
+            </p:dataTable>  
+            </h:form>
+
+            <h:form>
+                <p:panel>
+                    <h:outputText value="Atostogaus:" styleClass="spaced-text"/>
+                    <p:commandButton value="X" ajax="false"
+                                     action="#{usersViewAllBean.resetDatesFilter()}" 
+                                     style="float: right;"/>
+                    <br/>
+                    <br/>
+                    <h:outputText value="Nuo" styleClass="spaced-text"/>
+                    <br/>
+                    <p:calendar readonlyInput="true" pattern="dd/M/yy" locale="lt"  
+                                value="#{usersViewAllBean.dateFromFilter}"  
+                                mindate="0" maxdate="#{usersViewAllBean.dateToFilter}"
+                                styleClass="spaced-input">
+                        <p:ajax event="dateSelect" update="@form"/>
+                    </p:calendar>
+                    <br/>
+                    <h:outputText value="Iki" styleClass="spaced-text"/>
+                    <br/>
+                    <p:calendar readonlyInput="true" pattern="dd/M/yy" locale="lt"
+                                value="#{usersViewAllBean.dateToFilter}"
+                                mindate="#{usersViewAllBean.dateFromFilter}"
+                                styleClass="spaced-input">
+                        <p:ajax event="dateSelect" update="@form"/>
+                    </p:calendar>
+                    <p:commandButton value="Pritaikyti filtrą" ajax="false"
+                                     action="#{usersViewAllBean.filter}"
+                                     styleClass="butt"/>
+                </p:panel>
+                
+                    
+                
+               <p:commandButton value="Išvalyti visus filtrus" ajax="false"
+                                action="#{houseViewAllBean.resetAllFilters()}"
+                                styleClass="butt"/>
+            </h:form>
+            </p:panelGrid>
+        </p:panel>
+        
+    </ui:define>
+    
+</ui:composition>
+
