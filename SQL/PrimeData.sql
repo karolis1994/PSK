@@ -1,7 +1,3 @@
--- Test user
-INSERT INTO principals (email, points, firstname, lastname, address, phonenumber, birthdate, about, isadmin, isapproved, isdeleted, passwordhash, salt)
-    VALUES ('a@a.a', 999, 'a', 'a', 'no adress', '123', '1994-02-18', 'lalala', TRUE, TRUE, FALSE, -1, '');
-
 -- Yearly member's fee
 INSERT INTO otherservices (title, description)
     VALUES ('Metinis nario mokestis', 'Mokestis kurį turi sumokėti kiekvienas narys.');

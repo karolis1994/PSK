@@ -62,7 +62,7 @@ public class RegistrationBean {
     private String firstname;
     @Size(min = 0, max = 25)
     private String lastname;
-    
+
     @Size(max = 20) //password min size set dynamicaly(for fb login)
     private String password;
     private String repeatPassword;
@@ -127,9 +127,16 @@ public class RegistrationBean {
                 principal.setAbout(about);
             }
             principal.setPoints(0);
-            principal.setIsadmin(Boolean.FALSE);
-            principal.setIsdeleted(Boolean.FALSE);
-            principal.setIsapproved(Boolean.FALSE);
+            if (principalsFacade.findAll().isEmpty()) {
+                principal.setIsadmin(true);
+                principal.setIsapproved(true);
+            } else {
+                principal.setIsadmin(false);
+                principal.setIsapproved(false);
+            }
+
+            principal.setIsdeleted(false);
+
             principalsFacade.create(principal);
             userSessionBean.setUser(principal);
             return "REGISTRATION_SUCCESFUL";
@@ -166,9 +173,8 @@ public class RegistrationBean {
             setAbout(userFB.getBio());
         }
     }
-    
-    // Getters / setters -------------------------------------------------------
 
+    // Getters / setters -------------------------------------------------------
     public String getEmail() {
         return email;
     }
@@ -288,6 +294,5 @@ public class RegistrationBean {
     public void setPicture(UploadedFile picture) {
         this.picture = picture;
     }
-    
-    
+
 }
