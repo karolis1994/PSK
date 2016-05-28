@@ -20,11 +20,13 @@
         <param-name>paypal-returnurl</param-name>
         <param-value>http://localhost:8080/DT.ReservationSystem/logged-in/payments/yearly-members-fee.xhtml</param-value>
     </context-param>
-    
-    
     <filter>
         <filter-name>Authentication</filter-name>
         <filter-class>DT.Filters.Authentication</filter-class>
+    </filter>
+    <filter>
+        <filter-name>AdminAuthorization</filter-name>
+        <filter-class>DT.Filters.AdminAuthorization</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>Authentication</filter-name>
@@ -32,8 +34,8 @@
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>Authentication</filter-name>
-        <url-pattern>/administration/*</url-pattern>
+        <filter-name>AdminAuthorization</filter-name>
+        <url-pattern>/logged-in/administration/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <servlet>

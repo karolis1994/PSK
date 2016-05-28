@@ -34,7 +34,7 @@
                         <p:menuitem value="Pirkti taškus" url="logged-in/payments/buy-points.xhtml" />
                     </p:submenu>
                     <p:menuitem value="Profilis" url="logged-in/user-profile-change.xhtml" />
-                    <p:menuitem value="Administravimas" url="logged-in/administration/add-house.xhtml" />
+                    <p:menuitem value="Administravimas" url="logged-in/administration/add-house.xhtml" rendered="#{userSessionBean.user.isadmin}" />
                 </p:menubar>
             </h:form>
 

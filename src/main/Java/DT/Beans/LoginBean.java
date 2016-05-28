@@ -43,23 +43,25 @@ import javax.validation.constraints.Size;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 
+
 /**
  *
  * @author donatas
  */
 @Named("loginBean")
 @RequestScoped
-public class LoginBean {
+public class LoginBean{
 
     private static final String APP_ID = "1581543875491903";
     private static final String CLIENT_SECRET = "668d1f29c2257393382374610de8310c";
 
-    @Pattern(regexp = "[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
+    @Pattern(regexp = "[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]",
+            message = "Neteisingas formatas, teisingo pavyzdys: Jonas@gmail.lt")
     private String email;
 
     @EJB
     private PrincipalsFacade principalsFacade;
-
+  
     private String password;
     private String code;
 
@@ -110,7 +112,7 @@ public class LoginBean {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Reikalingas prisijungimas per facebook.", ""));
             return;
         }
-        
+
         if (passwordHasher.verifyPassword(getPassword(), currentUser.getPasswordhash())) {
             userSessionBean.setUser(currentUser);
             FacesContext.getCurrentInstance()
@@ -138,7 +140,6 @@ public class LoginBean {
         AccessToken token = facebook.getOAuthAccessToken(code);
         facebook.setOAuthAccessToken(token);
         User user = facebook.getUser(facebook.getId(), new Reading().fields("email,bio,birthday,first_name,last_name"));
-        String fbemail = user.getEmail();
 
         // Setting current user to UserSessionBean
         String facebookUserID = user.getId();

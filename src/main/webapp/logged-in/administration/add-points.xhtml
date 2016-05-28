@@ -6,6 +6,12 @@
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
     xmlns:f="http://xmlns.jcp.org/jsf/core">
 
+        <ui:define name="metadata">
+            <f:metadata>
+                <f:viewParam name="id" value="#{addPoints.paramId}" />
+                <f:viewAction action="#{addPoints.loadData()}" />
+            </f:metadata>
+        </ui:define>
         <ui:define name="administration_content">
             
             <c:set var="principal" value="#{addPoints.findPrincipalByUrlId()}" scope="session" />

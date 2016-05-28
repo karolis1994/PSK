@@ -32,11 +32,14 @@
             
             <h:form>
             
-                <h:panelGrid columns="2" cellpadding="10">
-                    <p:commandButton value="Redaguoti" action="house-edit.xhtml">
+                <h:panelGrid columns="3" cellpadding="10">
+                    <p:commandButton value="Pridėti paslaugą" action="administration/add-extra.xhtml" rendered="#{userSessionBean.user.isadmin}">
+                        <f:param name="house" value="#{param.id}"/>
+                    </p:commandButton>
+                    <p:commandButton value="Redaguoti" action="house-edit.xhtml" rendered="#{userSessionBean.user.isadmin}">
                         <f:param name="id" value="#{param.id}"/>
                     </p:commandButton>
-                    <p:commandButton value="Ištrinti" type="button" onclick="PF('dlg1').show();" />
+                    <p:commandButton value="Ištrinti" type="button" onclick="PF('dlg1').show();" rendered="#{userSessionBean.user.isadmin}" />
                 </h:panelGrid>
                 
                 <h1>#{myHouse.title}</h1>
@@ -59,9 +62,15 @@
                         #{extra.description}
                     </p:column>
                     <p:column headerText="Kaina (Taškais)">
-                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
+                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCostInPoints()}">             
                             <f:convertNumber type="number" groupingUsed="true" 
                                              maxFractionDigits="0" pattern="#0"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Kaina (Eurais)">
+                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
+                            <f:convertNumber type="number" groupingUsed="true" 
+                                             maxFractionDigits="2" pattern="#0.00"/>
                         </h:outputText>
                     </p:column>
                 </p:dataTable>
@@ -84,6 +93,7 @@
                 <br/>
                 <h:outputText value="Jūs negalite rezervuoti šio vasarnamio. Priežastis: #{houseBean.canReserveMessage}"
                               rendered="#{!houseBean.canReserve()}"/>
+           
             </h:form>
         </p:panel>
     </ui:define>

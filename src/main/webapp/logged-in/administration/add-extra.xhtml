@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="/templates/general_template.xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="general_content"> 
+        <h:form>
+            <p:panel header="Papildomos paslaugos pridėjimas">
+            
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                
+                <p:panelGrid columns="2" styleClass="formGrid">
+                    <h:outputLabel for="title" value="Pavadnimas:" />
+                    <p:inputText id="title" value="#{addExtraBean.title}" label="Pavadinimas" required="true"/>
+
+                    <h:outputLabel for="title" value="Aprašymas:" />
+                    <p:inputText id="description" value="#{addExtraBean.description}" label="Aprašymas" required="false"/>
+
+                    <h:outputLabel for="costInPoints" value="Kaina už sav. taškais: " />
+                    <p:inputText id="costInPoints" value="#{addExtraBean.costInPoints}" label="Kaina už val. taškais" required="true"/>
+
+                    <h:outputLabel for="cost" value="Kaina už sav. eurais: " />
+                    <p:inputText id="cost" value="#{addExtraBean.cost}" label="Kaina už val. eurais" required="true"/>
+                </p:panelGrid>
+
+                <p:commandButton value="Pridėti paslaugą" action="#{addExtraBean.save()}" validateClient="true" ajax="false">
+                    <f:param name="house" value="#{param.house}" />
+                </p:commandButton>
+
+            </p:panel>
+        </h:form>
+    </ui:define>
+    
+</ui:composition>

@@ -13,33 +13,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+//import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
+import javax.inject.Named;
 import org.primefaces.event.SelectEvent;
 
 /**
  *
  * @author Aurimas
  */
-@ManagedBean
+//@Named(value = "displayMembersBean")
+@Named
 @RequestScoped
 public class DisplayMembersBean {
 
     private Principals selectedPrincipal;  
     private List<Principals> allPrincipals;
    
-    @EJB
-    private PrincipalsFacade principalsFacade;
+    @EJB private PrincipalsFacade principalsFacade;
 
-    @Inject
-    private UserSessionBean userSessionBean;
-    
-    
-   // Principals currentUser = userSessionBean.getUser();
-    
+    @Inject private UserSessionBean userSessionBean;
+      
     @PostConstruct
     public void init() {
         allPrincipals = principalsFacade.findAllNotDeleted();
