@@ -10,25 +10,24 @@ import DT.Facades.PrincipalsFacade;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author Aurimas
  */
-@ManagedBean(name = "addPoints")
+@Named(value = "addPoints")
 @RequestScoped
 public class AddPoints {
 
-    @EJB
-    private PrincipalsFacade principalsFacade;
+    @Inject private PrincipalsFacade principalsFacade;
     private List<Principals> principals;
     private Principals principal; 
     private int points;
       
-    @ManagedProperty(value="#{param.id}")
     private String paramId;
     public String getParamId() { return paramId; }
     public void setParamId(String paramId) { this.paramId = paramId; }
@@ -38,6 +37,8 @@ public class AddPoints {
        
         if (paramId == null || paramId.isEmpty())
             return;
+        
+        //paramId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("principal");
         
         principal = findPrincipalById(Integer.parseInt(paramId));
         
