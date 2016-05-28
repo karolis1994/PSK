@@ -52,6 +52,7 @@ public class HouseBean implements Serializable{
     private Houses house; 
     private List<Paidservices> paidServices;
     private double cost;
+    private int costInPoints;
     
     @Inject UserSessionBean user;
     private String canReserveMessage;
@@ -76,10 +77,8 @@ public class HouseBean implements Serializable{
     }
     
     public Houses getHouse() {
-        if (house == null) {
-            loadData();
-        }
- 
+        
+        house = findHouseById(houseID);
         return house;
     }
     
@@ -113,9 +112,7 @@ public class HouseBean implements Serializable{
     }
     
     public List<Paidservices> getPaidServices() {
-        if (paidServices == null) {
-            paidServices = getHouse().getPaidservicesList();
-        }
+        paidServices = getHouse().getPaidservicesList();
         
         return paidServices;
     }
@@ -134,9 +131,24 @@ public class HouseBean implements Serializable{
         
         return cost;
     }
+    
+    public int getCostInPoints() {
+        for (Paidservices ps : getPaidServices()) {
+            if (ps.getHouseid() != null) {
+                costInPoints = ps.getCostInPoints();
+                break;
+            }
+        }
+        
+        return costInPoints;
+    }
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+    
+    public void setCostInPoints(int points) {
+        this.costInPoints = points;
     }
     
     public String removeHouse() {

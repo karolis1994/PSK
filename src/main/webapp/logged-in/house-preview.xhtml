@@ -67,11 +67,15 @@
                 </p:dataTable>
                 
                 <h4>Nuomos kaina savaitei:</h4> 
-                <h:outputText value="#{houseBean.cost}">
+                <h:outputText value="#{houseBean.costInPoints}">
                     <f:convertNumber type="number" groupingUsed="true" 
                                      maxFractionDigits="0" pattern="#0"/>
                 </h:outputText> Taškai(-ų)
-                
+                <br/>
+                <h:outputText value="#{houseBean.cost}">
+                    <f:convertNumber type="number" groupingUsed="true" 
+                                     maxFractionDigits="2" pattern="#0.00"/>
+                </h:outputText> EUR
                 <br/>
                 
                 <p:commandButton value="Rezervuoti" action="#{houseBean.navigateToReservation()}" 

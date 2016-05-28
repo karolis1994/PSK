@@ -1,10 +1,14 @@
 package DT.Beans;
 
 import DT.Entities.Houses;
+import DT.Entities.Paidservices;
 import DT.Facades.HouseFacade;
+import DT.Facades.PaidServicesFacade;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -57,8 +61,19 @@ public class AddHouseBean implements Serializable {
     private Map<String, Integer> months;
     public Map<String, Integer> getMonths() { return months; }
     
+    private int costInPoints;
+    public int getCostInPoints() { return costInPoints; }
+    public void setCostInPoints(int costInPoints) { this.costInPoints = costInPoints; }
+    
+    private double cost;
+    public double getCost() { return cost; }
+    public void setCost(double cost) { this.cost = cost; }
+    
     @EJB
     private HouseFacade houseFacade;
+    
+    @EJB
+    private PaidServicesFacade paidServicesFacade;
     
     private Houses house;
     
@@ -102,6 +117,23 @@ public class AddHouseBean implements Serializable {
             }
             
             houseFacade.create(house);
+            
+            Paidservices housePaidService = new Paidservices();
+            housePaidService.setCost(cost);
+            housePaidService.setCostInPoints(costInPoints);
+            housePaidService.setHouseid(house);
+            
+            paidServicesFacade.create(housePaidService);
+            
+            List<Paidservices> paidServices = house.getPaidservicesList();
+            if (paidServices == null) {
+                paidServices = new LinkedList<>();
+            }
+            
+            paidServices.add(housePaidService);
+            house.setPaidservicesList(paidServices);
+            
+            houseFacade.edit(house);
             
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Vasarnamis sukurtas."));
 

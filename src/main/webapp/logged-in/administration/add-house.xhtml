@@ -36,6 +36,12 @@
                         <p:selectOneMenu id="availableTo" value="#{addHouseBean.availableTo}" style="width:150px">
                             <f:selectItems value="#{addHouseBean.months}" />
                         </p:selectOneMenu>
+                        
+                        <h:outputLabel for="costInPoints" value="Kaina už sav. taškais: " />
+                        <p:inputText id="costInPoints" value="#{addHouseBean.costInPoints}" label="Kaina už sav. taškais" required="true"/>
+                        
+                        <h:outputLabel for="cost" value="Kaina už sav. eurais: " />
+                        <p:inputText id="cost" value="#{addHouseBean.cost}" label="Kaina už sav. eurais" required="true"/>
                     </p:panelGrid>
 
                     <p:commandButton actionListener="#{addHouseBean.save}" value="Pridėti" ajax="true" validateClient="true"/>

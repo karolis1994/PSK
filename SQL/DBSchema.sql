@@ -47,7 +47,9 @@ CREATE TABLE IF NOT EXISTS Houses(
   IsClosed BOOLEAN,
   IsDeleted BOOLEAN,
   Version SERIAL,
-  Capacity INT
+  Capacity INT,
+  AvailableFrom INT NOT NULL,
+  AvailableTo INT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS Extras(
   ID SERIAL PRIMARY KEY NOT NULL,
