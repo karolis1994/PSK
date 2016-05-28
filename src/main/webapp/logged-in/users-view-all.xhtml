@@ -56,14 +56,14 @@
                         <p:ajax event="dateSelect" update="@form"/>
                     </p:calendar>
                     <p:commandButton value="Pritaikyti filtrą" ajax="false"
-                                     action="#{usersViewAllBean.filter}"
+                                     action="#{usersViewAllBean.filter()}"
                                      styleClass="butt"/>
                 </p:panel>
                 
                     
                 
                <p:commandButton value="Išvalyti visus filtrus" ajax="false"
-                                action="#{houseViewAllBean.resetAllFilters()}"
+                                action="#{usersViewAllBean.resetAllFilters()}"
                                 styleClass="butt"/>
             </h:form>
             </p:panelGrid>

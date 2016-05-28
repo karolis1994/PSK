@@ -5,10 +5,8 @@
  */
 package DT.Beans;
 
-import DT.Entities.Houses;
 import DT.Entities.Principals;
 import DT.Entities.Reservations;
-import DT.Facades.HouseFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.ReservationFacade;
 import java.io.IOException;
@@ -25,7 +23,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.SelectEvent;
-import javax.faces.model.SelectItem;
 
 /**
  *
@@ -56,23 +53,10 @@ public class UsersViewAllBean implements Serializable {
     public Date getDateToFilter() { return dateToFilter; }
     public void setDateToFilter(Date dateToFilter) { this.dateToFilter = dateToFilter; }
     
-    private String summerHouse;
-    public String getSummerHouse() { return summerHouse; }
-    public void setSummerHouse(String summerHouse) { this.summerHouse = summerHouse; }
-
-    private List<SelectItem> summerHouses;
-    public List<SelectItem> getSummerHouses() { return summerHouses; }
-    public void setSummerHouses(List<SelectItem> summerHouses) { this.summerHouses = summerHouses; }
-    
-    
     @Inject
     private ReservationFacade reservationFacade;
     @Inject 
-    private PrincipalsFacade principalsFacade;
-    @Inject
-    private HouseFacade housesFacade;
-    
-    
+    private PrincipalsFacade principalsFacade;    
     
     // Methods------------------------------------------------------------------
     @PostConstruct
@@ -93,34 +77,33 @@ public class UsersViewAllBean implements Serializable {
     
     public List<Principals> filter() {
         filteredPrincipals = new ArrayList<>(allPrincipals);
-        
         if (dateFromFilter != null && dateToFilter != null) {
             filterByDate();
         }
-        
         return filteredPrincipals;
     }
     
-    public List<Principals> filterByHouses() {
-        
-        return filteredPrincipals;
-    }
-    
-    public List<Principals> filterByDate() {       
-        /*List<Reservations> reservations = reservationFacade.findByDatesCoveringNotCanceledHouseOnly(dateFromFilter, dateToFilter);
-        
-        Iterator<Principals> iter = filteredPrincipals.iterator();
-        while (iter.hasNext()) {
-            Principals h = iter.next();
-
-            for (Reservations r : reservations) {
-                if (r.getHouseid().equals(h)) {
+    public List<Principals> filterByDate() {
+        boolean has;
+        List<Reservations> reservations = reservationFacade.findByDatesCoveringNotCanceledHouseOnly(dateFromFilter, dateToFilter);
+        if(!reservations.isEmpty()) {
+            Iterator<Principals> iter = filteredPrincipals.iterator();
+            while (iter.hasNext()) {
+                Principals h = iter.next();
+                has = false;
+                for (Reservations r : reservations) {
+                    if (r.getPrincipalid().equals(h)) {
+                        has = true;
+                    } 
+                }
+                if(!has)
                     iter.remove();
-                    break;
-                } 
             }
-        }*/
-        return filteredPrincipals;
+            return filteredPrincipals;
+        } else {
+            filteredPrincipals.clear();
+            return filteredPrincipals;
+        }   
     }
     
     public void resetDatesFilter() {
