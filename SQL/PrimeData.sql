@@ -2,10 +2,6 @@
 INSERT INTO Pictures (ImageName, Image)
 	VALUES ('Default_profile_picture.png', '\211PNG\015\012\032\012\000\000\000\015IHDR\000\000\002\000\000\000\002\000\004\003\000\000\000\006V\311\311\000\000\000\004gAMA\000\000\261\217\013\374a\005\000\000\000!PLTE\347\347\347\332\332\332\333\332\333\350\350\350\353\353\353\351\351\351\352\352\3 (...)');
 
--- Test user
-INSERT INTO principals (email, points, firstname, lastname, address, phonenumber, birthdate, about, isadmin, isapproved, isdeleted, passwordhash, salt)
-    VALUES ('a@a.a', 999, 'a', 'a', 'no adress', '123', '1994-02-18', 'lalala', TRUE, TRUE, FALSE, -1, '');
-
 -- Yearly member's fee
 INSERT INTO otherservices (title, description)
     VALUES ('Metinis nario mokestis', 'Mokestis kurį turi sumokėti kiekvienas narys.');

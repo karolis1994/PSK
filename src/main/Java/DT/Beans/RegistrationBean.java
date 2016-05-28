@@ -143,6 +143,7 @@ public class RegistrationBean {
             } else {
                 principal.setPicture(picturesFacade.find(1));
             }
+            
             if (principalsFacade.findAll().isEmpty()) {
                 principal.setIsadmin(true);
                 principal.setIsapproved(true);
