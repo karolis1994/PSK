@@ -138,7 +138,6 @@ public class LoginBean {
         AccessToken token = facebook.getOAuthAccessToken(code);
         facebook.setOAuthAccessToken(token);
         User user = facebook.getUser(facebook.getId(), new Reading().fields("email,bio,birthday,first_name,last_name"));
-        String fbemail = user.getEmail();
 
         // Setting current user to UserSessionBean
         String facebookUserID = user.getId();
