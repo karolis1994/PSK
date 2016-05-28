@@ -172,4 +172,34 @@ public class HouseBean implements Serializable{
         
         return true;
     }
+    
+    public static String intToMonthName(int month) {
+        switch(month) {
+            case 1 :
+            return "Sausis";
+            case 2 :
+            return "Vasaris";
+            case 3 :
+            return "Kovas";
+            case 4 :
+            return "Balandis";
+            case 5 :
+            return "Gegužė";
+            case 6 :
+            return "Birželis";
+            case 7 :
+            return "Liepa";
+            case 8 :
+            return "Rugpjūtis";
+            case 9 :
+            return "Rugsėjis";
+            case 10 :
+            return "Spalis";
+            case 11 :
+            return "Lapkritis";
+            case 12 :
+            return "Gruodis";
+        }
+        return "Klaida";
+    }
 }

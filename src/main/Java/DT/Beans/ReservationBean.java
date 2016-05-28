@@ -37,6 +37,7 @@ import org.primefaces.event.SelectEvent;
 public class ReservationBean implements Serializable{
     private final String PAGE_AFTER_RESERVING = "reservations-history?faces-redirect=true";
     private final String MESSAGE_PERIOD_TAKEN = "Pasirinktu laikotarpiu vasarnamis yra užimtas. Pasirinkite kitą laikotarpį";
+    private final String MESSAGE_NOT_AVAILABLE_AT_SELECTED_TIME = "Pasirinktu laikotarpiu vasarnamis yra nenaudojimas. Pasirinkite kitą laikotarpį";
     private final String MESSAGE_NOT_APPROVED = "Jūs negalite rezervuoti šio vasarnamio. Priežastis: Jūsų narystė nepatvirtinta";
     private final String MESSAGE_INSUFFICIENT_POINTS = "Jūs turite nepakankamai taškų";
     private final String MESSAGE_OPTILOCK = "Įvyko klaida. Bandykite dar kartą";
@@ -258,6 +259,21 @@ public class ReservationBean implements Serializable{
     }
     
     public void continueClicked() {
+        
+        int reservedFromMonth = reservedFrom.getMonth();
+        reservedFromMonth += 1;
+        int reservedToMonth = reservedTo.getMonth();
+        reservedToMonth += 1;
+        
+        if (reservedFromMonth < house.getAvailablefrom() ||
+            reservedToMonth > house.getAvailableto()) {
+            
+            FacesContext.getCurrentInstance()
+                    .addMessage(MESSAGE_COMPONENT_CALENDAR, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MESSAGE_NOT_AVAILABLE_AT_SELECTED_TIME + " (nuo " + HouseBean.intToMonthName(house.getAvailablefrom()) + " iki " + HouseBean.intToMonthName(house.getAvailableto()) + ")."));
+            
+            return;
+        }
+        
         stepOneVisible = false;
         stepTwoVisible = false;
         stepThreeVisible = false;

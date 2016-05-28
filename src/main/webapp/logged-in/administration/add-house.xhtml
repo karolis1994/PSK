@@ -2,7 +2,8 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     template="/templates/administration_template.xhtml"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:p="http://primefaces.org/ui">
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
 
         <ui:define name="administration_content">
             
@@ -26,6 +27,15 @@
                         <h:outputLabel for="capacity" value="Vietų skaičius: " />
                         <p:inputText id="capacity" value="#{addHouseBean.capacity}" label="Vietų skaičius" required="true"/>
 
+                        <p:outputLabel for="availableFrom" value="Naudojamas nuo: " />
+                        <p:selectOneMenu id="availableFrom" value="#{addHouseBean.availableFrom}" style="width:150px">
+                            <f:selectItems value="#{addHouseBean.months}" />
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel for="availableTo" value="Naudojamas iki (įskaitant): " />
+                        <p:selectOneMenu id="availableTo" value="#{addHouseBean.availableTo}" style="width:150px">
+                            <f:selectItems value="#{addHouseBean.months}" />
+                        </p:selectOneMenu>
                     </p:panelGrid>
 
                     <p:commandButton actionListener="#{addHouseBean.save}" value="Pridėti" ajax="true" validateClient="true"/>

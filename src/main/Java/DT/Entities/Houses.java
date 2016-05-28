@@ -20,6 +20,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -37,6 +38,15 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Houses.findByIsclosed", query = "SELECT h FROM Houses h WHERE h.isclosed = :isclosed"),
     @NamedQuery(name = "Houses.findByIsdeleted", query = "SELECT h FROM Houses h WHERE h.isdeleted = :isdeleted")})
 public class Houses implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "availablefrom")
+    private int availablefrom;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "availableto")
+    private int availableto;
 
     @Column(name = "capacity")
     private Integer capacity;
@@ -189,6 +199,22 @@ public class Houses implements Serializable {
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    public int getAvailablefrom() {
+        return availablefrom;
+    }
+
+    public void setAvailablefrom(int availablefrom) {
+        this.availablefrom = availablefrom;
+    }
+
+    public int getAvailableto() {
+        return availableto;
+    }
+
+    public void setAvailableto(int availableto) {
+        this.availableto = availableto;
     }
     
 }
