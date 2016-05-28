@@ -62,9 +62,15 @@
                         #{extra.description}
                     </p:column>
                     <p:column headerText="Kaina (Taškais)">
-                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
+                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCostInPoints()}">             
                             <f:convertNumber type="number" groupingUsed="true" 
                                              maxFractionDigits="0" pattern="#0"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Kaina (Eurais)">
+                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
+                            <f:convertNumber type="number" groupingUsed="true" 
+                                             maxFractionDigits="2" pattern="#0.00"/>
                         </h:outputText>
                     </p:column>
                 </p:dataTable>
@@ -87,6 +93,7 @@
                 <br/>
                 <h:outputText value="Jūs negalite rezervuoti šio vasarnamio. Priežastis: #{houseBean.canReserveMessage}"
                               rendered="#{!houseBean.canReserve()}"/>
+           
             </h:form>
         </p:panel>
     </ui:define>
