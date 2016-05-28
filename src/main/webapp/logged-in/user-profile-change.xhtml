@@ -7,14 +7,12 @@
     
     <ui:define name="general_content">
         <div>
-            <h:form>
+            <h:form enctype="multipart/form-data" >
                 <h:outputText/>
                 <p:panel id="profileChangePage" header="Profilio nustatymai">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
                     <h:panelGrid columns="2" cellpadding="5">
 
-
-                        
                         <h:outputLabel for="pointsProfileChange" value="Turimi taškai" />
                         <h:outputText id="pointsProfileChange" value="#{userProfileChangeBean.points}" />
 
@@ -52,7 +50,10 @@
                         <p:inputTextarea id="aboutProfileChange" value="#{userProfileChangeBean.about}" rows="5" cols="30" 
                                          counter="remainingCharsProfileChange" maxlength="250" counterTemplate="{0} characters remaining." 
                                          autoResize="false" rendered="#{userProfileChangeBean.aboutField}"/>
-                        <h:outputText id="remainingCharsProfileChange" rendered="#{userProfileChangeBean.aboutField}"/>    
+                        <h:outputText id="remainingCharsProfileChange" rendered="#{userProfileChangeBean.aboutField}"/>  
+                        
+                        <h:outputLabel for="picturerProfileChange" value="Paveikslėlis" rendered="#{userProfileChangeBean.pictureField}"/>
+                        <p:fileUpload value="#{userProfileChangeBean.uploadedPicture}" sizeLimit="2000000" mode="simple" rendered="#{userProfileChangeBean.pictureField}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
 
                     </h:panelGrid>
 

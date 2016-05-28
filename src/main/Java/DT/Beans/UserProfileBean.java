@@ -5,22 +5,30 @@
  */
 package DT.Beans;
 
+import DT.Entities.Pictures;
 import DT.Entities.Principals;
+import DT.Facades.PicturesFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
+import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
  * @author Karolis
  */
 @Named("userProfileBean")
+@RequestScoped
 public class UserProfileBean {  
         
     // Fields ------------------------------------------------------------------
@@ -49,6 +57,7 @@ public class UserProfileBean {
     private String address;
     private String about;
     private String memberStatus;
+    private StreamedContent picture;
     
     private boolean aboutField;
     private boolean pictureField;
@@ -85,7 +94,9 @@ public class UserProfileBean {
         firstname = shownPrincipal.getFirstname();
         lastname = shownPrincipal.getLastname();
         birthdate = sdf.format(shownPrincipal.getBirthdate());
-        
+        if(shownPrincipal.getPicture() != null) {
+            displayPicture();
+        }
         
         email = shownPrincipal.getEmail();
         phoneNumber = shownPrincipal.getPhonenumber();
@@ -109,6 +120,12 @@ public class UserProfileBean {
                 memberStatus = CLUB_CANDIDATE;
             else
                 memberStatus = CLUB_CANDIDATE_NO_MEMBERSHIP;
+        }
+    }
+    
+    public void displayPicture() {
+        if(shownPrincipal.getPicture() != null) {
+            picture = new DefaultStreamedContent(new ByteArrayInputStream(shownPrincipal.getPicture().getImage()), "image/png", shownPrincipal.getPicture().getImagename());
         }
     }
     
@@ -168,6 +185,10 @@ public class UserProfileBean {
 
     public String getMemberStatus() {
         return memberStatus;
+    }
+
+    public StreamedContent getPicture() {
+        return picture;
     }
     
     

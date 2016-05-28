@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -51,6 +53,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Principals.findByFacebookid", query = "SELECT p FROM Principals p WHERE p.facebookid = :facebookid"),
     @NamedQuery(name = "Principals.findByVersion", query = "SELECT p FROM Principals p WHERE p.version = :version")})
 public class Principals implements Serializable {
+
+    @JoinColumn(name = "picture", referencedColumnName = "id")
+    @ManyToOne
+    private Pictures picture;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "principalid")
     private List<Reservations> reservationsList;
@@ -354,6 +360,14 @@ public class Principals implements Serializable {
 
     public void setRecommendationsList1(List<Recommendations> recommendationsList1) {
         this.recommendationsList1 = recommendationsList1;
+    }
+
+    public Pictures getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Pictures picture) {
+        this.picture = picture;
     }
     
 }

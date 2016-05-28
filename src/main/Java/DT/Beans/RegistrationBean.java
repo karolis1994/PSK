@@ -5,12 +5,17 @@
  */
 package DT.Beans;
 
+import DT.Entities.Pictures;
 import DT.Entities.Principals;
+import DT.Facades.PicturesFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
 import DT.Services.IPasswordHasher;
 import DT.Services.PasswordHasherPBKDF2;
 import facebook4j.User;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +50,7 @@ public class RegistrationBean {
     private final static String EMAIL_ALREADY_USED = "Naudotojas su tokiu el. paštu jau egzistuoja.";
 
     private Principals principal;
+    private Pictures picture;
 
     @Inject
     private PrincipalsFacade principalsFacade;
@@ -53,14 +59,17 @@ public class RegistrationBean {
     @Inject
     private UserSessionBean userSessionBean;
     @EJB
+    private PicturesFacade picturesFacade;
+    @EJB
     private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
 
-    @Pattern(regexp = "[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
+    @Pattern(regexp = "[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]",
+            message = "Neteisingas formatas, teisingo pavyzdys: Jonas@gmail.lt")
     private String email;
     private String facebookID;
-    @Size(min = 0, max = 20)
+    @Size(min = 0, max = 20, message = "Vardo ilgis iki 20 simbolių.")
     private String firstname;
-    @Size(min = 0, max = 25)
+    @Size(min = 0, max = 25, message = "Pavardės ilgis iki 25 simbolių.")
     private String lastname;
     @Size(max = 20)
     private String password;
@@ -68,11 +77,11 @@ public class RegistrationBean {
     private String address;
     @Past
     private Date birthdate;
-    @Pattern(regexp = "\\+370\\d{8}|8\\d{8}")
+    @Pattern(regexp = "\\+370\\d{8}|8\\d{8}", message="Telefono numeris užrašomas tokiu formatu 862329999 arba +37062329999")
     private String phoneNumber;
-    @Size(max = 250)
+    @Size(max = 250, message = "Jūsų prisistatymo limitas 250 simbolių.")
     private String about;
-    private UploadedFile picture;
+    private UploadedFile uploadedPicture;
 
     private boolean aboutField = true;
     private boolean pictureField = true;
@@ -129,6 +138,13 @@ public class RegistrationBean {
             principal.setIsadmin(Boolean.FALSE);
             principal.setIsdeleted(Boolean.FALSE);
             principal.setIsapproved(Boolean.FALSE);
+            if(uploadedPicture != null) {
+                //if succesful upload set the pic, otherwise leave null
+                if(picturesFacade.uploadPicture(picture, uploadedPicture))
+                    principal.setPicture(picture);
+            } else {
+                principal.setPicture(picturesFacade.find(1));
+            }
             principalsFacade.create(principal);
             userSessionBean.setUser(principal);
             return "REGISTRATION_SUCCESFUL";
@@ -280,13 +296,15 @@ public class RegistrationBean {
         this.passwordInfo = passwordInfo;
     }
 
-    public UploadedFile getPicture() {
-        return picture;
+    public UploadedFile getUploadedPicture() {
+        return uploadedPicture;
     }
 
-    public void setPicture(UploadedFile picture) {
-        this.picture = picture;
+    public void setUploadedPicture(UploadedFile uploadedPicture) {
+        this.uploadedPicture = uploadedPicture;
     }
+
+    
     
     
 }

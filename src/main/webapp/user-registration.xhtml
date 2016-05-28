@@ -60,7 +60,10 @@ and open the template in the editor.
                         
                         <h:outputLabel for="aboutRegistration" value="Trumpas jūsų prisistatymas" rendered="#{registrationBean.aboutField}"/>
                         <p:inputTextarea id="aboutRegistration" value="#{registrationBean.about}" rows="5" cols="30" counter="remainingCharsRegistration" maxlength="250" counterTemplate="{0} characters remaining." autoResize="false" rendered="#{registrationBean.aboutField}"/>
-                        <h:outputText id="remainingCharsRegistration" rendered="#{registrationBean.aboutField}"/>                 
+                        <h:outputText id="remainingCharsRegistration" rendered="#{registrationBean.aboutField}"/>   
+                        
+                        <h:outputLabel for="picturerRegistration" value="Paveikslėlis" rendered="#{registrationBean.pictureField}"/>
+                        <p:fileUpload value="#{registrationBean.uploadedPicture}" sizeLimit="2000000" mode="simple" rendered="#{registrationBean.pictureField}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
                                             
                     </h:panelGrid>
 

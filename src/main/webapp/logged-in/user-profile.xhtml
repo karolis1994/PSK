@@ -13,6 +13,11 @@
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
                     <h:panelGrid columns="2" cellpadding="5">
 
+                        <h:outputText rendered="#{userProfileBean.pictureField}"/>
+                        <p:graphicImage id="pictureProfile" value="#{userProfileBean.picture}" 
+                                        rendered="#{userProfileBean.pictureField}"
+                                        />
+                        
                         <h:outputLabel for="firstnameProfile" value="Vardas:" />
                         <h:outputText id="firstnameProfile" value="#{userProfileBean.firstname}" />
 
@@ -39,8 +44,6 @@
 
                         <h:outputLabel for="aboutProfile" value="Apie mane:" rendered="#{userProfileBean.aboutField}"/>
                         <h:outputText id="aboutProfile" value="#{userProfileBean.about}" rendered="#{userProfileBean.aboutField}"/>
-
-                        <!--paveikslėlis-->
 
                     </h:panelGrid>
                 </p:panel>

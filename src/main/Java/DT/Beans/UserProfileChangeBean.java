@@ -5,15 +5,19 @@
  */
 package DT.Beans;
 
+import DT.Entities.Pictures;
 import DT.Entities.Principals;
 import DT.Entities.Reservations;
+import DT.Facades.PicturesFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.ReservationFacade;
 import DT.Facades.SettingsFacade;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -21,6 +25,8 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.validation.constraints.Size;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -35,9 +41,12 @@ public class UserProfileChangeBean{
     private final static String PROFILE_UPDATED = "Jūsų profilis atnaujintas.";
     private final static String MEMBERSHIP_EXPIRED = "Pasibaigusi narystė";
     private final static String NOT_A_MEMBER = "Ne narys";
+    private final static String ERROR = "Klaida: ";
+    private final static String PICTURE_ERROR = "Jūsų paveikslėlis nebuvo atnaujintas.";
     
     private Principals loggedInPrincipal;
     private List<Reservations> reservations;
+    private Pictures picture;
     
     @Inject
     private SettingsFacade settingsFacade;
@@ -45,21 +54,27 @@ public class UserProfileChangeBean{
     private PrincipalsFacade principalsFacade;
     @Inject
     private ReservationFacade reservationsFacade;
+    @EJB
+    private PicturesFacade picturesFacade;
     @Inject
     private UserSessionBean userSessionBean;
     
+    @Size(min = 0, max = 20, message = "Vardo ilgis iki 20 simbolių.")
     private String firstname;
+    @Size(min = 0, max = 25, message = "Pavardės ilgis iki 25 simbolių.")
     private String lastname;
     @Past
     private Date birthdate;
     private String memberUntil;
-    @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]")
+    @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]",
+            message = "Neteisingas formatas, teisingo pavyzdys: Jonas@gmail.lt")
     private String email;
-    @Pattern(regexp="\\+370\\d{8}|8\\d{8}")
+    @Pattern(regexp="\\+370\\d{8}|8\\d{8}", message="Telefono numeris užrašomas tokiu formatu 862329999 arba +37062329999")
     private String phoneNumber;
     private String address;
     private String about;  
     private String points;
+    private UploadedFile uploadedPicture;
     
     private boolean aboutField;
     private boolean pictureField;
@@ -104,6 +119,9 @@ public class UserProfileChangeBean{
         //Change principal status and cancel member subscription
         loggedInPrincipal.setIsdeleted(Boolean.TRUE);
         loggedInPrincipal.setMembershipuntill(null);
+        /*
+        pictureFacade.remove(loggedInPrincipal.getPicture());
+        */
         
         //Cancel all reservations made by the user
         reservations = reservationsFacade.findByPrincipalNotCanceled(loggedInPrincipal);
@@ -137,8 +155,23 @@ public class UserProfileChangeBean{
         if(about != null) {
             loggedInPrincipal.setAbout(about);
         }
-        
+        //Create a new picture
+        picture = new Pictures();
+        Pictures temp = null;
+        if(uploadedPicture != null) {
+            //If the picture creation failed skip picture setting
+            if(picturesFacade.uploadPicture(picture, uploadedPicture)) {
+                //If the user already has a picture, copy it to delete it later
+                if(loggedInPrincipal.getPicture() != null)
+                    temp = loggedInPrincipal.getPicture();
+                loggedInPrincipal.setPicture(picture);
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, PICTURE_ERROR));
+            }
+        }
         principalsFacade.edit(loggedInPrincipal);
+        if(temp != null)
+            picturesFacade.remove(temp);
         userSessionBean.setUser(loggedInPrincipal);
         
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", PROFILE_UPDATED));
@@ -217,5 +250,15 @@ public class UserProfileChangeBean{
     public boolean isPictureField() {
         return pictureField;
     }  
+
+    public UploadedFile getUploadedPicture() {
+        return uploadedPicture;
+    }
+
+    public void setUploadedPicture(UploadedFile uploadedPicture) {
+        this.uploadedPicture = uploadedPicture;
+    }
+    
+    
     
 }
