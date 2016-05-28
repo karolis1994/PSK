@@ -62,7 +62,8 @@ public class RegistrationBean {
     private String firstname;
     @Size(min = 0, max = 25)
     private String lastname;
-    @Size(max = 20)
+    
+    @Size(max = 20) //password min size set dynamicaly(for fb login)
     private String password;
     private String repeatPassword;
     private String address;
