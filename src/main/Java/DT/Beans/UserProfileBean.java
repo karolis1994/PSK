@@ -31,6 +31,7 @@ public class UserProfileBean {
     private final static String CLUB_MEMBER = "Klubo narys";
     private final static String CLUB_CANDIDATE = "Klubo kandidatas";
     private final static String CLUB_CANDIDATE_NO_MEMBERSHIP = "Klubo kandidatas (neapmokėta narystė)";
+    private final static String CLUB_ADMINISTRATOR = "Klubo administratorius";
 
     private Principals shownPrincipal;
     @Inject
@@ -52,6 +53,8 @@ public class UserProfileBean {
     private boolean aboutField;
     private boolean pictureField;
     
+    private SimpleDateFormat sdf;
+    
     // Methods -----------------------------------------------------------------
     
     @PostConstruct
@@ -62,7 +65,7 @@ public class UserProfileBean {
         
         userID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userID");
         
-        //Choosing the user by userID, if no such member throwing an error message
+        //Choosing the user by userID, if no such member showing an error message
         int principalID;
         try {
             principalID = Integer.parseInt(userID);
@@ -76,12 +79,28 @@ public class UserProfileBean {
             return;
         }
         
-        //Setting to be shown fields
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);      
+        //Setting fields that will be shown
+        sdf = new SimpleDateFormat(DATE_FORMAT);   
+        chooseMemberStatus();
         firstname = shownPrincipal.getFirstname();
         lastname = shownPrincipal.getLastname();
         birthdate = sdf.format(shownPrincipal.getBirthdate());
         
+        
+        email = shownPrincipal.getEmail();
+        phoneNumber = shownPrincipal.getPhonenumber();
+        address = shownPrincipal.getAddress();
+        about = shownPrincipal.getAbout();
+        if(about == null) {
+            about = "";
+        }
+    }
+    
+    private void chooseMemberStatus() {
+        if(shownPrincipal.getIsadmin() != null && shownPrincipal.getIsadmin()) {
+            memberStatus = CLUB_ADMINISTRATOR;
+            return;
+        }
         if(shownPrincipal.getMembershipuntill() != null && new Date().after(shownPrincipal.getMembershipuntill())) {
             memberUntil = sdf.format(shownPrincipal.getMembershipuntill());
             memberStatus = CLUB_MEMBER;
@@ -90,13 +109,6 @@ public class UserProfileBean {
                 memberStatus = CLUB_CANDIDATE;
             else
                 memberStatus = CLUB_CANDIDATE_NO_MEMBERSHIP;
-        }
-        email = shownPrincipal.getEmail();
-        phoneNumber = shownPrincipal.getPhonenumber();
-        address = shownPrincipal.getAddress();
-        about = shownPrincipal.getAbout();
-        if(about == null) {
-            about = "";
         }
     }
     
