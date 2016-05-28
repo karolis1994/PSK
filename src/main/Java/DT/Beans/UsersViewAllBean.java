@@ -84,18 +84,20 @@ public class UsersViewAllBean implements Serializable {
     }
     
     public List<Principals> filterByDate() {
+        boolean has;
         List<Reservations> reservations = reservationFacade.findByDatesCoveringNotCanceledHouseOnly(dateFromFilter, dateToFilter);
         if(!reservations.isEmpty()) {
             Iterator<Principals> iter = filteredPrincipals.iterator();
             while (iter.hasNext()) {
                 Principals h = iter.next();
-                
+                has = false;
                 for (Reservations r : reservations) {
-                    if (!r.getPrincipalid().equals(h)) {
-                        iter.remove();
-                        break;
+                    if (r.getPrincipalid().equals(h)) {
+                        has = true;
                     } 
                 }
+                if(!has)
+                    iter.remove();
             }
             return filteredPrincipals;
         } else {
