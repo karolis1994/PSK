@@ -46,6 +46,9 @@
                 #{myHouse.address}
                 <h4>Vietų skaičius: </h4>
                 <p>#{myHouse.capacity}</p>
+                
+                <h4>Nauodjimosi laikotarpis:</h4>
+                <p>#{houseBean.intToMonthName(myHouse.availablefrom)} - #{houseBean.intToMonthName(myHouse.availableto)}</p>
 
                 <h4>Papildomos paslaugos:</h4>
                 <p:dataTable var="extra" value="#{myHouse.extrasList}" tableStyle="width:auto">

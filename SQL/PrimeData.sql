@@ -35,10 +35,10 @@ INSERT INTO Settings (settingname, settingvalue)
 VALUES ('PictureField', 'false');
 
 --Houses
-INSERT INTO Houses (id, title, description, address, isclosed, isdeleted, capacity)
+INSERT INTO Houses (id, title, description, address, isclosed, isdeleted, capacity, availablefrom, availableto)
 VALUES (1, 'Vila "Genutės vasara"', 
         'Erdvus ir ištaigingas vasarnamis su dideliu kiemu ir nuostabiu vaizdu į pievą',
-        'Vasaros g. 69', false, false, 6);
+        'Vasaros g. 69', false, false, 6, 7, 8);
 
 --Extras
 INSERT INTO Extras (id, houseid, title, description, isdeleted)
