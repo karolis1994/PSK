@@ -1,17 +1,17 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      template="/templates/general_template.xhtml"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/general_template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="general_content"> 
         <h:form>
             <p:panel header="Vasarnamis" style="border: none;">
-            
+
                 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-                
+
                 <p:panelGrid columns="2" styleClass="formGrid">
                     <h:outputLabel for="title" value="Pavadnimas:" />
                     <p:inputText id="title" value="#{houseBean.title}" label="Pavadinimas" required="true"/>
@@ -21,11 +21,20 @@
 
                     <h:outputLabel for="address" value="Adresas: " />
                     <p:inputText id="address" value="#{houseBean.address}" label="Adresas" required="true"/>
-                    
+
                     <h:outputLabel for="capacity" value="Vietų skaičius: " />
                     <p:inputText id="capacity" value="#{houseBean.capacity}" label="Vietų skaičius" required="true"/>
-                </p:panelGrid>
 
+                    <p:outputLabel for="availableFrom" value="Naudojamas nuo: " />
+                    <p:selectOneMenu id="availableFrom" value="#{houseBean.availablefrom}" style="width:150px">
+                        <f:selectItems value="#{addHouseBean.months}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="availableTo" value="Naudojamas iki (įskaitant): " />
+                    <p:selectOneMenu id="availableTo" value="#{houseBean.availableto}" style="width:150px">
+                        <f:selectItems value="#{addHouseBean.months}" />
+                    </p:selectOneMenu>
+                </p:panelGrid>
                 <p:commandButton value="Išsaugoti" action="#{houseBean.updateHouse()}" validateClient="true" ajax="true">
                     <f:param name="id" value="#{param.id}" />
                 </p:commandButton>
@@ -33,5 +42,5 @@
             </p:panel>
         </h:form>
     </ui:define>
-    
+
 </ui:composition>
