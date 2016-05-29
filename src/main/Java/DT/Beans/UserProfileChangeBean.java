@@ -58,10 +58,8 @@ public class UserProfileChangeBean{
     private PicturesFacade picturesFacade;
     @Inject
     private UserSessionBean userSessionBean;
-    
-    @Size(min = 0, max = 20, message = "Vardo ilgis iki 20 simbolių.")
+
     private String firstname;
-    @Size(min = 0, max = 25, message = "Pavardės ilgis iki 25 simbolių.")
     private String lastname;
     @Past
     private Date birthdate;
@@ -69,7 +67,7 @@ public class UserProfileChangeBean{
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]",
             message = "Neteisingas formatas, teisingo pavyzdys: Jonas@gmail.lt")
     private String email;
-    @Pattern(regexp="\\+370\\d{8}|8\\d{8}", message="Telefono numeris užrašomas tokiu formatu 862329999 arba +37062329999")
+    @Pattern(regexp="\\+370\\d{8}|8\\d{8}", message="Neteisingas formatas, teisingo pavyzdys: 862329999 arba +37062329999")
     private String phoneNumber;
     private String address;
     private String about;  
@@ -162,7 +160,7 @@ public class UserProfileChangeBean{
             //If the picture creation failed skip picture setting
             if(picturesFacade.uploadPicture(picture, uploadedPicture)) {
                 //If the user already has a picture, copy it to delete it later
-                if(loggedInPrincipal.getPicture() != null)
+                if(loggedInPrincipal.getPicture() != null && loggedInPrincipal.getPicture().getId() != 1)
                     temp = loggedInPrincipal.getPicture();
                 loggedInPrincipal.setPicture(picture);
             } else {

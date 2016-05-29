@@ -5,23 +5,18 @@
  */
 package DT.Beans;
 
-import DT.Entities.Pictures;
 import DT.Entities.Principals;
-import DT.Facades.PicturesFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
-import java.io.ByteArrayInputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -29,7 +24,7 @@ import org.primefaces.model.StreamedContent;
  */
 @Named("userProfileBean")
 @RequestScoped
-public class UserProfileBean {  
+public class UserProfileBean implements Serializable {  
         
     // Fields ------------------------------------------------------------------
     private final static String DATE_FORMAT = "yyyy-MM-dd";
@@ -57,7 +52,7 @@ public class UserProfileBean {
     private String address;
     private String about;
     private String memberStatus;
-    private StreamedContent picture;
+    private byte[] picture;
     
     private boolean aboutField;
     private boolean pictureField;
@@ -94,9 +89,7 @@ public class UserProfileBean {
         firstname = shownPrincipal.getFirstname();
         lastname = shownPrincipal.getLastname();
         birthdate = sdf.format(shownPrincipal.getBirthdate());
-        if(shownPrincipal.getPicture() != null) {
-            displayPicture();
-        }
+        displayPicture();
         
         email = shownPrincipal.getEmail();
         phoneNumber = shownPrincipal.getPhonenumber();
@@ -107,6 +100,7 @@ public class UserProfileBean {
         }
     }
     
+    //Method to choose the member status
     private void chooseMemberStatus() {
         if(shownPrincipal.getIsadmin() != null && shownPrincipal.getIsadmin()) {
             memberStatus = CLUB_ADMINISTRATOR;
@@ -123,10 +117,13 @@ public class UserProfileBean {
         }
     }
     
+    //Method to convert byte array into displayable format
     public void displayPicture() {
         if(shownPrincipal.getPicture() != null) {
-            picture = new DefaultStreamedContent(new ByteArrayInputStream(shownPrincipal.getPicture().getImage()), "image/png", shownPrincipal.getPicture().getImagename());
+            picture = shownPrincipal.getPicture().getImage();
+            return;
         }
+        picture = new byte[1];
     }
     
     // Getters / setters -------------------------------------------------------
@@ -187,7 +184,7 @@ public class UserProfileBean {
         return memberStatus;
     }
 
-    public StreamedContent getPicture() {
+    public byte[] getPicture() {
         return picture;
     }
     

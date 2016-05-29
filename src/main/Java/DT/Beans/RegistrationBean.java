@@ -67,9 +67,7 @@ public class RegistrationBean {
             message = "Neteisingas formatas, teisingo pavyzdys: Jonas@gmail.lt")
     private String email;
     private String facebookID;
-    @Size(min = 0, max = 20, message = "Vardo ilgis iki 20 simbolių.")
     private String firstname;
-    @Size(min = 0, max = 25, message = "Pavardės ilgis iki 25 simbolių.")
     private String lastname;
 
     @Size(max = 20) //password min size set dynamicaly(for fb login)
@@ -78,7 +76,7 @@ public class RegistrationBean {
     private String address;
     @Past
     private Date birthdate;
-    @Pattern(regexp = "\\+370\\d{8}|8\\d{8}", message="Telefono numeris užrašomas tokiu formatu 862329999 arba +37062329999")
+    @Pattern(regexp = "\\+370\\d{8}|8\\d{8}", message="Neteisingas formatas, teisingo pavyzdys: 862329999 arba +37062329999")
     private String phoneNumber;
     @Size(max = 250, message = "Jūsų prisistatymo limitas 250 simbolių.")
     private String about;
