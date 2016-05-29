@@ -35,10 +35,11 @@ INSERT INTO Settings (settingname, settingvalue)
 VALUES ('PictureField', 'false');
 
 --Houses
-INSERT INTO Houses (id, title, description, address, isclosed, isdeleted, capacity, availablefrom, availableto)
+INSERT INTO Houses (id, title, description, address, isclosed, isdeleted, capacity, availablefrom, availableto,FaceBookImageURL)
 VALUES (1, 'Vila "Genutės vasara"', 
         'Erdvus ir ištaigingas vasarnamis su dideliu kiemu ir nuostabiu vaizdu į pievą',
-        'Vasaros g. 69', false, false, 6, 7, 8);
+        'Vasaros g. 69', false, false, 6, 7, 8,
+        'https://www.facebook.com/photo.php?fbid=1712387242367270&set=g.600520043448157&type=1&theater');
 
 --Extras
 INSERT INTO Extras (id, houseid, title, description, isdeleted)

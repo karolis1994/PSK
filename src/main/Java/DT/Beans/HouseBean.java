@@ -47,7 +47,9 @@ public class HouseBean implements Serializable {
 
     @Size(min = 1, max = 255)
     private String description;
-
+    
+    @Size(min = 1, max = 255)
+    private String faceBookImageURL;
     @Size(min = 1, max = 255)
     private String address;
 
@@ -99,7 +101,14 @@ public class HouseBean implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+    
+    public String getFaceBookImageURL() {
+        return faceBookImageURL;
+    }
 
+    public void setFaceBookImageURL(String faceBookImageURL) {
+        this.faceBookImageURL = faceBookImageURL;
+    }
     public String getAddress() {
         return address;
     }
@@ -221,6 +230,7 @@ public class HouseBean implements Serializable {
         extrasList = house.getExtrasList();
         availableto = house.getAvailableto();
         availablefrom = house.getAvailablefrom();
+        faceBookImageURL = house.getFaceBookImageURL();
     }
 
     public String removeHouse() {
@@ -240,6 +250,7 @@ public class HouseBean implements Serializable {
         houseToUpdate.setCapacity(capacity);
         houseToUpdate.setAvailablefrom(availablefrom);
         houseToUpdate.setAvailableto(availableto);
+        houseToUpdate.setFaceBookImageURL(faceBookImageURL);
         houseFacade.edit(houseToUpdate);
 
         return "house-preview.xhtml?faces-redirect=true&id=" + houseID;
@@ -296,4 +307,5 @@ public class HouseBean implements Serializable {
     public String RedirectAddMoreExtras() {
         return "administration/add-extra.xhtml?faces-redirect=true&amp;house=" + houseID;
     }
+    
 }
