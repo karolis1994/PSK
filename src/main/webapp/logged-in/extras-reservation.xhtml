@@ -87,7 +87,8 @@
 
             <br/>
 
-            <p:commandButton value="Tęsti" disabled="#{extrasReservationBean.totalPrice == 0}"
+            <p:commandButton value="Tęsti" styleClass="butt" 
+                             disabled="#{extrasReservationBean.totalPrice == 0}"
                              action="#{extrasReservationBean.continueClicked()}" 
                              update="@form"/>
 

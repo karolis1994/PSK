@@ -116,7 +116,7 @@ public class ReservationFacade extends GenericFacade<Reservations> {
     
     public void cancelReservation(Payments payment, Principals principal) {
         if (payment.getPaidWithPoints()) {
-            int principalPoints = principal.getPoints() - (int) payment.getAmmount();
+            int principalPoints = principal.getPoints() + (int) payment.getAmmount();
             principal.setPoints(principalPoints);
             principalsFacade.edit(principal);
         }    
