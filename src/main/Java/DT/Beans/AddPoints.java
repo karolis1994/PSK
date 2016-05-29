@@ -9,9 +9,7 @@ import DT.Entities.Principals;
 import DT.Facades.PrincipalsFacade;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -23,6 +21,7 @@ import javax.inject.Named;
 @RequestScoped
 public class AddPoints {
 
+     // Fields ------------------------------------------------------------------
     @Inject private PrincipalsFacade principalsFacade;
     private List<Principals> principals;
     private Principals principal; 
@@ -32,6 +31,7 @@ public class AddPoints {
     public String getParamId() { return paramId; }
     public void setParamId(String paramId) { this.paramId = paramId; }
 
+    // Methods ------------------------------------------------------------------
     @PostConstruct
     public void loadData() {
        
@@ -48,24 +48,36 @@ public class AddPoints {
         points = principal.getPoints();
     }
     
+    //Method to change member's points
     public void add(int addedPoints){
         principal.setPoints(addedPoints);
     }
 
-    public int getPoints() { return points; }
-    
-    public void setPoints(int points) { this.points = points; }
-
-    private Principals findPrincipalById(int id) {
-        principal = principalsFacade.find(id);
-        return principal;
-    }
-  
+    //Method to find principal by id in page's url
     public Principals findPrincipalByUrlId() {
         if (paramId != null && !paramId.isEmpty())
             return findPrincipalById(Integer.parseInt(paramId));
         return null;
     }
+
+    //Method to update principal that has been modified
+    public String updatePrincipal() {
+        Principals principalToUpdate = findPrincipalByUrlId();
+        
+        principalToUpdate.setPoints(points);
+        principalsFacade.edit(principalToUpdate);
+        
+        return "logged-in/administration/display-members-points.xhtml";
+    }
+    //Method to find principal by it's id in database
+    private Principals findPrincipalById(int id) {
+        principal = principalsFacade.find(id);
+        return principal;
+    }
+    // Getters / setters -------------------------------------------------------
+    public int getPoints() { return points; }
+    
+    public void setPoints(int points) { this.points = points; }
 
     public List<Principals> getPrincipals() {
         if (principals == null){
@@ -76,14 +88,5 @@ public class AddPoints {
 
     public void setPrincipals(List<Principals> principals) {
         this.principals = principals;
-    }
-    
-    public String updatePrincipal() {
-        Principals principalToUpdate = findPrincipalByUrlId();
-        
-        principalToUpdate.setPoints(points);
-        principalsFacade.edit(principalToUpdate);
-        
-        return "logged-in/administration/display-members-points.xhtml";
     }
 }
