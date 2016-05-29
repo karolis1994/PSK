@@ -21,30 +21,28 @@
                     </h:panelGrid>
                     <h:panelGrid columns="1" cellpadding="2">    
                         <h:outputLabel for="firstnameProfileChange" value="Vardas *"/>
-                        <p:inputText id="firstnameProfileChange" value="#{userProfileChangeBean.firstname}" label="Vardas" required="true"/>
-                        <p:message for="firstnameProfileChange" />
+                        <p:inputText id="firstnameProfileChange" value="#{userProfileChangeBean.firstname}" label="Vardas" required="true">
+                            <f:validateLength minimum="1" maximum="20"/>
+                        </p:inputText>
                         
                         <h:outputLabel for="lastnameProfileChange" value="Pavardė *"/>
-                        <p:inputText id="lastnameProfileChange" value="#{userProfileChangeBean.lastname}" label="Pavardė" required="true"/>
-                        <p:message for="lastnameProfileChange" />
+                        <p:inputText id="lastnameProfileChange" value="#{userProfileChangeBean.lastname}" label="Pavardė" required="true">
+                            <f:validateLength minimum="1" maximum="25"/>
+                        </p:inputText>
                         
                         <h:outputLabel for="birthdateProfileChange" value="Gimimo data [yyyy-mm-dd] *"/>
                         <p:inputText id="birthdateProfileChange" value="#{userProfileChangeBean.birthdate}" label="Gimimo data" required="true">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </p:inputText>
-                        <p:message for="birthdateProfileChange" />
 
                         <h:outputLabel for="emailProfileChange" value="El. paštas *" />
                         <p:inputText id="emailProfileChange" value="#{userProfileChangeBean.email}" label="Email" required="true"/>
-                        <p:message for="emailProfileChange" />
 
                         <h:outputLabel for="addressProfileChange" value="Adresas *"/>
-                        <p:inputText id="addressProfileChange" value="#{userProfileChangeBean.address}" label="Adresas" required="true"/>
-                        <p:message for="addressProfileChange" />               
+                        <p:inputText id="addressProfileChange" value="#{userProfileChangeBean.address}" label="Adresas" required="true"/>              
 
                         <h:outputLabel for="phoneNumberProfileChange" value="Telefono numeris *" />
                         <p:inputText id="phoneNumberProfileChange" value="#{userProfileChangeBean.phoneNumber}" label="Telefono numeris" required="true"/>
-                        <p:message for="phoneNumberProfileChange" />
 
                         <h:outputLabel for="aboutProfileChange" value="Trumpas jūsų prisistatymas" rendered="#{userProfileChangeBean.aboutField}"/>
                         <p:inputTextarea id="aboutProfileChange" value="#{userProfileChangeBean.about}" rows="5" cols="30" 
@@ -53,7 +51,7 @@
                         <h:outputText id="remainingCharsProfileChange" rendered="#{userProfileChangeBean.aboutField}"/>  
                         
                         <h:outputLabel for="picturerProfileChange" value="Paveikslėlis" rendered="#{userProfileChangeBean.pictureField}"/>
-                        <p:fileUpload value="#{userProfileChangeBean.uploadedPicture}" sizeLimit="2000000" mode="simple" rendered="#{userProfileChangeBean.pictureField}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                        <p:fileUpload id="picturerProfileChange" value="#{userProfileChangeBean.uploadedPicture}" sizeLimit="2000000" mode="simple" rendered="#{userProfileChangeBean.pictureField}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
 
                     </h:panelGrid>
 

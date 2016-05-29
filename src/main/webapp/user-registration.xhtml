@@ -21,14 +21,13 @@ and open the template in the editor.
         </h:head>
     <body>
         <div>
-            <h:form>
+            <h:form enctype="multipart/form-data">
                 <p:panel header="Registracija">
                     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
 
                     <h:panelGrid columns="1" cellpadding="2">
                         <h:outputLabel for="emailRegistration" value="El. paštas *" />
                         <p:inputText id="emailRegistration" value="#{registrationBean.email}" label="Email" required="true"/>
-                        <p:message for="emailRegistration" />
                         
                         <h:outputLabel for="passwordRegistration" value="Slaptažodis #{registrationBean.passwordInfo}" />
                         <p:password id="passwordRegistration" value="#{registrationBean.password}" match="passwordRepeatRegistration" label="Slaptažodis" required="#{!registrationBean.facebookRegistration}" />
@@ -37,38 +36,39 @@ and open the template in the editor.
                         <p:password id="passwordRepeatRegistration" value="#{registrationBean.repeatPassword}" label="Pakartokite slaptažodį" required="#{!registrationBean.facebookRegistration}" />   
                         
                         <h:outputLabel for="firstnameRegistration" value="Vardas *"/>
-                        <p:inputText id="firstnameRegistration" value="#{registrationBean.firstname}" label="Vardas" required="true"/>
-                        <p:message for="firstnameRegistration" />
+                        <p:inputText id="firstnameRegistration" value="#{registrationBean.firstname}" label="Vardas" required="true">
+                            <f:validateLength minimum="1" maximum="20"/>
+                        </p:inputText>
                         
                         <h:outputLabel for="lastnameRegistration" value="Pavardė *"/>
-                        <p:inputText id="lastnameRegistration" value="#{registrationBean.lastname}" label="Pavardė" required="true"/>
-                        <p:message for="lastnameRegistration" />
+                        <p:inputText id="lastnameRegistration" value="#{registrationBean.lastname}" label="Pavardė" required="true">
+                            <f:validateLength minimum="1" maximum="25"/>
+                        </p:inputText>
                         
                         <h:outputLabel for="birthdateRegistration" value="Gimimo data [yyyy-mm-dd] *"/>
                         <p:inputText id="birthdateRegistration" value="#{registrationBean.birthdate}" label="Gimimo data" required="true">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </p:inputText>
-                        <p:message for="birthdateRegistration" />
                         
                         <h:outputLabel for="addressRegistration" value="Adresas *"/>
                         <p:inputText id="addressRegistration" value="#{registrationBean.address}" label="Adresas" required="true"/>
-                        <p:message for="addressRegistration" />               
+          
  
                         <h:outputLabel for="phoneNumberRegistration" value="Telefono numeris *" />
                         <p:inputText id="phoneNumberRegistration" value="#{registrationBean.phoneNumber}" label="Telefono numeris" required="true"/>
-                        <p:message for="phoneNumberRegistration" />
+                      
                         
                         <h:outputLabel for="aboutRegistration" value="Trumpas jūsų prisistatymas" rendered="#{registrationBean.aboutField}"/>
                         <p:inputTextarea id="aboutRegistration" value="#{registrationBean.about}" rows="5" cols="30" counter="remainingCharsRegistration" maxlength="250" counterTemplate="{0} characters remaining." autoResize="false" rendered="#{registrationBean.aboutField}"/>
                         <h:outputText id="remainingCharsRegistration" rendered="#{registrationBean.aboutField}"/>   
                         
                         <h:outputLabel for="picturerRegistration" value="Paveikslėlis" rendered="#{registrationBean.pictureField}"/>
-                        <p:fileUpload value="#{registrationBean.uploadedPicture}" sizeLimit="2000000" mode="simple" rendered="#{registrationBean.pictureField}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                        <p:fileUpload id="picturerRegistration" value="#{registrationBean.uploadedPicture}" sizeLimit="2000000" mode="simple" rendered="#{registrationBean.pictureField}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
                                             
                     </h:panelGrid>
 
                     <p:commandButton action="#{registrationBean.register}" value="Registruotis" ajax="false" validateClient="true"/><p></p>
-                    <p:commandButton action="login.xhtml" value="Grįžti" ajax="false" validateClient="true" immediate="true"/>
+                    <p:commandButton action="login.xhtml" value="Grįžti" ajax="false" validateClient="false" immediate="true"/>
                 </p:panel>
             </h:form>
         </div>
