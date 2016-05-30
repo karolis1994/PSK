@@ -46,12 +46,17 @@ public class PaymentsConfirmBean {
     
     public void confirmSelected() throws IOException {
         
+        Boolean wasPaymentNotApproved = !selectedPayment.getIspaid();
         selectedPayment.setIspaid(true);
-        if (selectedPayment.getPaidserviceid().getId() == 2) {
-            completeBuyingPoints(selectedPayment);
-        } else if (selectedPayment.getPaidserviceid().getId() == 1) {
-            completeMembershipPayment(selectedPayment);
+        
+        if (wasPaymentNotApproved) {
+            if (selectedPayment.getPaidserviceid().getId() == 2) {
+                completeBuyingPoints(selectedPayment);
+            } else if (selectedPayment.getPaidserviceid().getId() == 1) {
+                completeMembershipPayment(selectedPayment);
+            }
         }
+        
         paymentsFacade.edit(selectedPayment);
     }
     
