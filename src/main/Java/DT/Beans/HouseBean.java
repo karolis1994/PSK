@@ -10,6 +10,7 @@ import DT.Entities.Houses;
 import DT.Entities.Paidservices;
 import DT.Entities.Settings;
 import DT.Facades.HouseFacade;
+import DT.Facades.PaidServicesFacade;
 import DT.Facades.SettingsFacade;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -46,6 +47,8 @@ public class HouseBean implements Serializable {
 
     @Inject
     private HouseFacade houseFacade;
+    @Inject
+    private PaidServicesFacade paidServicesFacade;
     private List<Houses> houses;
     private Houses house;
     private List<Paidservices> paidServices;
@@ -75,6 +78,11 @@ public class HouseBean implements Serializable {
     private List<Extras> extrasList;
     private int availableto;
     private int availablefrom;
+    
+    @Min(1)
+    private int priceInPoints;
+    public int getPriceInPoints() { return priceInPoints; }
+    public void setPriceInPoints(int price) { this.priceInPoints = price; }
 
     public List<Extras> getExtrasList() {
         return extrasList;
@@ -266,6 +274,10 @@ public class HouseBean implements Serializable {
         houseToUpdate.setAvailableto(availableto);
         houseToUpdate.setFaceBookImageURL(faceBookImageURL);
         houseFacade.edit(houseToUpdate);
+        
+        Paidservices paidService = houseToUpdate.getPaidservicesList().get(0);
+        paidService.setCostInPoints(costInPoints);
+        paidServicesFacade.edit(paidService);
 
         return "house-preview.xhtml?faces-redirect=true&id=" + houseID;
     }
