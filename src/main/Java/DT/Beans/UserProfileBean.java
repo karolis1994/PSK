@@ -119,11 +119,13 @@ public class UserProfileBean implements Serializable {
     
     //Method to convert byte array into displayable format
     public void displayPicture() {
-        if(shownPrincipal.getPicture() != null) {
-            picture = shownPrincipal.getPicture().getImage();
-            return;
+        if(pictureField) {
+            if(shownPrincipal.getPicture() != null) {
+                picture = shownPrincipal.getPicture().getImage();
+                return;
+            }
+            picture = new byte[1];
         }
-        picture = new byte[1];
     }
     
     // Getters / setters -------------------------------------------------------

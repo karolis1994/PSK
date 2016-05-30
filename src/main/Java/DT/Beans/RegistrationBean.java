@@ -134,14 +134,13 @@ public class RegistrationBean {
                 principal.setAbout(about);
             }
             principal.setPoints(0);
-            if(uploadedPicture != null) {
-                //if succesful upload set the pic, otherwise leave null
-                if(picturesFacade.uploadPicture(picture, uploadedPicture))
-                    principal.setPicture(picture);
-            } else {
-                principal.setPicture(picturesFacade.find(1));
+            if(pictureField) {
+                if(uploadedPicture != null) {
+                    //if succesful upload set the pic, otherwise leave null
+                    if(picturesFacade.uploadPicture(picture, uploadedPicture))
+                        principal.setPicture(picture);
+                }
             }
-            
             if (principalsFacade.findAll().isEmpty()) {
                 principal.setIsadmin(true);
                 principal.setIsapproved(true);

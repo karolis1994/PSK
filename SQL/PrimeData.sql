@@ -1,7 +1,3 @@
--- Default profile picture
-INSERT INTO Pictures (ImageName, Image)
-	VALUES ('Default_profile_picture.png', '\211PNG\015\012\032\012\000\000\000\015IHDR\000\000\002\000\000\000\002\000\004\003\000\000\000\006V\311\311\000\000\000\004gAMA\000\000\261\217\013\374a\005\000\000\000!PLTE\347\347\347\332\332\332\333\332\333\350\350\350\353\353\353\351\351\351\352\352\3 (...)');
-
 -- Yearly member's fee
 INSERT INTO otherservices (title, description)
     VALUES ('Metinis nario mokestis', 'Mokestis kurį turi sumokėti kiekvienas narys.');
@@ -26,6 +22,16 @@ VALUES ('MinRecommendations','2');
 
 INSERT INTO Settings (settingname, settingvalue)
 VALUES ('MaxRecommendations','5');
+
+--Season Settings
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('GroupNumber','6');
+
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('SeasonStartDate','');
+
+INSERT INTO Settings (settingname, settingvalue)
+VALUES ('SeasonEndDate','');
 
 --Registration form Settings
 INSERT INTO Settings (settingname, settingvalue)

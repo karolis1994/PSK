@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="/templates/administration_template.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="administration_content">
+        <h:form>
+            <p:panel header="Sezono nustatymai" style="border: none;">
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    
+                    <h:outputText value="Grupių skaičius:" /> 
+                    <p:inputText value="#{seasonSettingsBean.groupNumber}" required="false" 
+                                 converterMessage="Turi būti įvesti skaičiai."/>
+                    
+                    <h:outputText value="Sezono pradžia:" styleClass="spaced-text"/>
+                    <p:calendar readonlyInput="true" pattern="dd/M/yy" 
+                                value="#{seasonSettingsBean.startDate}" required="true" 
+                                requiredMessage="Būtina parinkti datą."
+                                validatorMessage="Pasirinkta klaidinga data."
+                                mindate="#{seasonSettingsBean.thisYear}" 
+                                maxdate="#{seasonSettingsBean.endDate}">
+                        <p:ajax event="dateSelect" update="@form"/>
+                    </p:calendar>
+                    
+                    <h:outputText value="Sezono pabaiga:" styleClass="spaced-text"/>
+                    <p:calendar readonlyInput="true" pattern="dd/M/yy"
+                                value="#{seasonSettingsBean.endDate}" required="true" 
+                                requiredMessage="Būtina parinkti datą."
+                                validatorMessage="Pasirinkta klaidinga data."
+                                mindate="#{seasonSettingsBean.startDate}"
+                                maxdate="#{seasonSettingsBean.nextYear}">
+                        <p:ajax event="dateSelect" update="@form"/>
+                    </p:calendar>
+                    
+                    <p:commandButton action="#{seasonSettingsBean.change}" value="Pakeisti" ajax="false" styleClass="butt"/>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+

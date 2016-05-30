@@ -12,7 +12,6 @@ import DT.Facades.PicturesFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.ReservationFacade;
 import DT.Facades.SettingsFacade;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +24,6 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.validation.constraints.Size;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -156,15 +154,17 @@ public class UserProfileChangeBean{
         //Create a new picture
         picture = new Pictures();
         Pictures temp = null;
-        if(uploadedPicture != null) {
-            //If the picture creation failed skip picture setting
-            if(picturesFacade.uploadPicture(picture, uploadedPicture)) {
-                //If the user already has a picture, copy it to delete it later
-                if(loggedInPrincipal.getPicture() != null && loggedInPrincipal.getPicture().getId() != 1)
-                    temp = loggedInPrincipal.getPicture();
-                loggedInPrincipal.setPicture(picture);
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, PICTURE_ERROR));
+        if(pictureField) {
+            if(uploadedPicture != null) {
+                //If the picture creation failed skip picture setting
+                if(picturesFacade.uploadPicture(picture, uploadedPicture)) {
+                    //If the user already has a picture, copy it to delete it later
+                    if(loggedInPrincipal.getPicture() != null && loggedInPrincipal.getPicture().getId() != 1)
+                        temp = loggedInPrincipal.getPicture();
+                    loggedInPrincipal.setPicture(picture);
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, PICTURE_ERROR));
+                }
             }
         }
         principalsFacade.edit(loggedInPrincipal);
