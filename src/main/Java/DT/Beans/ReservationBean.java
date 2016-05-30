@@ -468,6 +468,9 @@ public class ReservationBean implements Serializable{
         if (extrasList == null) {
             List<Extras> extras = getExtrasList();
             for (Extras e : extras) {
+                if (e.getIsdeleted() == true) {
+                    continue;
+                }
                 ExtraItem ei = new ExtraItem();
                 ei.extra = e;
                 extraItems.add(ei);

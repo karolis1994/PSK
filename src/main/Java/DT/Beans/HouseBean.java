@@ -9,17 +9,22 @@ import DT.Entities.Extras;
 import DT.Entities.Houses;
 import DT.Entities.Paidservices;
 import DT.Entities.Settings;
+import DT.Facades.ExtrasFacade;
 import DT.Facades.HouseFacade;
 import DT.Facades.PaidServicesFacade;
 import DT.Facades.SettingsFacade;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -84,8 +89,30 @@ public class HouseBean implements Serializable {
     public int getPriceInPoints() { return priceInPoints; }
     public void setPriceInPoints(int price) { this.priceInPoints = price; }
 
+    @Inject
+    ExtrasFacade extrasFacade;
+    
     public List<Extras> getExtrasList() {
-        return extrasList;
+        
+        List<Extras> list = new LinkedList<>();
+        
+        if (extrasList == null) {
+            return list;
+        }
+        
+        for(Extras e : extrasList) {
+            if (e.getIsdeleted() == null || e.getIsdeleted() == false) {
+                list.add(e);
+            }
+        }
+        
+        return list;
+        
+    }
+    
+    public Boolean hasExtras() {
+        List list = getExtrasList();
+        return list != null && list.size() > 0;
     }
 
     public void setExtrasList(List<Extras> extrasList) {
@@ -284,6 +311,13 @@ public class HouseBean implements Serializable {
 
     public String navigateToReservation() {
         return "house-reservation.xhtml?faces-redirect=true&houseID=" + houseID;
+    }
+    
+    public String remove(Extras extra) {
+        
+        extrasFacade.remove(extra);
+        
+        return "";
     }
 
     public boolean canReserve() {

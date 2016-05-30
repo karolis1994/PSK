@@ -63,7 +63,7 @@
                 <p>#{houseBean.intToMonthName(houseBean.availablefrom)} - #{houseBean.intToMonthName(houseBean.availableto)}</p>
 
                 <h4>Papildomos paslaugos:</h4>
-                <p:dataTable var="extra" value="#{houseBean.extrasList}" tableStyle="width:auto">
+                <p:dataTable var="extra" value="#{houseBean.extrasList}" tableStyle="width:auto" rendered="#{houseBean.hasExtras()}">
                     <p:column headerText="Pavadinimas">    				 				
                         #{extra.title}
                     </p:column>
@@ -75,6 +75,14 @@
                             <f:convertNumber type="number" groupingUsed="true" 
                                              maxFractionDigits="0" pattern="#0"/>
                         </h:outputText>
+                    </p:column>
+                    <p:column headerText="Trynimas" rendered="#{userSessionBean.user.isadmin}">
+                        <p:commandButton icon="ui-icon-trash"
+                            title="Delete this actor"
+                            action="#{houseBean.remove(extra)}"
+                            ajax="false">
+                            <f:param name="id" value="#{param.id}"/>
+                        </p:commandButton>
                     </p:column>
                 </p:dataTable>
 

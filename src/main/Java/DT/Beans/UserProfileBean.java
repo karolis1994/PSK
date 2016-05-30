@@ -106,7 +106,7 @@ public class UserProfileBean implements Serializable {
             memberStatus = CLUB_ADMINISTRATOR;
             return;
         }
-        if(shownPrincipal.getMembershipuntill() != null && new Date().after(shownPrincipal.getMembershipuntill())) {
+        if(shownPrincipal.getMembershipuntill() != null && new Date().before(shownPrincipal.getMembershipuntill())) {
             memberUntil = sdf.format(shownPrincipal.getMembershipuntill());
             memberStatus = CLUB_MEMBER;
         } else {
