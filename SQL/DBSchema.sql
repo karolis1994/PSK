@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS Houses(
   Version SERIAL,
   Capacity INT,
   AvailableFrom INT NOT NULL,
-  AvailableTo INT NOT NULL
+  AvailableTo INT NOT NULL,
+  FaceBookImageURL VARCHAR (255)
 );
 CREATE TABLE IF NOT EXISTS Extras(
   ID SERIAL PRIMARY KEY NOT NULL,

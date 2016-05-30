@@ -31,8 +31,8 @@
         </navigation-case>      
     </navigation-rule>
     <application>
-	  <message-bundle>
-	  	META-INF.TranslatedErrorsLT
-	  </message-bundle>
-     </application>
+        <message-bundle>
+            META-INF.TranslatedErrorsLT
+        </message-bundle>
+    </application>
 </faces-config>

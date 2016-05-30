@@ -80,7 +80,11 @@ public class Houses implements Serializable {
     private List<Paidservices> paidservicesList;
     @OneToMany(mappedBy = "houseid", fetch=FetchType.EAGER)
     private List<Extras> extrasList;
-
+    
+    @Size(max = 255)
+    @Column(name = "FaceBookImageURL")
+    private String faceBookImageURL;
+    
     public Houses() {
     }
 
@@ -119,7 +123,14 @@ public class Houses implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+    public String getFaceBookImageURL() {
+        return faceBookImageURL;
+    }
 
+    public void setFaceBookImageURL(String faceBookImageURL) {
+        this.faceBookImageURL = faceBookImageURL;
+    }
+    
     public Boolean getIsclosed() {
         return isclosed;
     }

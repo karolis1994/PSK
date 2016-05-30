@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-//import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.SelectEvent;
@@ -24,11 +23,11 @@ import org.primefaces.event.SelectEvent;
  *
  * @author Aurimas
  */
-//@Named(value = "displayMembersBean")
 @Named
 @RequestScoped
 public class DisplayMembersBean {
 
+    // Fields ------------------------------------------------------------------
     private Principals selectedPrincipal;  
     private List<Principals> allPrincipals;
    
@@ -36,6 +35,7 @@ public class DisplayMembersBean {
 
     @Inject private UserSessionBean userSessionBean;
       
+    // Methods ------------------------------------------------------------------
     @PostConstruct
     public void init() {
         allPrincipals = principalsFacade.findAllNotDeleted();
@@ -52,6 +52,8 @@ public class DisplayMembersBean {
             Logger.getLogger(DisplayMembersBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    // Getters / setters -------------------------------------------------------
+    
     public Principals getSelectedPrincipal() { return selectedPrincipal; }
     public List<Principals> getAllPrincipals() { return allPrincipals; }
     public void setSelectedPrincipal(Principals selectedPrincipal) { this.selectedPrincipal = selectedPrincipal; }
