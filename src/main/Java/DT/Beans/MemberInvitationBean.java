@@ -60,17 +60,14 @@ public class MemberInvitationBean implements Serializable{
    
     //Method to send invitation to new member
     public void sendInvitation() throws Exception{
-        //sugeneruojam aktyvacijos rakta, sukuriam reikiamus laukus
-        String uuid = UUID.randomUUID().toString();
+        
         Invitations invitation = new Invitations();
-
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String url = request.getRequestURL().toString();
         String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
         String message = "Sveiki, vartotojas " + loggedInPrincipal.getFirstname() + " " + loggedInPrincipal.getLastname() +
                          " jus kviečia prisijungti prie Labanoro draugų. Kad tai padarytumėte paspauskite nuorodą apačioje.\n" +
-                          baseURL +"user-registration.xhtml?key=" 
-                         + uuid;
+                          baseURL +"user-registration.xhtml";
         int error = -1;
         int i = 0;
         
@@ -84,10 +81,9 @@ public class MemberInvitationBean implements Serializable{
             return;
         }
         
-        try {
-            invitation.setUrlcode(uuid);         
+        try {       
             invitation.setSenderid(loggedInPrincipal);  
-            invitation.setIsactivated(Boolean.FALSE);
+            invitation.setReceiveremail(inputEmail);
             invitationsFacade.create(invitation); 
                     
             error = mailSMTP.sendMail(inputEmail , SUBJECT, message);

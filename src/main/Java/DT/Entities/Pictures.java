@@ -33,6 +33,12 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Pictures.findByImagename", query = "SELECT p FROM Pictures p WHERE p.imagename = :imagename")})
 public class Pictures implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,11 +50,6 @@ public class Pictures implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "imagename")
     private String imagename;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Column(name = "image")
-    private byte[] image;
     @OneToMany(mappedBy = "picture")
     private Collection<Principals> principalsCollection;
 
@@ -81,13 +82,6 @@ public class Pictures implements Serializable {
         this.imagename = imagename;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
 
     public Collection<Principals> getPrincipalsCollection() {
         return principalsCollection;
@@ -120,6 +114,14 @@ public class Pictures implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Pictures[ id=" + id + " ]";
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
     
 }
