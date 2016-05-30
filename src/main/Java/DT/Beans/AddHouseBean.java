@@ -98,7 +98,7 @@ public class AddHouseBean implements Serializable {
     
     // Saves house to the database
     public void save() {
-        if (houseFacade.findWhere("o.title = '" + title + "'").isEmpty()) {
+        if (houseFacade.findByName(title).isEmpty()) {
             if(house == null) {
                 house = new Houses();
                 house.setTitle(title);
