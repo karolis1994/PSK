@@ -62,7 +62,7 @@ public class HouseBean implements Serializable {
     @Size(min = 1, max = 255)
     private String description;
     
-    @Size(min = 1, max = 255)
+    @Size(min = 0, max = 255)
     private String faceBookImageURL;
     @Size(min = 1, max = 255)
     private String address;
