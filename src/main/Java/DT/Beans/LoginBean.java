@@ -43,14 +43,13 @@ import javax.validation.constraints.Size;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * @author donatas
  */
 @Named("loginBean")
 @RequestScoped
-public class LoginBean{
+public class LoginBean {
 
     private static final String APP_ID = "1581543875491903";
     private static final String CLIENT_SECRET = "668d1f29c2257393382374610de8310c";
@@ -61,7 +60,7 @@ public class LoginBean{
 
     @EJB
     private PrincipalsFacade principalsFacade;
-  
+
     private String password;
     private String code;
 
@@ -155,6 +154,9 @@ public class LoginBean{
         return "logged-in/index.xhtml";
     }
 
+    public void RedirectToFacebook() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().redirect("https://www.facebook.com/dialog/oauth?client_id=1581543875491903&scope=email&redirect_uri=" + getFBReturnUrl());
+    }
 // IN case we drop fb4j api
 //    public String returnFromFb() throws MalformedURLException, IOException {
 //
