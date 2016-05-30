@@ -7,11 +7,12 @@
 
     <ui:define name="general_content">
         
-        <h:form>
-            <p:commandButton action="invite-member.xhtml?faces-redirect=true" value="Pakviesti narį" 
-                             ajax="false" rendered="#{userSessionBean.user.isapproved}"/>
-        </h:form>
         <p:panel header="Naudotojai">   
+            
+            <h:form>
+                <p:commandButton action="invite-member.xhtml?faces-redirect=true" value="Pakviesti narį" 
+                                 ajax="false" rendered="#{userSessionBean.user.isapproved}"/>
+            </h:form>
             
             <p:panelGrid columns="2" columnClasses="alignTop,alignTop" style="padding: 0; margin: 0;">
             <h:form id="form">
