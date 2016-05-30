@@ -15,7 +15,7 @@
                                  converterMessage="Turi būti įvesti skaičiai."/>
                     
                     <h:outputText value="Sezono pradžia:" styleClass="spaced-text"/>
-                    <p:calendar readonlyInput="true" pattern="dd/M/yy" 
+                    <p:calendar readonlyInput="true" pattern="yyyy-MM-dd" 
                                 value="#{seasonSettingsBean.startDate}" required="true" 
                                 requiredMessage="Būtina parinkti datą."
                                 validatorMessage="Pasirinkta klaidinga data."
@@ -25,7 +25,7 @@
                     </p:calendar>
                     
                     <h:outputText value="Sezono pabaiga:" styleClass="spaced-text"/>
-                    <p:calendar readonlyInput="true" pattern="dd/M/yy"
+                    <p:calendar readonlyInput="true" pattern="yyyy-MM-dd"
                                 value="#{seasonSettingsBean.endDate}" required="true" 
                                 requiredMessage="Būtina parinkti datą."
                                 validatorMessage="Pasirinkta klaidinga data."
