@@ -58,17 +58,17 @@ public class ChangeRecommendationSettings {
             max = Integer.parseInt(maxRecommendationsValue);
             min = Integer.parseInt(minRecommendationsValue);
         } catch(NumberFormatException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", INPUT_NOT_NUMBER));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, INPUT_NOT_NUMBER, ""));
             return;
         }
         //Check if input numbers positive
         if(max <= 0 || min <= 0) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", INPUT_NUMBER_TOO_LOW));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, INPUT_NUMBER_TOO_LOW, ""));
             return;
         }
         //Check if the minimal number is not above maximum
         if(max < min) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", MINIMUM_TOO_HIGH));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, MINIMUM_TOO_HIGH, ""));
             return;
         }
         
@@ -77,7 +77,7 @@ public class ChangeRecommendationSettings {
         minRecommendations.setSettingvalue(""+min);
         settingsFacade.edit(maxRecommendations);
         settingsFacade.edit(minRecommendations);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", SETTINGS_CHANGED));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, SETTINGS_CHANGED, ""));
     }
     
     // Getters / setters -------------------------------------------------------

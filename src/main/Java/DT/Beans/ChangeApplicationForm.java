@@ -54,7 +54,7 @@ public class ChangeApplicationForm {
         PictureSettings.setSettingvalue(String.valueOf(picture));                      
         settingsFacade.edit(AboutSettings);
         settingsFacade.edit(PictureSettings);                
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", FORM_UPDATED));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, FORM_UPDATED, ""));
     }
 
     // Getters / setters -------------------------------------------------------

@@ -12,7 +12,6 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.RecommendationsFacade;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -30,7 +29,6 @@ public class RecommendationApproveBean {
     private final static String REQUEST_NOT_SENT_TO_YOU = "Šio prašymo jūs negalite patvirtinti, nes jis nebuvo siųstas jums.";
     private final static String INVALID_KEY = "Toks raktas neegzistuoja.";
     private final static String PROGRAM_ERROR = "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui.";
-    private final static String ERROR = "Klaida:";
     
     private Recommendations recommendation;
     private Principals principal;
@@ -69,7 +67,7 @@ public class RecommendationApproveBean {
         recommendation = recommendationsFacade.findByURLCode(key);          
         if(recommendation == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_ERROR, "", INVALID_KEY));
+                    FacesMessage.SEVERITY_ERROR, INVALID_KEY, ""));
             return false;
         }
 
@@ -82,7 +80,7 @@ public class RecommendationApproveBean {
         }
         else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_WARN, "", REQUEST_NOT_SENT_TO_YOU));
+                    FacesMessage.SEVERITY_WARN, REQUEST_NOT_SENT_TO_YOU, ""));
             return false;
         }
     }
@@ -94,7 +92,7 @@ public class RecommendationApproveBean {
         int minRecommendationsCount = Integer.parseInt(minRecommendations.getSettingvalue());
         if(currentlyAcceptedRecommendations < minRecommendationsCount) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_INFO, "", REQUEST_APPROVED));
+                    FacesMessage.SEVERITY_INFO, REQUEST_APPROVED, ""));
             return true;
         } else {      
             principal = recommendation.getSenderid();
@@ -103,7 +101,7 @@ public class RecommendationApproveBean {
             try {
                 groupNumber = Integer.parseInt(settingsFacade.getSettingByName("GroupNumber").getSettingvalue());
             } catch(NumberFormatException e) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, ERROR, PROGRAM_ERROR));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, PROGRAM_ERROR, ""));
             }
             principal.setGroupno(groupNumber);
             principalsFacade.edit(principal);

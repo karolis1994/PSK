@@ -84,7 +84,7 @@ public class SeasonSettingsBean {
         settingsFacade.edit(startDateSettings);
         settingsFacade.edit(endDateSettings);
         settingsFacade.edit(groupNumberSettings);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", FORM_UPDATED));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, FORM_UPDATED, ""));
     }
  
     public Date getStartDate() {

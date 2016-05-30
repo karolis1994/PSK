@@ -39,7 +39,6 @@ public class UserProfileChangeBean{
     private final static String PROFILE_UPDATED = "Jūsų profilis atnaujintas.";
     private final static String MEMBERSHIP_EXPIRED = "Pasibaigusi narystė";
     private final static String NOT_A_MEMBER = "Ne narys";
-    private final static String ERROR = "Klaida: ";
     private final static String PICTURE_ERROR = "Jūsų paveikslėlis nebuvo atnaujintas.";
     
     private Principals loggedInPrincipal;
@@ -59,7 +58,7 @@ public class UserProfileChangeBean{
 
     private String firstname;
     private String lastname;
-    @Past
+    @Past(message = "Gimimo data negali būti didesnė už dabartinę.")
     private Date birthdate;
     private String memberUntil;
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]",
@@ -140,6 +139,11 @@ public class UserProfileChangeBean{
         return "LOGOUT";
     }
     
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "index.html?faces-redirect=true";
+    }
+    
     //Method to update the changed fields
     public void update() {
         loggedInPrincipal.setFirstname(firstname);
@@ -163,7 +167,7 @@ public class UserProfileChangeBean{
                         temp = loggedInPrincipal.getPicture();
                     loggedInPrincipal.setPicture(picture);
                 } else {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, PICTURE_ERROR));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, PICTURE_ERROR, ""));
                 }
             }
         }
@@ -172,7 +176,7 @@ public class UserProfileChangeBean{
             picturesFacade.remove(temp);
         userSessionBean.setUser(loggedInPrincipal);
         
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", PROFILE_UPDATED));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, PROFILE_UPDATED, "" ));
     }
 
     // Getters / setters -------------------------------------------------------

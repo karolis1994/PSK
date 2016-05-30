@@ -37,7 +37,6 @@ public class RecommendationRequestBean implements Serializable{
     // Fields ------------------------------------------------------------------
     
     private final static String SUBJECT = "Prašymas priimti į klubą";
-    private final static String ERROR = "Klaida: ";
     private final static String ALREADY_APPROVED = "Jums jau yra suteiktas patvirtinto nario statusas.";
     private final static String NO_MORE_REQUESTS = "Daugiau prašymų siųsti nebegalima.";
     private final static String NO_SUCH_MEMBER = "Narys su įvestu el. paštu neegzistuoja.";
@@ -83,12 +82,12 @@ public class RecommendationRequestBean implements Serializable{
     public void SendEmails() throws Exception{
         //Check if the logged in user is not already approved
         if(loggedInPrincipal.getIsapproved() == true) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", ALREADY_APPROVED));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, ALREADY_APPROVED, ""));
             return;
         }
         //Check if recommendations count is not above maximum
         if(currentlySentRecommendations >= Integer.parseInt(maxRecommendations.getSettingvalue())) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", NO_MORE_REQUESTS));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, NO_MORE_REQUESTS, ""));
             return;
         }
         //Check if there is a user registered with input email
@@ -96,13 +95,13 @@ public class RecommendationRequestBean implements Serializable{
         inputPrincipal.setIsapproved(Boolean.FALSE);
         inputPrincipal = principalsFacade.findByEmail(inputEmail);
         if(inputPrincipal == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", NO_SUCH_MEMBER));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, NO_SUCH_MEMBER, ""));
             return;
         }
         
         //Check if the user we're sending the email to is aleady a member
         if(!inputPrincipal.getIsapproved()){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", RECEIVER_IS_NOT_APPROVED));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, RECEIVER_IS_NOT_APPROVED, ""));
             return;
         }
         
@@ -128,15 +127,15 @@ public class RecommendationRequestBean implements Serializable{
             recommendationsFacade.create(recommendation);                          
             error = mailSMTP.sendMail(inputPrincipal.getEmail(), SUBJECT, message);
         } catch(EJBException e2) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", EMAIL_ALREADY_SENT));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, EMAIL_ALREADY_SENT, ""));
         } catch(Exception e) {
             error = -1;
         } 
         finally {
             if(error == -1) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, FAILED_TO_SEND_EMAIL));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, FAILED_TO_SEND_EMAIL, ""));
             } else if(error == 0) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", EMAIL_SENT));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, EMAIL_SENT, ""));
             }
         }
     }

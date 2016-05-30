@@ -7,10 +7,16 @@
     
     <ui:define name="general_content">
         <div>
+            <p:panel rendered="#{!userSessionBean.user.isapproved}">
+                <h:outputText value="Jūsų narystė dar nepatvirtinta, išsiųskite patvirtinimo prašymus"/>        
+                <h:form>
+                    <p:commandButton action="recommendation-request.xhtml?faces-redirect=true" value="Patvirtinimo prašymai" 
+                                     ajax="false" styleClass="butt"/>
+                </h:form>
+            </p:panel>
             <h:form enctype="multipart/form-data" >
                 <h:outputText/>
-                <p:panel id="profileChangePage" header="Profilio nustatymai">
-                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                <p:panel header="Profilio informacija">
                     <h:panelGrid columns="2" cellpadding="5">
 
                         <h:outputLabel for="pointsProfileChange" value="Turimi taškai" />
@@ -19,6 +25,12 @@
                         <h:outputLabel for="memeberUntilProfileChange" value="Narys iki" />
                         <h:outputText id="memeberUntilProfileChange" value="#{userProfileChangeBean.memberUntil}" />
                     </h:panelGrid>
+                    <p:commandButton action="reservations-history.xhtml?faces-redirect=true" value="Rezervacijų istorija" 
+                                     ajax="false" styleClass="butt"/>
+                </p:panel>
+                <h:outputText/>
+                <p:panel id="profileChangePage" header="Profilio nustatymai">
+                    <p:messages id="messages" autoUpdate="true" closable="true" />
                     <h:panelGrid columns="1" cellpadding="2">    
                         <h:outputLabel for="firstnameProfileChange" value="Vardas *"/>
                         <p:inputText id="firstnameProfileChange" value="#{userProfileChangeBean.firstname}" label="Vardas" required="true">

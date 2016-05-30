@@ -13,9 +13,6 @@ import DT.Facades.SettingsFacade;
 import DT.Services.IPasswordHasher;
 import DT.Services.PasswordHasherPBKDF2;
 import facebook4j.User;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,7 +40,6 @@ public class RegistrationBean {
     private final static String NO_PASSWORD_NECESSARY = "Slaptažodis Facebook registracijai neprivalomas.";
     private final static String NOT_NECESSARY = "(Neprivaloma)";
     private final static String PASSWORD_LENGTH = "Slaptažodis turi būti 5-20 simbolių ilgio.";
-    private final static String ERROR = "Klaida: ";
     private final static String PROGRAM_ERROR = "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui.";
     private final static String FB_DATE_FORMAT = "MM/DD/YYYY";
     private final static String HAVE_TO_REACTIVATE = "Naudotojas su tokiu el. paštu yra panaikinęs savo paskyrą.\nNorint ją atstatyti jums reikia prisijungti su savo senu slaptažodžiu.";
@@ -64,7 +60,7 @@ public class RegistrationBean {
     private final IPasswordHasher passwordHasher = new PasswordHasherPBKDF2();
 
     @Pattern(regexp = "[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]",
-            message = "Neteisingas formatas, teisingo pavyzdys: Jonas@gmail.lt")
+            message = "Neteisingas el. pašto formatas, teisingo pavyzdys: Jonas@gmail.lt")
     private String email;
     private String facebookID;
     private String firstname;
@@ -74,9 +70,10 @@ public class RegistrationBean {
     private String password;
     private String repeatPassword;
     private String address;
-    @Past
+    @Past(message = "Gimimo data negali būti didesnė už dabartinę.")
     private Date birthdate;
-    @Pattern(regexp = "\\+370\\d{8}|8\\d{8}", message="Neteisingas formatas, teisingo pavyzdys: 862329999 arba +37062329999")
+    @Pattern(regexp = "\\+370\\d{8}|8\\d{8}", 
+            message="Neteisingas telefono formatas, teisingo pavyzdys: 862329999 arba +37062329999")
     private String phoneNumber;
     @Size(max = 250, message = "Jūsų prisistatymo limitas 250 simbolių.")
     private String about;
@@ -97,7 +94,7 @@ public class RegistrationBean {
         //userSessionBean = (UserSessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("userSessionBean");
         if (userSessionBean != null && userSessionBean.getUserFB() != null) {
             setFacebookRegistration(true);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", NO_PASSWORD_NECESSARY));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, NO_PASSWORD_NECESSARY, ""));
             passwordInfo = NOT_NECESSARY;
             loadFacebookData(userSessionBean.getUserFB());
         }
@@ -108,7 +105,7 @@ public class RegistrationBean {
         if (principalsFacade.findByEmail(email) == null) {
             if ((password.length() < 5 && !facebookRegistration)
                     || (password.length() > 0 && password.length() < 5)) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", PASSWORD_LENGTH));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, PASSWORD_LENGTH, "" ));
                 return "";
             }
 
@@ -123,7 +120,7 @@ public class RegistrationBean {
                 try {
                     principal.setPasswordhash(passwordHasher.createHash(password, salt));
                 } catch (Exception e) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, ERROR, PROGRAM_ERROR));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, PROGRAM_ERROR, ""));
                     return "";
                 }
             }
@@ -158,12 +155,12 @@ public class RegistrationBean {
             principal = (Principals) principalsFacade.findByEmail(email);
             if (principal.getIsdeleted() != null) {
                 if (principal.getIsdeleted()) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "", HAVE_TO_REACTIVATE));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, HAVE_TO_REACTIVATE, ""));
                     return null;
                 }
             }
         }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", EMAIL_ALREADY_USED));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, EMAIL_ALREADY_USED, ""));
         return null;
     }
 
