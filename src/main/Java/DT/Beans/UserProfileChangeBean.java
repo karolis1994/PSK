@@ -139,6 +139,11 @@ public class UserProfileChangeBean{
         return "LOGOUT";
     }
     
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "index.html?faces-redirect=true";
+    }
+    
     //Method to update the changed fields
     public void update() {
         loggedInPrincipal.setFirstname(firstname);
