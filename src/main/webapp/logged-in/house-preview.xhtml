@@ -40,7 +40,11 @@
 
             <h:form>
 
-                <h:panelGrid columns="3" cellpadding="10">
+                <h:panelGrid columns="4" cellpadding="1">
+                    <p:commandButton value="Rezervacijos" action="administration/house-view-reservations.xhtml" rendered="#{userSessionBean.user.isadmin}" ajax="false">
+                        <f:param name="id" value="#{param.id}"/>
+                    </p:commandButton>
+                    
                     <p:commandButton value="Pridėti paslaugą" action="#{houseBean.RedirectAddMoreExtras()}" rendered="#{userSessionBean.user.isadmin}" ajax="false"/>
 
                     <p:commandButton value="Redaguoti" action="#{houseBean.RedirectToEdit()}" rendered="#{userSessionBean.user.isadmin}" ajax="false"/>
