@@ -57,6 +57,7 @@ public class SeasonSettingsBean {
         today.set(today.get(1), 0, 1, 0, 0, 0);
         thisYear = today.getTime();
         today.add(Calendar.YEAR, 1);
+        today.add(Calendar.DATE, -1);
         nextYear = today.getTime(); 
         
         //Get data from settings, if invalid data get default
