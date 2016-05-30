@@ -25,8 +25,8 @@ public class InvitationsFacade extends GenericFacade<Invitations> {
                 .getResultList();
     }
     
-    public List findByURLCode(String urlCode) {
-        return em.createNamedQuery("Invitations.findByUrlcode").setParameter("urlcode", urlCode)
+    public List findByReceiver(String receiverEmail) {
+        return em.createNamedQuery("Invitations.findByReceiverEmail").setParameter("receiveremail", receiverEmail)
                 .getResultList();
     }
     

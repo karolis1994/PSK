@@ -30,10 +30,16 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Invitations.findAll", query = "SELECT i FROM Invitations i"),
     @NamedQuery(name = "Invitations.findById", query = "SELECT i FROM Invitations i WHERE i.id = :id"),
-    @NamedQuery(name = "Invitations.findByUrlcode", query = "SELECT i FROM Invitations i WHERE i.urlcode = :urlcode"),
-    @NamedQuery(name = "Invitations.findByIsactivated", query = "SELECT i FROM Invitations i WHERE i.isactivated = :isactivated"),
+    @NamedQuery(name = "Invitations.findBySenderId", query = "SELECT i FROM Invitations i WHERE i.senderid = :senderid"),
+    @NamedQuery(name = "Invitations.findByReceiverEmail", query = "SELECT i FROM Invitations i WHERE i.receiveremail = :receiveremail"),
     @NamedQuery(name = "Invitations.findByVersion", query = "SELECT i FROM Invitations i WHERE i.version = :version")})
 public class Invitations implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "receiveremail")
+    private String receiveremail;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,13 +47,6 @@ public class Invitations implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "urlcode")
-    private String urlcode;
-    @Column(name = "isactivated")
-    private Boolean isactivated;
     @Basic(optional = false)
     @Column(name = "version")
     @Version
@@ -63,9 +62,8 @@ public class Invitations implements Serializable {
         this.id = id;
     }
 
-    public Invitations(Integer id, String urlcode, int version) {
+    public Invitations(Integer id, int version) {
         this.id = id;
-        this.urlcode = urlcode;
         this.version = version;
     }
 
@@ -75,22 +73,6 @@ public class Invitations implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getUrlcode() {
-        return urlcode;
-    }
-
-    public void setUrlcode(String urlcode) {
-        this.urlcode = urlcode;
-    }
-
-    public Boolean getIsactivated() {
-        return isactivated;
-    }
-
-    public void setIsactivated(Boolean isactivated) {
-        this.isactivated = isactivated;
     }
 
     public int getVersion() {
@@ -132,6 +114,14 @@ public class Invitations implements Serializable {
     @Override
     public String toString() {
         return "DT.Entities.Invitations[ id=" + id + " ]";
+    }
+
+    public String getReceiveremail() {
+        return receiveremail;
+    }
+
+    public void setReceiveremail(String receiveremail) {
+        this.receiveremail = receiveremail;
     }
     
 }
