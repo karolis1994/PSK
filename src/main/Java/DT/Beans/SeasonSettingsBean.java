@@ -5,12 +5,15 @@
  */
 package DT.Beans;
 
+import DT.Entities.Principals;
 import DT.Entities.Settings;
+import DT.Facades.PrincipalsFacade;
 import DT.Facades.SettingsFacade;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -45,6 +48,10 @@ public class SeasonSettingsBean {
     private Date nextYear;
     private SimpleDateFormat sdf;
     
+    @Inject Grouping grouping;
+    
+    @Inject
+    PrincipalsFacade principalsFacade;
     
     @PostConstruct
     public void init() {
@@ -87,6 +94,16 @@ public class SeasonSettingsBean {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, FORM_UPDATED, ""));
     }
  
+    public void regroup() {
+        
+        List<Principals> principals = principalsFacade.findAllApproved();        
+        List<Principals> groupedPrincipals = grouping.splitIntoGroups(principals, groupNumber);
+        
+        for(Principals p : groupedPrincipals) {
+            principalsFacade.edit(p);
+        }
+    }
+    
     public Date getStartDate() {
         return startDate;
     }
