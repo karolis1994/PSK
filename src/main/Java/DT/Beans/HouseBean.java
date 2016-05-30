@@ -299,6 +299,7 @@ public class HouseBean implements Serializable {
         return "Klaida";
     }
 
+    //this is some next level java bullshit
     public String RedirectToEdit() {
         return "house-edit.xhtml?faces-redirect=true&amp;id=" + houseID;
     }
