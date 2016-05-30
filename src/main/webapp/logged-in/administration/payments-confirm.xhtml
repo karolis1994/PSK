@@ -18,8 +18,8 @@
                          style="margin-top: 5px;"
                          selection="#{paymentsConfirmBean.selectedPayment}"
                          selectionMode="single"
-                         rowKey="#{payment.id}">
-                
+                         rowKey="#{payment.id}"> 
+               
 <!--                        <p:ajax event="rowSelect" 
                                 listener="#{houseViewAllBean.navigateToSelected}" />-->
 
@@ -31,6 +31,9 @@
                         </p:column>
                         <p:column headerText="Sumokėta">
                             <h:outputText value="#{payment.ammount}" />
+                        </p:column>
+                        <p:column headerText="Valiuta">
+                            <h:outputText value="#{houseViewAllBean.getPaymentCurrency(payment)}" />
                         </p:column>
                         <p:column headerText="Mokėjimas patvirtintas">
                             <h:outputText value="#{payment.ispaid}" />
