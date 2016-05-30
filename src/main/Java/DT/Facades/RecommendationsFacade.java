@@ -33,6 +33,6 @@ public class RecommendationsFacade extends GenericFacade<Recommendations>{
     }
     
     public List findByApprovedSender(int receiverId) {
-        return findWhere(" o.senderid.id = " + receiverId + " AND o.isactivated = 't'");
+        return em.createNamedQuery("Recommendations.findByApprovedSender").setParameter("senderid", receiverId).getResultList();
     }
 }

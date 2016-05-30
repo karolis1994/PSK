@@ -35,7 +35,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Recommendations.findByIsactivated", query = "SELECT r FROM Recommendations r WHERE r.isactivated = :isactivated"),
     @NamedQuery(name = "Recommendations.findBySenderid", query = "SELECT r FROM Recommendations r Where r.senderid.id = :senderid"),
     @NamedQuery(name = "Recommendations.findByRecieverid", query = "SELECT r FROM Recommendations r Where r.recieverid.id = :recieverid"),
-    @NamedQuery(name = "Recommendations.findByVersion", query = "SELECT r FROM Recommendations r WHERE r.version = :version")})
+    @NamedQuery(name = "Recommendations.findByVersion", query = "SELECT r FROM Recommendations r WHERE r.version = :version"),
+    @NamedQuery(name = "Recommendations.findByApprovedSender", query = "SELECT r FROM Recommendations r WHERE r.senderid.id = :senderid AND r.isactivated = 't'")})
+    
 public class Recommendations implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -76,12 +76,6 @@
                                              maxFractionDigits="0" pattern="#0"/>
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Kaina (Eurais)">
-                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
-                            <f:convertNumber type="number" groupingUsed="true" 
-                                             maxFractionDigits="2" pattern="#0.00"/>
-                        </h:outputText>
-                    </p:column>
                 </p:dataTable>
 
                 <h4>Nuomos kaina savaitei:</h4> 
@@ -89,11 +83,6 @@
                     <f:convertNumber type="number" groupingUsed="true" 
                                      maxFractionDigits="0" pattern="#0"/>
                 </h:outputText> Taškai(-ų)
-                <br/>
-                <h:outputText value="#{houseBean.cost}">
-                    <f:convertNumber type="number" groupingUsed="true" 
-                                     maxFractionDigits="2" pattern="#0.00"/>
-                </h:outputText> EUR
                 <br/>
 
                 <p:commandButton value="Rezervuoti" action="#{houseBean.navigateToReservation()}" 
