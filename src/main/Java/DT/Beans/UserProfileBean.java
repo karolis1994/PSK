@@ -28,7 +28,6 @@ public class UserProfileBean implements Serializable {
         
     // Fields ------------------------------------------------------------------
     private final static String DATE_FORMAT = "yyyy-MM-dd";
-    private final static String ERROR = "Klaida: ";
     private final static String WRONG_ID_FORMAT = "ID formatas netinkamas.";
     private final static String NO_USER_WITH_SUCH_ID = "Naudotojas su tokiu ID neegzistuoja.";
     private final static String CLUB_MEMBER = "Klubo narys";
@@ -75,11 +74,11 @@ public class UserProfileBean implements Serializable {
             principalID = Integer.parseInt(userID);
             shownPrincipal = principalsFacade.find(principalID);
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, WRONG_ID_FORMAT));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, WRONG_ID_FORMAT, ""));
             return;
         }
         if(shownPrincipal == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, NO_USER_WITH_SUCH_ID));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, NO_USER_WITH_SUCH_ID, ""));
             return;
         }
         
