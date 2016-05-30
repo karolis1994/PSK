@@ -66,6 +66,8 @@ public class SeasonSettingsBean {
         today.add(Calendar.YEAR, 1);
         today.add(Calendar.DATE, -1);
         nextYear = today.getTime(); 
+        startDate = null;
+        endDate = null;
         
         //Get data from settings, if invalid data get default
         sdf = new SimpleDateFormat(DATE_FORMAT);

@@ -21,7 +21,6 @@
                                 validatorMessage="Pasirinkta klaidinga data."
                                 mindate="#{seasonSettingsBean.thisYear}" 
                                 maxdate="#{seasonSettingsBean.endDate}">
-                        <p:ajax event="dateSelect" update="@form"/>
                     </p:calendar>
                     
                     <h:outputText value="Sezono pabaiga:" styleClass="spaced-text"/>
@@ -31,7 +30,6 @@
                                 validatorMessage="Pasirinkta klaidinga data."
                                 mindate="#{seasonSettingsBean.startDate}"
                                 maxdate="#{seasonSettingsBean.nextYear}">
-                        <p:ajax event="dateSelect" update="@form"/>
                     </p:calendar>
                     
                     <p:commandButton action="#{seasonSettingsBean.change}" value="Pakeisti" ajax="false" styleClass="butt"/>
