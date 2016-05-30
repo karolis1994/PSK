@@ -54,7 +54,7 @@ public class SeasonSettingsBean {
         
         Calendar today = Calendar.getInstance();
         today.setTime(new Date());
-        today.set(today.YEAR, 0, 0, 0, 0, 0);
+        today.set(today.get(1), 0, 1, 0, 0, 0);
         thisYear = today.getTime();
         today.add(Calendar.YEAR, 1);
         nextYear = today.getTime(); 
