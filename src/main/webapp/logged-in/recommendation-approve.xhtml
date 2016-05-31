@@ -8,7 +8,7 @@
     <ui:define name="general_content">
         <h:outputText value="#{recommendationApproveBean.emptyString}"/>
         <div>
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+            <p:messages id="messages" autoUpdate="true" closable="true" />
             <h:panelGroup layout="block" rendered="#{recommendationApproveBean.isRecommendationValid}">
                 <p>Sėkmingai patvirtintas prašymas!</p>
              </h:panelGroup>

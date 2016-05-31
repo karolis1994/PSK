@@ -8,9 +8,23 @@ package DT.Beans;
 import DT.Entities.Extras;
 import DT.Entities.Houses;
 import DT.Entities.Paidservices;
+import DT.Entities.Settings;
+import DT.Facades.ExtrasFacade;
 import DT.Facades.HouseFacade;
+import DT.Facades.PaidServicesFacade;
+import DT.Facades.SettingsFacade;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -28,13 +42,18 @@ import org.primefaces.model.UploadedFile;
 @RequestScoped
 public class HouseBean implements Serializable {
 
+    private final static String NOT_SEASON = "Rezervacijos nevyksta (ne sezonas)";
     private final static String NOT_APPROVED = "Jūsų narystė nepatvirtinta";
+    private final static String NOT_MEMBER = "Jūs nesate susimokėjęs metinio narystės mokesčio";
+    private final static String GROUP_TOO_LOW = "Jūsų rezervavimo pirmumo grupė yra per žema";
 
     @Size(min = 1, max = 255)
     private String title;
 
     @Inject
     private HouseFacade houseFacade;
+    @Inject
+    private PaidServicesFacade paidServicesFacade;
     private List<Houses> houses;
     private Houses house;
     private List<Paidservices> paidServices;
@@ -44,11 +63,14 @@ public class HouseBean implements Serializable {
     @Inject
     UserSessionBean user;
     private String canReserveMessage;
+    
+    @Inject
+    private SeasonSettingsBean seasonSettingsBean;
 
     @Size(min = 1, max = 255)
     private String description;
     
-    @Size(min = 1, max = 255)
+    @Size(min = 0, max = 255)
     private String faceBookImageURL;
     @Size(min = 1, max = 255)
     private String address;
@@ -61,9 +83,36 @@ public class HouseBean implements Serializable {
     private List<Extras> extrasList;
     private int availableto;
     private int availablefrom;
+    
+    @Min(1)
+    private int priceInPoints;
+    public int getPriceInPoints() { return priceInPoints; }
+    public void setPriceInPoints(int price) { this.priceInPoints = price; }
 
+    @Inject
+    ExtrasFacade extrasFacade;
+    
     public List<Extras> getExtrasList() {
-        return extrasList;
+        
+        List<Extras> list = new LinkedList<>();
+        
+        if (extrasList == null) {
+            return list;
+        }
+        
+        for(Extras e : extrasList) {
+            if (e.getIsdeleted() == null || e.getIsdeleted() == false) {
+                list.add(e);
+            }
+        }
+        
+        return list;
+        
+    }
+    
+    public Boolean hasExtras() {
+        List list = getExtrasList();
+        return list != null && list.size() > 0;
     }
 
     public void setExtrasList(List<Extras> extrasList) {
@@ -252,6 +301,10 @@ public class HouseBean implements Serializable {
         houseToUpdate.setAvailableto(availableto);
         houseToUpdate.setFaceBookImageURL(faceBookImageURL);
         houseFacade.edit(houseToUpdate);
+        
+        Paidservices paidService = houseToUpdate.getPaidservicesList().get(0);
+        paidService.setCostInPoints(costInPoints);
+        paidServicesFacade.edit(paidService);
 
         return "house-preview.xhtml?faces-redirect=true&id=" + houseID;
     }
@@ -259,14 +312,69 @@ public class HouseBean implements Serializable {
     public String navigateToReservation() {
         return "house-reservation.xhtml?faces-redirect=true&houseID=" + houseID;
     }
+    
+    public String remove(Extras extra) {
+        
+        extrasFacade.remove(extra);
+        
+        return "";
+    }
 
     public boolean canReserve() {
+        if (user.getUser().getIsadmin() == true) {
+            return true;
+        }
+        
+        Date seasonStartDate = getSeasonStartDate();
+        Date seasonEndDate = getSeasonEndDate();
+        if (
+                seasonStartDate == null || 
+                seasonEndDate == null ||
+                seasonStartDate.after(new Date()) ||
+                seasonEndDate.before(new Date())
+            ) 
+        {
+            canReserveMessage = NOT_SEASON;
+            return false;
+        }
+        
         if (user.getUser().getIsapproved() == false) {
             canReserveMessage = NOT_APPROVED;
             return false;
         }
+        
+        if (user.getUser().getMembershipuntill() == null || user.getUser().getMembershipuntill().before(new Date())) {
+            canReserveMessage = NOT_MEMBER;
+            return false;
+        }
+        
+        Date reservateDateByGroup = calculateReservationDateByGroup();
+        if (reservateDateByGroup == null || calculateReservationDateByGroup().after(new Date())) {
+            canReserveMessage = GROUP_TOO_LOW;
+            return false;
+        }
 
         return true;
+    }
+    
+    private Date calculateReservationDateByGroup() {
+        Integer groupNo = user.getUser().getGroupno();
+        if (groupNo == null || groupNo == 0) 
+            return null;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getSeasonStartDate());
+        cal.add(Calendar.WEEK_OF_YEAR, groupNo-1);  
+        
+        return cal.getTime();
+    }
+    
+    private Date getSeasonStartDate() {
+        return seasonSettingsBean.getStartDate();
+    }
+    
+    private Date getSeasonEndDate() {
+        return seasonSettingsBean.getEndDate();
     }
 
     public static String intToMonthName(int month) {

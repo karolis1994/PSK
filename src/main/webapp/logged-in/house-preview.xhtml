@@ -40,7 +40,11 @@
 
             <h:form>
 
-                <h:panelGrid columns="3" cellpadding="10">
+                <h:panelGrid columns="4" cellpadding="1">
+                    <p:commandButton value="Rezervacijos" action="administration/house-view-reservations.xhtml" rendered="#{userSessionBean.user.isadmin}" ajax="false">
+                        <f:param name="id" value="#{param.id}"/>
+                    </p:commandButton>
+                    
                     <p:commandButton value="Pridėti paslaugą" action="#{houseBean.RedirectAddMoreExtras()}" rendered="#{userSessionBean.user.isadmin}" ajax="false"/>
 
                     <p:commandButton value="Redaguoti" action="#{houseBean.RedirectToEdit()}" rendered="#{userSessionBean.user.isadmin}" ajax="false"/>
@@ -63,7 +67,7 @@
                 <p>#{houseBean.intToMonthName(houseBean.availablefrom)} - #{houseBean.intToMonthName(houseBean.availableto)}</p>
 
                 <h4>Papildomos paslaugos:</h4>
-                <p:dataTable var="extra" value="#{houseBean.extrasList}" tableStyle="width:auto">
+                <p:dataTable var="extra" value="#{houseBean.extrasList}" tableStyle="width:auto" rendered="#{houseBean.hasExtras()}">
                     <p:column headerText="Pavadinimas">    				 				
                         #{extra.title}
                     </p:column>
@@ -76,11 +80,13 @@
                                              maxFractionDigits="0" pattern="#0"/>
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Kaina (Eurais)">
-                        <h:outputText value="#{extra.getPaidservicesList().get(0).getCost()}">             
-                            <f:convertNumber type="number" groupingUsed="true" 
-                                             maxFractionDigits="2" pattern="#0.00"/>
-                        </h:outputText>
+                    <p:column headerText="Trynimas" rendered="#{userSessionBean.user.isadmin}">
+                        <p:commandButton icon="ui-icon-trash"
+                            title="Delete this actor"
+                            action="#{houseBean.remove(extra)}"
+                            ajax="false">
+                            <f:param name="id" value="#{param.id}"/>
+                        </p:commandButton>
                     </p:column>
                 </p:dataTable>
 
@@ -89,11 +95,6 @@
                     <f:convertNumber type="number" groupingUsed="true" 
                                      maxFractionDigits="0" pattern="#0"/>
                 </h:outputText> Taškai(-ų)
-                <br/>
-                <h:outputText value="#{houseBean.cost}">
-                    <f:convertNumber type="number" groupingUsed="true" 
-                                     maxFractionDigits="2" pattern="#0.00"/>
-                </h:outputText> EUR
                 <br/>
 
                 <p:commandButton value="Rezervuoti" action="#{houseBean.navigateToReservation()}" 

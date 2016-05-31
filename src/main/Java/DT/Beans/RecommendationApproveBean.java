@@ -12,7 +12,6 @@ import DT.Facades.PrincipalsFacade;
 import DT.Facades.RecommendationsFacade;
 import DT.Facades.SettingsFacade;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -29,6 +28,7 @@ public class RecommendationApproveBean {
     private final static String REQUEST_APPROVED = "Prašymas patvirtintas.";
     private final static String REQUEST_NOT_SENT_TO_YOU = "Šio prašymo jūs negalite patvirtinti, nes jis nebuvo siųstas jums.";
     private final static String INVALID_KEY = "Toks raktas neegzistuoja.";
+    private final static String PROGRAM_ERROR = "Programos nustatymuose yra klaida. Praneškite sistemos administratoriui.";
     
     private Recommendations recommendation;
     private Principals principal;
@@ -60,7 +60,6 @@ public class RecommendationApproveBean {
             isRecommendationValid = approve();
         else
             isRecommendationValid = false;
-        System.out.println("klaidaklaida6");
     }
     
     //Method checking if the approval message is correct
@@ -68,38 +67,45 @@ public class RecommendationApproveBean {
         recommendation = recommendationsFacade.findByURLCode(key);          
         if(recommendation == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_ERROR, "", INVALID_KEY));
+                    FacesMessage.SEVERITY_ERROR, INVALID_KEY, ""));
             return false;
         }
-        System.out.println("klaida1");
+
         //Check if logged in user is the one to whom this email was sent
         if(recommendation.getRecieverid().equals(loggedInPrincipal)) {
             //approve recommendation
             recommendation.setIsactivated(Boolean.TRUE);
             recommendationsFacade.edit(recommendation);
-            System.out.println("klaida2");
-            //Check if there are enough approvals
-            currentlyAcceptedRecommendations = recommendationsFacade
-                    .findByApprovedSender(recommendation.getSenderid().getId()).size();      
-            int minRecommendationsCount = Integer.parseInt(minRecommendations.getSettingvalue());
-            if(currentlyAcceptedRecommendations < minRecommendationsCount) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                        FacesMessage.SEVERITY_INFO, "", REQUEST_APPROVED));
-                System.out.println("klaida3");
-                return true;
-            } else {      
-                principal = recommendation.getSenderid();
-                principal.setIsapproved(true);
-                principalsFacade.edit(principal);
-                System.out.println("klaida4");
-                return true;
-            }
+            return checkIfApproved();
         }
         else {
-            System.out.println("klaida5");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_WARN, "", REQUEST_NOT_SENT_TO_YOU));
+                    FacesMessage.SEVERITY_WARN, REQUEST_NOT_SENT_TO_YOU, ""));
             return false;
+        }
+    }
+    
+    //Method to check if there are enough approvals
+    public boolean checkIfApproved() {
+        currentlyAcceptedRecommendations = recommendationsFacade
+                .findByApprovedSender(recommendation.getSenderid().getId()).size();      
+        int minRecommendationsCount = Integer.parseInt(minRecommendations.getSettingvalue());
+        if(currentlyAcceptedRecommendations < minRecommendationsCount) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                    FacesMessage.SEVERITY_INFO, REQUEST_APPROVED, ""));
+            return true;
+        } else {      
+            principal = recommendation.getSenderid();
+            principal.setIsapproved(true);
+            int groupNumber = 1;
+            try {
+                groupNumber = Integer.parseInt(settingsFacade.getSettingByName("GroupNumber").getSettingvalue());
+            } catch(NumberFormatException e) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, PROGRAM_ERROR, ""));
+            }
+            principal.setGroupno(groupNumber);
+            principalsFacade.edit(principal);
+            return true;
         }
     }
     

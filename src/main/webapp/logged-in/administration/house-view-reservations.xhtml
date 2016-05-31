@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      template="/templates/general_template.xhtml"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="general_content">
+                
+        <p:panel header="Vasarnamio rezervacijos">
+            <p:dataTable id="house-reservations" var="reservation" value="#{houseViewReservationsBean.reservations}" 
+                         style="margin-top: 5px;"
+                         rowKey="#{reservation.id}">
+                                
+                <p:column headerText="Užsakovas">
+                    <h:outputText value="#{reservation.principalid.firstname} #{reservation.principalid.lastname}" />
+                </p:column>
+
+                <p:column headerText="Nuo">
+                    <h:outputText value="#{reservation.reservedfrom}">
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Iki">
+                    <h:outputText value="#{reservation.reservedto}">
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
+                    </h:outputText>
+                </p:column>
+                
+                <p:column headerText="Apmokėta">
+                    <h:outputText value="#{reservation.paymentid.ispaid}"/>
+                </p:column>
+                
+                <p:column headerText="Apmokėjimo data">
+                    <h:outputText value="#{reservation.paymentid.payedat}">
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="Europe/Vilnius"/>
+                    </h:outputText>
+                </p:column>
+                
+                <p:column headerText="Ekstra paslaugos">                    
+                    <p:dataTable id="house-extra-#{reservation.id}" var="extra" value="#{reservation.reservationextrasList}" 
+                         style="margin-top: 5px;"
+                         rowKey="#{extra.id}">
+                    
+                        <p:column>
+                            <h:outputText value="#{extra.extraid.title}" />
+                        </p:column>
+                    
+                    </p:dataTable>
+                </p:column>
+                  
+            </p:dataTable> 
+        </p:panel>
+        
+    </ui:define>
+    
+</ui:composition>

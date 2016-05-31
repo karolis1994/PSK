@@ -145,7 +145,7 @@ public class LoginBean {
             Principals logedInUser = userSessionBean.getUser();
             logedInUser.setFacebookid(user.getId());
             principalsFacade.edit(logedInUser);
-            return"";
+            return"logged-in/synchonization-succesful.xhtml";
         }
         // Setting current user to UserSessionBean
         String facebookUserID = user.getId();

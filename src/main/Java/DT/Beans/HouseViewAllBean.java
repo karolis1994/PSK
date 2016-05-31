@@ -1,6 +1,7 @@
 package DT.Beans;
 
 import DT.Entities.Houses;
+import DT.Entities.Payments;
 import DT.Entities.Reservations;
 import DT.Facades.HouseFacade;
 import DT.Facades.ReservationFacade;
@@ -104,6 +105,10 @@ public class HouseViewAllBean implements Serializable {
             }
         }
         return filteredHouses;
+    }
+    
+    public String getPaymentCurrency(Payments payment) {
+        return payment.getPaidWithPoints() ? "TŠK" : "EUR";
     }
     
     public List<Houses> filterByCapacity() {

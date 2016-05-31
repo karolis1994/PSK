@@ -28,7 +28,6 @@ public class UserProfileBean implements Serializable {
         
     // Fields ------------------------------------------------------------------
     private final static String DATE_FORMAT = "yyyy-MM-dd";
-    private final static String ERROR = "Klaida: ";
     private final static String WRONG_ID_FORMAT = "ID formatas netinkamas.";
     private final static String NO_USER_WITH_SUCH_ID = "Naudotojas su tokiu ID neegzistuoja.";
     private final static String CLUB_MEMBER = "Klubo narys";
@@ -75,11 +74,11 @@ public class UserProfileBean implements Serializable {
             principalID = Integer.parseInt(userID);
             shownPrincipal = principalsFacade.find(principalID);
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, WRONG_ID_FORMAT));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, WRONG_ID_FORMAT, ""));
             return;
         }
         if(shownPrincipal == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, NO_USER_WITH_SUCH_ID));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, NO_USER_WITH_SUCH_ID, ""));
             return;
         }
         
@@ -106,7 +105,7 @@ public class UserProfileBean implements Serializable {
             memberStatus = CLUB_ADMINISTRATOR;
             return;
         }
-        if(shownPrincipal.getMembershipuntill() != null && new Date().after(shownPrincipal.getMembershipuntill())) {
+        if(shownPrincipal.getMembershipuntill() != null && new Date().before(shownPrincipal.getMembershipuntill())) {
             memberUntil = sdf.format(shownPrincipal.getMembershipuntill());
             memberStatus = CLUB_MEMBER;
         } else {
@@ -119,11 +118,13 @@ public class UserProfileBean implements Serializable {
     
     //Method to convert byte array into displayable format
     public void displayPicture() {
-        if(shownPrincipal.getPicture() != null) {
-            picture = shownPrincipal.getPicture().getImage();
-            return;
+        if(pictureField) {
+            if(shownPrincipal.getPicture() != null) {
+                picture = shownPrincipal.getPicture().getImage();
+                return;
+            }
+            picture = new byte[1];
         }
-        picture = new byte[1];
     }
     
     // Getters / setters -------------------------------------------------------

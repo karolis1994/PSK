@@ -12,7 +12,6 @@ import DT.Facades.PicturesFacade;
 import DT.Facades.PrincipalsFacade;
 import DT.Facades.ReservationFacade;
 import DT.Facades.SettingsFacade;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +24,6 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.validation.constraints.Size;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -41,7 +39,6 @@ public class UserProfileChangeBean{
     private final static String PROFILE_UPDATED = "Jūsų profilis atnaujintas.";
     private final static String MEMBERSHIP_EXPIRED = "Pasibaigusi narystė";
     private final static String NOT_A_MEMBER = "Ne narys";
-    private final static String ERROR = "Klaida: ";
     private final static String PICTURE_ERROR = "Jūsų paveikslėlis nebuvo atnaujintas.";
     
     private Principals loggedInPrincipal;
@@ -61,7 +58,7 @@ public class UserProfileChangeBean{
 
     private String firstname;
     private String lastname;
-    @Past
+    @Past(message = "Gimimo data negali būti didesnė už dabartinę.")
     private Date birthdate;
     private String memberUntil;
     @Pattern(regexp="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]",
@@ -142,6 +139,11 @@ public class UserProfileChangeBean{
         return "LOGOUT";
     }
     
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "index.html?faces-redirect=true";
+    }
+    
     //Method to update the changed fields
     public void update() {
         loggedInPrincipal.setFirstname(firstname);
@@ -156,15 +158,17 @@ public class UserProfileChangeBean{
         //Create a new picture
         picture = new Pictures();
         Pictures temp = null;
-        if(uploadedPicture != null) {
-            //If the picture creation failed skip picture setting
-            if(picturesFacade.uploadPicture(picture, uploadedPicture)) {
-                //If the user already has a picture, copy it to delete it later
-                if(loggedInPrincipal.getPicture() != null && loggedInPrincipal.getPicture().getId() != 1)
-                    temp = loggedInPrincipal.getPicture();
-                loggedInPrincipal.setPicture(picture);
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ERROR, PICTURE_ERROR));
+        if(pictureField) {
+            if(uploadedPicture != null) {
+                //If the picture creation failed skip picture setting
+                if(picturesFacade.uploadPicture(picture, uploadedPicture)) {
+                    //If the user already has a picture, copy it to delete it later
+                    if(loggedInPrincipal.getPicture() != null && loggedInPrincipal.getPicture().getId() != 1)
+                        temp = loggedInPrincipal.getPicture();
+                    loggedInPrincipal.setPicture(picture);
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, PICTURE_ERROR, ""));
+                }
             }
         }
         principalsFacade.edit(loggedInPrincipal);
@@ -172,7 +176,7 @@ public class UserProfileChangeBean{
             picturesFacade.remove(temp);
         userSessionBean.setUser(loggedInPrincipal);
         
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", PROFILE_UPDATED));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, PROFILE_UPDATED, "" ));
     }
 
     // Getters / setters -------------------------------------------------------

@@ -48,7 +48,13 @@ public abstract class GenericFacade<T> implements Serializable {
     }
     
     public List<T> findAllNotDeleted() {
-        return findWhere("o.isdeleted = FALSE");
+        
+        String queryString = String.format(
+            "SELECT o FROM %s o WHERE o.isdeleted = FALSE", // constant sql, not a subject to injection
+            entityClass.getSimpleName());
+        Query query = em.createQuery(queryString);
+        
+        return query.getResultList();
     }
 
     public List<T> findRange(int maxResults, int firstResult) {
@@ -57,15 +63,9 @@ public abstract class GenericFacade<T> implements Serializable {
         q.setFirstResult(firstResult);
         return q.getResultList();
     }
-    
-    public List<T> findWhere(String whereClause) {
-        String queryString = String.format(
-                "SELECT o FROM %s o WHERE %s",
-                entityClass.getSimpleName(),
-                whereClause);
-        Query query = em.createQuery(queryString);
         
-        return query.getResultList();
+    public List<T> findByName(String name) {
+        return em.createNamedQuery("Houses.findByTitle").setParameter("title", name).getResultList();
     }
 
     public int getItemCount() {

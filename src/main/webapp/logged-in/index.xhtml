@@ -1,17 +1,18 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     template="/templates/general_template.xhtml"
-    xmlns:h="http://xmlns.jcp.org/jsf/html">
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
 
         <ui:define name="general_content">
-            <h:form>
-                <h3>Request: </h3>
-                <h:commandButton action="recommendation-request" value="Request" />
-                <h3>Rezervacijų istorija:</h3>
-                <h:commandButton action="reservations-history" value="Reservations history" />
-                <h3>Pakviesti naują narį:</h3>
-                <h:commandButton action="invite-member" value="Pakviesti" />
-            </h:form>
+            <p:panel rendered="#{!userSessionBean.user.isapproved}">
+                <h:outputText value="Jūsų narystė dar nepatvirtinta, išsiųskite patvirtinimo prašymus"/>        
+                <h:form>
+                    <p:commandButton action="recommendation-request" value="Patvirtinimo prašymai" 
+                                     ajax="false" styleClass="butt"/>
+                </h:form>
+            </p:panel>
+            <ui:include src="reservations-history-table.xhtml" rendered="#{userSessionBean.user.isapproved}"/>
         </ui:define>
 
 </ui:composition>

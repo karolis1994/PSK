@@ -37,6 +37,9 @@
                     <p:selectOneMenu id="availableTo" value="#{houseBean.availableto}" style="width:150px">
                         <f:selectItems value="#{addHouseBean.months}" />
                     </p:selectOneMenu>
+                    
+                    <h:outputLabel for="priceInPoints" value="Kaina už savaitę (TŠK): " />
+                    <p:inputText id="priceInPoints" value="#{houseBean.costInPoints}" label="Kaina už savaitę (TŠK)" required="true"/>
                 </p:panelGrid>
                 <p:commandButton value="Išsaugoti" action="#{houseBean.updateHouse()}" validateClient="true" ajax="true">
                     <f:param name="id" value="#{param.id}" />
