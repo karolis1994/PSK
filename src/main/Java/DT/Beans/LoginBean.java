@@ -132,6 +132,7 @@ public class LoginBean {
     }
 
     public String returnFromFb() throws FacebookException, UnsupportedEncodingException, ParseException {
+        
         Facebook facebook = new FacebookFactory().getInstance();
         facebook.setOAuthAppId(APP_ID, CLIENT_SECRET);
         facebook.setOAuthPermissions("email,public_profile,user_about_me,user_birthday");
@@ -139,7 +140,13 @@ public class LoginBean {
         AccessToken token = facebook.getOAuthAccessToken(code);
         facebook.setOAuthAccessToken(token);
         User user = facebook.getUser(facebook.getId(), new Reading().fields("email,bio,birthday,first_name,last_name"));
-
+        if(userSessionBean.getUser() != null)
+        {
+            Principals logedInUser = userSessionBean.getUser();
+            logedInUser.setFacebookid(user.getId());
+            principalsFacade.edit(logedInUser);
+            return"";
+        }
         // Setting current user to UserSessionBean
         String facebookUserID = user.getId();
         Principals currentUser = principalsFacade.findByFacebookID(facebookUserID);
